@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+  <h3 class="mb-4"><i class="fas fa-user-md icon"></i>Doctor List</h3>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Specialization</th>
+          <th>Contact</th>
+          <th>Experience</th>
+          <th>Status</th>
+          <th>User ID</th>
+          <th>Admin ID</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (doctors && doctors.length > 0) { %>
+          <% doctors.forEach((doctor, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= doctor.doctor_name %></td>
+              <td><%= doctor.doctor_specialization %></td>
+              <td><%= doctor.doctor_contact %></td>
+              <td><%= doctor.doctor_experience %></td>
+              <td><%= doctor.status %></td>
+              <td><%= doctor.user_id %></td>
+              <td><%= doctor.admin_id %></td>
+              <td>
+                <a href="/doctor/edit/<%= doctor.doctor_id %>" class="btn btn-sm btn-warning">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <a href="/doctor/delete/<%= doctor.doctor_id %>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this doctor?')">
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="9" class="text-center text-muted">No doctors found.</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+/* Sidebar Styles */
+.sidebar {
+  height: calc(100vh - 56px);
+  position: fixed;
+  top: 56px;
+  left: 0;
+  width: 250px;
+  background: #000428;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #004e92, #000428);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #004e92, #000428);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  overflow-y: auto;
+  border-right: 1px solid #ced4da;
+  padding: 20px 15px;
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 30px 40px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: white;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease-in-out;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.nav-link:hover {
+  background-color: #d6d8db;
+  color: white;
+  text-decoration: none;
+}
+
+.nav .collapse .nav-link {
+  font-weight: 500;
+  font-size: 15px;
+  padding-left: 30px;
+}
+
+.nav-item + .nav-item {
+  margin-top: 10px;
+}
+
+.sidebar .nav-link.text-danger:hover {
+  background-color: #f8d7da;
+}
