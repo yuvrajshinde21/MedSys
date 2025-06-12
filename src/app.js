@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const path = require("path");
+
+const errorHandler = require("../src/middleware/errorhandler")
 //
 const homeRoutes = require("./routes/homeRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -17,6 +19,8 @@ app.use(express.json());
 //routes
 app.use("/",homeRoutes);
 app.use("/auth",authRoutes);
+
+app.use(errorHandler)
 
 module.exports = app;
 
