@@ -44,7 +44,7 @@ exports.handleLogin = asynchandler(async function (req, res) {
         res.render("receptionDashboard", { partialToInclude: false });
     } else if (role == "reception") {
         res.render("doctorDashboard", { partialToInclude: false });
-    } else {
+    } else { 
         res.render("login.ejs", { error: "invalid username or password" })
     }
 })
