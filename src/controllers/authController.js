@@ -36,3 +36,4 @@ exports.handleLogin = asynchandler(async function (req, res) {
         res.render("login.ejs", { error: "invalid username or password" })
     }
 })
+
