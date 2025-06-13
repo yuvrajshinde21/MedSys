@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const path = require("path");
-
+const cookieparser = require("cookie-parser");
 const errorHandler = require("../src/middleware/errorhandler")
 //
 const homeRoutes = require("./routes/homeRoutes");
@@ -15,6 +15,7 @@ app.set("views",path.join(__dirname,"..","views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"))
 app.use(express.json());
+app.use(cookieparser());
 
 //routes
 app.use("/",homeRoutes);
