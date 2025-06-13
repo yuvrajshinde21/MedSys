@@ -1,0 +1,60 @@
+<div class="card p-4 shadow-sm">
+  <h4 class="mb-4">Add New Doctor</h4>
+  <form action="/admin/doctor" method="POST">
+    <!-- Doctor Name -->
+    <div class="mb-3">
+      <label for="doctor_name" class="form-label">Doctor Name</label>
+      <input type="text" class="form-control" id="doctor_name" name="doctor_name" >
+    </div>
+
+    <!-- Username -->
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" id="username" name="username" >
+    </div>
+
+    <!-- Password -->
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="password" >
+    </div>
+
+    <!-- Specialization -->
+    <div class="mb-3">
+      <label for="doctor_specialization" class="form-label">Specialization</label>
+      <input type="text" class="form-control" id="doctor_specialization" name="doctor_specialization" >
+    </div>
+
+    <!-- Contact -->
+    <div class="mb-3">
+      <label for="doctor_contact" class="form-label">Contact Number</label>
+      <input type="text" class="form-control" id="doctor_contact" name="doctor_contact" >
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+      <label for="doctor_email" class="form-label">Email Address</label>
+      <input type="email" class="form-control" id="doctor_email" name="doctor_email" >
+    </div>
+
+    <!-- Experience -->
+    <div class="mb-3">
+      <label for="doctor_experience" class="form-label">Years of Experience</label>
+      <input type="number" class="form-control" id="doctor_experience" name="doctor_experience" min="0" >
+    </div>
+
+    <!-- Status -->
+    <div class="mb-3">
+      <label for="status" class="form-label">Status</label>
+      <select class="form-select" id="status" name="status" >
+        <option value="active" selected>Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
+
+    <input type="hidden" name="admin_id" value="1">
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-accent">Register Doctor</button>
+  </form>
+</div>

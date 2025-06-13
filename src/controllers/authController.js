@@ -44,11 +44,11 @@ exports.handleLogin = asynchandler(async function (req, res) {
 
     //admin
     if (user.role === "admin") {
-        res.render("adminDashboard", { partialToInclude: false });
+        res.render("admin/adminDashboard");
     } else if (user.role === "doctor") {
-        res.render("doctorDashboard", { partialToInclude: false });
+        res.render("doctor/doctorDashboard");
     } else if (user.role === "reception") {
-        res.render("receptionDashboard", { partialToInclude: false });
+        res.render("reception/receptionDashboard");
     } else {
         res.render("login.ejs", { error: "invalid username or password" });
     }
