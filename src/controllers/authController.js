@@ -1,5 +1,6 @@
+const asynchandler = require("express-async-handler");
 const { authenticateUser } = require("../models/authModel");
-const asynchandler = require("express-async-handler")
+const jwt = require("jsonwebtoken");
 
 // @desc render login.ejs
 // @route GET: "auth/login"
@@ -8,44 +9,53 @@ exports.getLoginPage = function (req, res) {
     res.render("login.ejs", { message: "" });
 }
 
-exports.getRegisterDoctorPage = function (req, res) {
-    res.render("registerDoctor.ejs", { partialToInclude: true });
-}
-
-exports.getViewDoctorsPage = function (req, res) {
-    res.render("viewDoctors.ejs", { partialToInclude: true });
-}
-
-exports.getRegisterReceptionistPage = function (req, res) {
-    res.render("registerReception.ejs", { partialToInclude: true });
-}
 // @desc register doctor
 // @route POST: "auth/register/doctor"
 // @access public
 exports.handleLogin = asynchandler(async function (req, res) {
     const userData = req.body;
     if (!userData.username || !userData.password || !userData.role) {
-        return res.render("login.ejs", { error: "username , passward and roule required" })
+        return res.render("login.ejs", {
+            error: "Username, password and role are required"
+        })
     }
-
+    //isUser
     const user = await authenticateUser(userData);
     if (!user) {
         throw new Error("Invalid user!");
     }
-    const user_id = user.user_id;
-    const username = user.username;
-    const password = user.password;
-    const role = user.role;
+    //set jwt
+    const token = jwt.sign(
+        {
+            user_id: user.user_id,
+            username: user.username,
+            role: user.role
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN }
+    )
+    //set cookie
+    res.cookie("token", token,
+        {
+            httpOnly: true,
+            secure: false,
+            maxAge: 24 * 60 * 60 * 1000
+        })
+
     //admin
-    if (role === "admin") {
+    if (user.role === "admin") {
         res.render("adminDashboard", { partialToInclude: false });
-    } else if (role === "Receptionist") {
-    } else if (role == "doctor") {
-        res.render("receptionDashboard", { partialToInclude: false });
-    } else if (role == "reception") {
+    } else if (user.role === "doctor") {
         res.render("doctorDashboard", { partialToInclude: false });
-    } else { 
-        res.render("login.ejs", { error: "invalid username or password" })
+    } else if (user.role === "reception") {
+        res.render("receptionDashboard", { partialToInclude: false });
+    } else {
+        res.render("login.ejs", { error: "invalid username or password" });
     }
+
 })
 
+exports.logoutUser = (req,res)=>{
+    res.clearCookie("token");
+    res.redirect("/auth/login");
+}
