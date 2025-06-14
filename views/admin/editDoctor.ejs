@@ -1,0 +1,50 @@
+<!DOCTYPE html>     
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Doctor</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Doctor</h1>
+        <form action="/admin/doctors/edit/<%= doctor.doctor_id %>" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_method" value="PUT">
+            <div class="mb-3">
+                <label for="doctor_name" class="form-label">Doctor Name</label>
+                <input type="text" class="form-control" id="doctor_name" name="doctor_name" value="<%= doctor.doctor_name %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="doctor_specialization" class="form-label">Specialization</label>
+                <input type="text" class="form-control" id="doctor_specialization" name="doctor_specialization" value="<%= doctor.doctor_specialization %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="doctor_contact" class="form-label">Contact Number</label>
+                <input type="text" class="form-control" id="doctor_contact" name="doctor_contact" value="<%= doctor.doctor_contact %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="doctor_email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="doctor_email" name="doctor_email" value="<%= doctor.doctor_email %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="doctor_experience" class="form-label">Years of Experience</label>
+                <input type="number" class="form-control" id="doctor_experience" name="doctor_experience" value="<%= doctor.doctor_experience %>" min="0" required>
+            </div>
+            <div class="mb-3">
+                <label for="doctor_image" class="form-label">Doctor Image</label>
+                <input class="form-control" type="file" id="doctor_image" name="doctor_image" accept="image/*">
+                <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="active" <%= doctor.status === 'active' ? 'selected' : '' %>>Active</option>
+                    <option value="inactive" <%= doctor.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+                </select>
+            </div>
+            <input type="hidden" name="doctor_id" value="<%= doctor.doctor_id %>">
+            <button type="submit" class="btn btn-primary">Update Doctor</button>
+        </form>
+    </div>
+</body>
+</html>

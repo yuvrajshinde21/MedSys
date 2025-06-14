@@ -22,7 +22,9 @@ exports.handleLogin = asynchandler(async function (req, res) {
     //isUser
     const user = await authenticateUser(userData);
     if (!user) {
-        throw new Error("Invalid user!");
+        return res.render("login.ejs", {
+            error: "Invalid username or password"
+        })
     }
     //set jwt
     const token = jwt.sign(

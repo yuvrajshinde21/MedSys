@@ -1,23 +1,27 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../config/uploadConfig")
 
 const {
-  addDoctorForm,
-  registerDoctor,
-  viewDoctors,
-  deleteDoctor,
-  addReceptionForm,
-  registerReception,
-  viewReceptions,
-  deleteReception,
-  viewPatients
+    addDoctorForm,
+    registerDoctor,
+    viewDoctors,
+    deleteDoctor,
+    editDoctor,
+    getEditDoctorForm,
+    addReceptionForm,
+    registerReception,
+    viewReceptions,
+    deleteReception,
+    viewPatients
 } = require("../controllers/adminController");
 
 // ====== Doctor Management ======
-router.get("/doctor", addDoctorForm);               // Show Add Doctor Form
-router.post("/doctor", registerDoctor);             // Register Doctor
-// router.get("/doctors", viewDoctors);                 // View All Doctors
-// router.post("/doctors/delete/:id", deleteDoctor);    // Delete Doctor
+router.get("/doctor", addDoctorForm);                   // Show Add Doctor Form
+router.post("/doctor", upload.single("doctor_image"), registerDoctor);                 // Register Doctor
+router.get("/doctors", viewDoctors);                 // View All Doctors
+router.delete("/doctors/delete/:id", deleteDoctor);    // Delete Doctor
+router.route("/doctors/edit/:id").get(getEditDoctorForm).post(upload.single("doctor_image"), editDoctor);    // Edit Doctor
 
 // // ====== Receptionist Management ======
 // router.get("/add-reception", addReceptionForm);       // Show Add Receptionist Form

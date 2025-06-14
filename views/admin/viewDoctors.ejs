@@ -1,0 +1,66 @@
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+    <input type="text" id="doctorSearch" class="form-control w-100 w-md-50" placeholder="Search doctors by name..." oninput="searchDoctor()">
+
+    <select id="statusFilter" class="form-select w-100 w-md-25" onchange="searchDoctor()">
+        <option value="all">All Doctors</option>
+        <option value="active">Active Doctors</option>
+        <option value="inactive">Inactive Doctors</option>
+    </select>
+</div>
+
+
+<div class="container py-4">
+    <!-- <h2 class="mb-4 text-center">All Doctors</h2> -->
+
+    <% if (doctors.length===0) { %>
+        <div class="alert alert-warning text-center" role="alert">
+            <i class="bi bi-info-circle"></i> No doctors found. Please add a new doctor to get started.
+        </div>
+        <% } else { %>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                <% doctors.forEach(doctor=> { %>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm d-flex flex-column justify-content-between">
+
+                            <div class="text-center mt-4">
+                                <img src="/uploads/<%= doctor.doctor_image || 'doctor.jpg' %>" alt="Doctor Image"
+                                    class="rounded-circle"
+                                    style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #ccc;">
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body text-center">
+                                <h5 class="card-title mt-2">
+                                    <%= doctor.doctor_name %>
+                                </h5>
+                                <p class="card-text text-start">
+                                    <strong>Specialization:</strong>
+                                    <%= doctor.doctor_specialization %><br>
+                                        <strong>Experience:</strong>
+                                        <%= doctor.doctor_experience %> years<br>
+                                            <strong>Contact:</strong>
+                                            <%= doctor.doctor_contact %><br>
+                                                <strong>Email:</strong>
+                                                <%= doctor.doctor_email %><br>
+                                                    <strong>Status:</strong>
+                                                    <span
+                                                        class="badge <%= doctor.status === 'active' ? 'bg-success' : 'bg-secondary' %>">
+                                                        <%= doctor.status %>
+                                                    </span>
+                                </p>
+                            </div>
+
+                            <div class="card-footer bg-transparent border-0 text-center mb-2">
+                                <a href="/admin/doctors/edit/<%= doctor.doctor_id %>"
+                                    class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                                <a href="#" class="btn btn-sm btn-outline-danger me-2" onclick="confirmDelete('<%= doctor.doctor_id %>')">Delete</a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+            <% } %>
+</div>
+
+<script src="/script/viewDoctors.js"></script>
