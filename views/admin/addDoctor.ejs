@@ -1,10 +1,12 @@
 <div class="card p-4 shadow-sm">
     <h4 class="mb-4">Add New Doctor</h4>
-    <form action="/admin/doctor" method="POST" enctype="multipart/form-data">
+    <form action="/admin/doctor" method="POST" enctype="multipart/form-data" onsubmit="return validateDoctorForm()">
         <!-- Doctor Name -->
         <div class="mb-3">
             <label for="doctor_name" class="form-label">Doctor Name</label>
             <input type="text" class="form-control" id="doctor_name" name="doctor_name">
+                <div id="doctorNameError" class="text-danger mt-1" style="font-size: 14px;"></div>
+
         </div>
 
         <!-- Username -->
@@ -65,3 +67,4 @@
         <button type="submit" class="btn btn-accent">Register Doctor</button>
     </form>
 </div>
+<script src="/script/addDoctor.js"></script>
