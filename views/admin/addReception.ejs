@@ -1,0 +1,52 @@
+<div class="container mt-4">
+    <div class="card shadow rounded-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Add Receptionist</h5>
+        </div>
+        <div class="card-body">
+            <form action="/admin/reception" method="POST" enctype="multipart/form-data" novalidate>
+                <div class="mb-3">
+                    <label for="reception_name" class="form-label">Receptionist Name</label>
+                    <input type="text" class="form-control" id="reception_name" name="reception_name" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="reception_contact" class="form-label">Contact Number</label>
+                    <input type="tel" class="form-control" id="reception_contact" name="reception_contact" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="reception_email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="reception_email" name="reception_email">
+                </div>
+
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status" required>
+                        <option value="" selected disabled>Select Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="reception_image" class="form-label">Receptionist Image</label>
+                    <input class="form-control" type="file" id="reception_image" name="reception_image"
+                        accept="image/*">
+                    <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
+                </div>
+
+                <button type="submit" class="btn btn-success">Add Receptionist</button>
+            </form>
+        </div>
+    </div>
+</div>
