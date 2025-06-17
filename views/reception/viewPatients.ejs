@@ -1,0 +1,55 @@
+<div class="container-fluid">
+
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <h2 class="mb-4 text-center">Patient Records</h2>
+
+        <div class="table-responsive bg-light p-3 rounded shadow-sm">
+          <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Contact</th>
+                <th>Issue</th>
+                <th>Admitted</th>
+                <th>Discharged</th>
+                <th>Room</th>
+                <th>Nurse</th>
+                <th>Doctor</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (patients.length > 0) { %>
+                <% patients.forEach(patient => { %>
+                  <tr>
+                    <td><%= patient.patient_id %></td>
+                    <td><%= patient.patient_name %></td>
+                    <td><%= patient.patient_age %></td>
+                    <td><%= patient.patient_gender %></td>
+                    <td><%= patient.patient_contact %></td>
+                    <td><%= patient.patient_issue %></td>
+                    <td><%= patient.admitted_date ? patient.admitted_date.toISOString().split('T')[0] : '' %></td>
+                    <td><%= patient.discharge_date ? patient.discharge_date.toISOString().split('T')[0] : '' %></td>
+                    <td><%= patient.room_no %></td>
+                    <td><%= patient.nurse_id %></td>
+                    <td><%= patient.doctor_id %></td>
+                    <td><%= patient.status %></td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="12" class="text-center">No patients found</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>

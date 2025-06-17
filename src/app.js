@@ -27,7 +27,7 @@ app.use("/auth", authRoutes);
 //auth routes:
 app.use("/admin", authMiddleware, adminRoutes);
 // app.use("/doctor", authMiddleware, doctorRoutes);
-// app.use("/reception", authMiddleware, receptionRoutes);
+app.use("/reception", receptionRoutes);
 
 app.use(errorHandler)
 
