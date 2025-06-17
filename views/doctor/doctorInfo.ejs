@@ -1,0 +1,82 @@
+<div class="container mt-5">
+    <!-- Welcome Section -->
+    <div class="text-center mb-5">
+        <h2>Welcome, Dr. <%= doctorName %> 👨‍⚕️</h2>
+        <p class="text-muted">Here's your overview for today</p>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Total Appointments</h5>
+                    <p class="display-6 fw-bold"><%= totalAppointments %></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Today’s Patients</h5>
+                    <p class="display-6 fw-bold text-primary"><%= todaysPatients %></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Prescriptions</h5>
+                    <p class="display-6 fw-bold text-danger"><%= pendingPrescriptions %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Today's Appointments Table -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Today's Appointments</h5>
+        </div>
+        <div class="card-body p-0">
+            <% if (appointments.length === 0) { %>
+                <p class="text-center p-4 text-muted">No appointments scheduled for today.</p>
+            <% } else { %>
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Time</th>
+                                <th>Patient Name</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% appointments.forEach(app => { %>
+                                <tr>
+                                    <td><%= app.time %></td>
+                                    <td><%= app.patient_name %></td>
+                                    <td><%= app.reason %></td>
+                                    <td>
+                                        <span class="badge <%= app.status === 'Pending' ? 'bg-warning text-dark' : 'bg-success' %>">
+                                            <%= app.status %>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-4 text-center">
+        <a href="/doctor/patients" class="btn btn-outline-primary me-3">View Patients</a>
+        <a href="/doctor/prescriptions" class="btn btn-outline-success">Manage Prescriptions</a>
+    </div>
+</div>

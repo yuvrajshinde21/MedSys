@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reception Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      padding-top: 56px;
+    }
+    .sidebar {
+      height: 100vh;
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 250px;
+      background-color: whitesmoke;
+      color: black;
+      overflow-y: auto;
+    }
+    .sidebar a {
+      color: black;
+      text-decoration: none;
+    }
+    /* .sidebar .nav-link:hover {
+      background-color: #495057;
+    } */
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+    <%- include('../partials/header') %>
+
+
+<!-- Sidebar -->
+<div class="sidebar d-flex flex-column p-3">
+  <ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="collapse" href="#patientsMenu" role="button" aria-expanded="false">
+        <i class="bi bi-person-fill"></i> Patients
+      </a>
+      <div class="collapse" id="patientsMenu">
+        <ul class="btn-toggle-nav list-unstyled ps-3">
+          <li><a href="#" class="nav-link">Add</a></li>
+          <li><a href="#" class="nav-link">View</a></li>
+          <li><a href="#" class="nav-link">Bill</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="collapse" href="#roomMenu" role="button" aria-expanded="false">
+        <i class="bi bi-door-closed-fill"></i> Room
+      </a>
+      <div class="collapse" id="roomMenu">
+        <ul class="btn-toggle-nav list-unstyled ps-3">
+          <li><a href="#" class="nav-link">Add</a></li>
+          <li><a href="#" class="nav-link">View</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="collapse" href="#nurseMenu" role="button" aria-expanded="false">
+        <i class="bi bi-person-badge-fill"></i> Nurse
+      </a>
+      <div class="collapse" id="nurseMenu">
+        <ul class="btn-toggle-nav list-unstyled ps-3">
+          <li><a href="#" class="nav-link">Add</a></li>
+          <li><a href="#" class="nav-link">View</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="collapse" href="#medicineMenu" role="button" aria-expanded="false">
+        <i class="bi bi-capsule"></i> Medicine
+      </a>
+      <div class="collapse" id="medicineMenu">
+        <ul class="btn-toggle-nav list-unstyled ps-3">
+          <li><a href="#" class="nav-link">Add</a></li>
+          <li><a href="#" class="nav-link">View</a></li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <%- include(main_content) %>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

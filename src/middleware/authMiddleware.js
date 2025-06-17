@@ -9,7 +9,6 @@ function verifyToken(req, res, next) {
                 res.clearCookie("token");
                 console.log("Token verification failed:", err);
                 console.log("Redirecting to login page due to invalid token. ",token);
-                
                 return res.redirect("/auth/login");
             }
             req.user = decoded;
