@@ -1,0 +1,30 @@
+<form action="/reception/rooms/<%= room.room_no %>/update" method="POST">
+  <div class="mb-3">
+    <label class="form-label">Room No</label>
+    <input type="text" class="form-control" name="room_no" value="<%= room.room_no %>" readonly>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Room Type</label>
+    <select class="form-select" name="room_type">
+      <% roomTypes.forEach(type => { %>
+        <option value="<%= type %>" <%= type === room.room_type ? "selected" : "" %>><%= type %></option>
+      <% }) %>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Room Status</label>
+    <select class="form-select" name="room_status">
+      <option value="Available" <%= room.room_status === "Available" ? "selected" : "" %>>Available</option>
+      <option value="Occupied" <%= room.room_status === "Occupied" ? "selected" : "" %>>Occupied</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Charges Per Day (₹)</label>
+    <input type="number" step="0.01" class="form-control" name="charges_per_day" value="<%= room.charges_per_day %>" required>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Update Room</button>
+</form>
