@@ -4,9 +4,11 @@ const bcrypt = require("bcrypt");
 
 // @Desc render addDoctorForm
 // @route GET: admin/doctor 
-exports.addDoctorForm = (req, res) => {
+exports.addDoctorForm =async (req, res) => {
+    const specializations = await adminModel.getSpecializations();
     res.render("admin/adminDashboard.ejs", {
         main_content: "addDoctor",
+        specializations
     })
 }
 
@@ -24,12 +26,14 @@ exports.registerDoctor = asynchandler(async (req, res) => {
     const admin_id = req.body.admin_id;
     const doctorImage = req.file ? req.file.filename : null;
 
+    const specializations = await adminModel.getSpecializations();
 
     if (!doctor_name || !username || !password || !doctor_specialization || !doctor_contact || !doctor_email || !doctor_experience || !status || !admin_id) {
         return res.render("admin/adminDashboard.ejs", {
             main_content: "addDoctor",
             user_id: req.user.user_id,
             errorMessage: "All required fields must be filled.",
+            specializations
         })
     }
 
@@ -39,6 +43,7 @@ exports.registerDoctor = asynchandler(async (req, res) => {
             main_content: "addDoctor",
             user_id: req.user.user_id,
             errorMessage: "Username is already taken. Try another.",
+            specializations
         })
     }
     //register user
@@ -47,17 +52,11 @@ exports.registerDoctor = asynchandler(async (req, res) => {
 
     const doctor_id = await adminModel.createUser(username, hashedPassword, "doctor");
     const insertCount = await adminModel.createDoctor(doctor_name, doctor_specialization, doctor_contact, doctor_email, doctor_experience, status, doctor_id, admin_id, doctorImage)
-    if (insertCount === 1) {
-        return res.render("admin/adminDashboard.ejs", {
-            main_content: "addDoctor",
-            errorMessage: "Doctor registered successfully ✅",
-        });
-    } else {
-        return res.render("admin/adminDashboard.ejs", {
-            main_content: "addDoctor",
-            errorMessage: "Something went wrong while saving the doctor ❌",
-        });
-    }
+    return res.render("admin/adminDashboard.ejs", {
+        main_content: "addDoctor",
+        errorMessage: insertCount === 1 ? "Doctor registered successfully ✅" : "Something went wrong while saving the doctor ❌",
+        specializations
+    });
 })
 
 // @Desc view Doctors
@@ -88,6 +87,8 @@ exports.deleteDoctor = asynchandler(async (req, res) => {
 //@route GET: admin/doctors/edit/:id
 exports.getEditDoctorForm = asynchandler(async (req, res) => {
     const doctorId = req.params.id;
+        const specializations = await adminModel.getSpecializations();
+
     const doctor = await adminModel.getDoctorById(doctorId);
     if (!doctor) {
         return res.status(404).render("admin/adminDashboard.ejs", {
@@ -98,6 +99,7 @@ exports.getEditDoctorForm = asynchandler(async (req, res) => {
     res.render("admin/adminDashboard.ejs", {
         main_content: "editDoctor",
         doctor: doctor,
+        specializations
     });
 });
 

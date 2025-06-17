@@ -7,13 +7,13 @@ function verifyToken(req, res, next) {
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err) {
                 res.clearCookie("token");
-                return res.redirect("/login");
+                return res.redirect("/auth/login");
             }
             req.user = decoded;
             next();
         });
     } else {
-        res.redirect("/login");
+        res.redirect("/auth/login");
     }
 }
 

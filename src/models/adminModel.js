@@ -1,6 +1,11 @@
 const conn = require("../config/dbConfig");
 
 const promiseConn = conn.promise();
+// Function to get specializations
+exports.getSpecializations = async () => {
+    const [result] = await promiseConn.query("SELECT * FROM specializations ORDER BY specialization_name ASC");
+    return result;
+}
 
 // Function to check if a username is already taken
 exports.isUserNameTaken = async (username) => {
@@ -42,9 +47,9 @@ exports.createDoctor = async (doctor_name, doctor_specialization, doctor_contact
     return result.affectedRows;
 }
 
-// Function to get all doctors
+// Function to get all doctors and specializations
 exports.getDoctors = async () => {
-    const [result] = await promiseConn.query("SELECT * FROM doctor WHERE is_deleted = 0 ORDER BY doctor_name ASC");
+    const [result] = await promiseConn.query("SELECT d.*, s.specialization_name FROM doctor d LEFT JOIN specializations s ON d.doctor_specialization = s.specialization_id WHERE d.is_deleted = 0 ORDER BY d.doctor_name ASC");
     return result;
 }
 // Function to delete a doctor (soft delete)
@@ -52,9 +57,9 @@ exports.deleteDoctor = async (doctor_id) => {
     const [result] = await promiseConn.query("UPDATE doctor SET is_deleted = 1 WHERE doctor_id = ?", [doctor_id]);
     return result.affectedRows;
 }
-// Function to get a doctor by ID
+// Function to get a doctor by ID and include specialization name
 exports.getDoctorById = async (doctor_id) => {
-    const [result] = await promiseConn.query("SELECT * FROM doctor WHERE doctor_id = ?", [doctor_id]);
+    const [result] = await promiseConn.query("SELECT d.*, s.specialization_name FROM doctor d LEFT JOIN specializations s ON d.doctor_specialization = s.specialization_id WHERE d.doctor_id = ?", [doctor_id]);
     return result[0];
 }
 // Function to update doctor details

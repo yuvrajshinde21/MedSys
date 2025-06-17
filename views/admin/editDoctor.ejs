@@ -17,11 +17,19 @@
                 <input type="text" class="form-control" id="doctor_name" name="doctor_name"
                     value="<%= doctor.doctor_name %>" required>
             </div>
+            <!-- //show doctor specialization but insert value specialization id -->
             <div class="mb-3">
                 <label for="doctor_specialization" class="form-label">Specialization</label>
-                <input type="text" class="form-control" id="doctor_specialization" name="doctor_specialization"
-                    value="<%= doctor.doctor_specialization %>" required>
+                <select class="form-select" id="doctor_specialization" name="doctor_specialization" required>
+                    <% specializations.forEach(function(specialization) { %>
+                        <option value="<%= specialization.specialization_id %>"
+                            <%=doctor.doctor_specialization==specialization.specialization_id ? 'selected' : '' %>>
+                            <%= specialization.specialization_name %>
+                        </option>
+                        <% }) %>
+                </select>
             </div>
+
             <div class="mb-3">
                 <label for="doctor_contact" class="form-label">Contact Number</label>
                 <input type="text" class="form-control" id="doctor_contact" name="doctor_contact"

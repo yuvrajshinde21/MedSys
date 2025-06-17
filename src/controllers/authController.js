@@ -1,7 +1,7 @@
 const asynchandler = require("express-async-handler");
-const { authenticateUser } = require("../models/authModel");
+const { authenticateUser, getUserById } = require("../models/authModel");
 const jwt = require("jsonwebtoken");
-
+const bcrypt = require("bcrypt");
 // @desc render login.ejs
 // @route GET: "auth/login"
 // @access public
@@ -13,18 +13,26 @@ exports.getLoginPage = function (req, res) {
 // @route POST: "auth/register/doctor"
 // @access public
 exports.handleLogin = asynchandler(async function (req, res) {
-    const userData = req.body;
-    if (!userData.username || !userData.password || !userData.role) {
+    const username = req.body.username.trim();
+    const password = req.body.password.trim();
+
+    if (!username || !password) {
         return res.render("login.ejs", {
-            error: "Username, password and role are required"
-        })
+            error: "Username and password are required"
+        });
     }
-    //isUser
-    const user = await authenticateUser(userData);
+    //authenticate user
+    const user = await authenticateUser(username);
     if (!user) {
         return res.render("login.ejs", {
-            error: "Invalid username or password"
-        })
+            error: "Invalid username "
+        });
+    }
+    const isUser = await bcrypt.compare(password, user.password);
+    if (!isUser) {
+        return res.render("login.ejs", {
+            error: "Invalid password"
+        });
     }
     //set jwt
     const token = jwt.sign(
@@ -45,19 +53,46 @@ exports.handleLogin = asynchandler(async function (req, res) {
         })
 
     //admin
+    const receptionist = await getUserById(user.user_id);
+    console.log(user.user_id);
+    console.log(receptionist);
     if (user.role === "admin") {
         res.render("admin/adminDashboard");
     } else if (user.role === "doctor") {
-        res.render("doctor/doctorDashboard");
+        res.render("doctor/doctorDashboard.ejs", {
+            main_content:"doctorInfo",
+            doctorName: "John Doe",
+            totalAppointments: 12,
+            todaysPatients: 5,
+            pendingPrescriptions: 3,
+            appointments: [
+                {
+                    time: "10:00 AM",
+                    patient_name: "Alice Smith",
+                    reason: "Headache",
+                    status: "Pending"
+                },
+                {
+                    time: "11:30 AM",
+                    patient_name: "Bob Jones",
+                    reason: "Fever",
+                    status: "Completed"
+                }
+            ]
+        });
+
     } else if (user.role === "reception") {
-        res.render("reception/receptionDashboard");
+        res.render("reception/receptionDashboard.ejs", {
+            main_content: "receptionistInfo", // ✅ match the actual filename
+            receptionist: receptionist,
+        });
     } else {
-        res.render("login.ejs", { error: "invalid username or password" });
+        res.render("login.ejs", { error: "invalid user role!" });
     }
 
 })
 
-exports.logoutUser = (req,res)=>{
+exports.logoutUser = (req, res) => {
     res.clearCookie("token");
     res.redirect("/auth/login");
 }
