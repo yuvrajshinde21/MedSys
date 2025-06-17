@@ -59,6 +59,64 @@ exports.viewRooms = async (req, res) => {
     }
 };
 
+//
+exports.getRoomById = async (req, res) => {
+  try {
+    const roomId = req.params.roomId;
+    const room = await Room.getRoomById(roomId);
+    if (!room) {
+      return res.status(404).send("Room not found");
+    }
+
+    const roomTypes = await Room.getRoomTypes();
+
+    res.render("reception/receptionDashboard.ejs", {
+      main_content: "editRoom",
+      title: "Edit Room",
+      room: room,
+      roomTypes: roomTypes   
+    });
+  } catch (err) {
+    console.error("Error fetching room:", err);
+    res.status(500).send("Error fetching room");
+  }
+};
+
+//Update room status controller
+exports.updateRoom = async (req, res) => {
+  try {
+    const roomId = req.params.roomId;
+    const { room_type, room_status, charges_per_day } = req.body;
+
+    await Room.updateRoom(roomId, room_type, room_status, charges_per_day);
+
+    console.log(`Room ${roomId} updated successfully`);
+    res.redirect("/reception");
+  } catch (err) {
+    console.error("Error updating room:", err);
+    res.status(500).send("Error updating room");
+  }
+};
+
+//Delete room controller
+exports.deleteRoom = async (req, res) => {
+    try {
+        const roomId = req.params.roomId;
+        const result = await Room.deleteRoom(roomId);
+        console.log(result);
+        
+        if (result) {
+            console.log(`Room ${roomId} deleted successfully`);
+            res.redirect("/reception/rooms");
+        } else {
+            res.status(404).send("Room not found");
+        }
+    } catch (err) {
+        console.error("Error deleting room:", err);
+        res.status(500).send("Error deleting room");
+    }
+};
+
 //Add nurse controller
 exports.addNurse = (req, res) => {
     res.render("reception/receptionDashboard.ejs", {
@@ -98,6 +156,60 @@ exports.    viewNurses = async (req, res) => {
     } catch (err) {
         console.error("Error fetching nurses:", err);
         res.status(500).send("Error fetching nurses");
+    }
+};
+
+// Get nurse by ID controller
+exports.getNurseById = async (req, res) => {
+  try {
+    const nurseId = req.params.nurseId;
+    const nurse = await Room.getNurseById(nurseId);
+    if (!nurse) {
+      return res.status(404).send("Nurse not found");
+    }
+
+    res.render("reception/receptionDashboard.ejs", {
+      main_content: "editNurse",
+      title: "Edit Nurse",
+      nurse: nurse
+    });
+  } catch (err) {
+    console.error("Error fetching nurse:", err);
+    res.status(500).send("Error fetching nurse");
+  }
+};
+
+// Update nurse controller
+exports.updateNurse = async (req, res) => {
+  try {
+    const nurseId = req.params.nurseId;
+    const { nurse_name, nurse_contact, nurse_shift } = req.body;
+
+    await Room.updateNurse(nurseId, nurse_name, nurse_contact, nurse_shift);
+
+    console.log(`Nurse ${nurseId} updated successfully`);
+    res.redirect("/reception");
+  } catch (err) {
+    console.error("Error updating nurse:", err);
+    res.status(500).send("Error updating nurse");
+  }
+};  
+
+// Delete nurse controller
+exports.deleteNurse = async (req, res) => {
+    try {
+        const nurseId = req.params.nurseId;
+        const result = await Room.deleteNurse(nurseId);
+        
+        if (result) {
+            console.log(`Nurse ${nurseId} deleted successfully`);
+            res.redirect("/reception/nurses");
+        } else {
+            res.status(404).send("Nurse not found");
+        }
+    } catch (err) {
+        console.error("Error deleting nurse:", err);
+        res.status(500).send("Error deleting nurse");
     }
 };
 
