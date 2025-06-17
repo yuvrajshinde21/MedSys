@@ -6,8 +6,8 @@ const bcrypt = require("bcrypt");
 // @route GET: "auth/login"
 // @access public
 exports.getLoginPage = function (req, res) {
-    res.render("login.ejs", { message: "" });
-}
+  res.render("login.ejs", { message: "" });
+};
 
 // @desc register doctor
 // @route POST: "auth/register/doctor"
@@ -90,9 +90,23 @@ exports.handleLogin = asynchandler(async function (req, res) {
         res.render("login.ejs", { error: "invalid user role!" });
     }
 
-})
+  //admin
+  if (user.role === "admin") {
+    console.log("admin");
+    console.log(user.role);
+    
+    res.render("admin/adminDashboard");
+  } else if (user.role === "doctor") {
+    res.render("doctor/doctorDashboard");
+  } else if (user.role === "reception") {
+    res.render("reception/receptionDashboard");
+  } else {
+    res.render("login.ejs", { error: "invalid username or password" });
+  }
+});
 
 exports.logoutUser = (req, res) => {
-    res.clearCookie("token");
-    res.redirect("/auth/login");
-}
+
+  res.clearCookie("token");
+  res.redirect("/auth/login");
+};

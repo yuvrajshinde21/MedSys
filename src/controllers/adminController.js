@@ -213,7 +213,11 @@ exports.registerReception = asynchandler(async (req, res) => {
 // @Desc view Receptionists
 // @route GET: admin/receptionists
 exports.viewReceptions = asynchandler(async (req, res) => {
+    console.log("View All Receptionists");
+    
     const receptionists = await adminModel.getReceptionists();
+    console.log("Receptionists:", receptionists);
+    
     res.render("admin/adminDashboard.ejs", {
         main_content: "viewReceptions",
         receptionists: receptionists,
