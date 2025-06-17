@@ -1,39 +1,38 @@
-
-//Router API Reception
 const express = require("express");
 const router = express.Router();
-const roomCtrl=require("../controllers/receptionController");
+const receptionController = require("../controllers/receptionController");
 
-//Show Reception Dashboard
-router.get("/", roomCtrl.showReceptionDashboard);
+// ---------------------- Dashboard ----------------------
+router.get("/", receptionController.showReceptionDashboard); // GET /reception
 
-//Add_Rooom
-router.get("/room/add",roomCtrl.addrooom)
+// ---------------------- Rooms ----------------------
+// List all rooms
+router.get("/rooms", receptionController.viewRooms);          // GET /reception/rooms
 
-//Add room to databse
-router.post("/rooms/save", roomCtrl.saveRoom);
+// Show add room form (optional if frontend)
+router.get("/rooms/new", receptionController.addRoom);        // GET /reception/rooms/new
 
-// View all rooms
-router.get("/room/view", roomCtrl.viewRooms);
+// Create room
+router.post("/rooms", receptionController.saveRoom);          // POST /reception/rooms
 
+// ---------------------- Nurses ----------------------
+// List all nurses
+router.get("/nurses", receptionController.viewNurses);        // GET /reception/nurses
 
-//Add nurse
-router.get("/nurse/add", roomCtrl.addNurse);
+// Show add nurse form
+router.get("/nurses/new", receptionController.addNurse);      // GET /reception/nurses/new
 
-// Save nurse to database
-router.post("/nurse/save", roomCtrl.saveNurse);
+// Create nurse
+router.post("/nurses", receptionController.saveNurse);        // POST /reception/nurses
 
-// View all nurses
-router.get("/nurse/view", roomCtrl.viewNurses);
+// ---------------------- Patients ----------------------
+// List all patients
+router.get("/patients", receptionController.viewPatients);    // GET /reception/patients
 
+// Show add patient form
+router.get("/patients/new", receptionController.addPatientForm); // GET /reception/patients/new
 
-//Add patient
-router.get("/patient/add", roomCtrl.addPatientForm);
-
-// Save patient to database
-router.post("/patient/save", roomCtrl.savePatient);
-
-// View all patients
-router.get("/patient/view", roomCtrl.viewPatients);
+// Create patient
+router.post("/patients", receptionController.savePatient);    // POST /reception/patients
 
 module.exports = router;

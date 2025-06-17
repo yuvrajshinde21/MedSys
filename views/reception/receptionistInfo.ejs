@@ -1,37 +1,43 @@
-<div class="container mt-5">
-    <div class="mx-auto w-100" style="max-width: 600px;">
-        <h3 class="mb-4 text-center">Receptionist Details</h3>
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+          <h4 class="text-center mb-4 text-primary">Receptionist Details</h4>
 
-        <div class="card shadow rounded-4">
-            <div class="card-body">
+          <!-- Name -->
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" value="<%= receptionist.reception_name %>" readonly>
+          </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Name</label>
-                    <input type="text" class="form-control" value="<%= receptionist.reception_name %>" readonly>
-                </div>
+          <!-- Contact -->
+          <div class="mb-3">
+            <label class="form-label">Contact</label>
+            <input type="text" class="form-control" value="<%= receptionist.reception_contact %>" readonly>
+          </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Contact</label>
-                    <input type="text" class="form-control" value="<%= receptionist.reception_contact %>" readonly>
-                </div>
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" value="<%= receptionist.reception_email %>" readonly>
+          </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" value="<%= receptionist.reception_email %>" readonly>
-                </div>
+          <!-- Status -->
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <input type="text" class="form-control" value="<%= receptionist.status %>" readonly>
+          </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Status</label>
-                    <input type="text" class="form-control" value="<%= receptionist.status %>" readonly>
-                </div>
+          <!-- Edit Button -->
+          <div class="text-center mt-4">
+            <a href="/admin/reception/edit/<%= receptionist.reception_id %>" class="btn btn-outline-primary px-4">
+              <i class="bi bi-pencil-square me-1"></i> Edit
+            </a>
+          </div>
 
-                <div class="text-center mt-4">
-                    <a href="/admin/reception/edit/<%= receptionist.reception_id %>" class="btn btn-outline-primary px-4">
-                        Edit
-                    </a>
-                </div>
-
-            </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>

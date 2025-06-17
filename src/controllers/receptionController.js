@@ -3,20 +3,22 @@ let Room = require("../models/receptionModel");
 
 const receptionService = require("../service/receptionService");
 
-
-// Show Reception Dashboard
-exports.showReceptionDashboard = (req, res) => {
+exports.showReceptionDashboard =async (req, res) => {
+    //get receptionist info 
+    const receptionistId = req.user.user_id; 
+    const receptionistInfo = await Room.getReceptionistInfo(receptionistId);
     res.render("reception/receptionDashboard.ejs", {
+        main_content: "receptionistInfo",
+        receptionist: receptionistInfo,
         title: "Reception Dashboard",
-        message: "Welcome to the Reception Dashboard!",
+        message: "Welcome to the Reception Dashboard",
     });
-} ;
-
-
+};
 
 //add room controller
-exports.addrooom = (req, res) => {
-    res.render("reception/AddRoom.ejs", {
+exports.addRoom = (req, res) => {
+    res.render("reception/receptionDashboard.ejs", {
+        main_content: "addRoom",
         title: "Add Room",
         message: "Add a new room to the hospital.",
     });
@@ -46,7 +48,8 @@ exports.saveRoom = async (req, res) => {
 exports.viewRooms = async (req, res) => {
     try {
         const rooms = await Room.getAllRooms();
-        res.render("reception/viewRooms.ejs", {
+        res.render("reception/receptionDashboard.ejs", {
+            main_content: "viewRooms",
             title: "View Rooms",
             rooms: rooms,
         });
@@ -58,7 +61,8 @@ exports.viewRooms = async (req, res) => {
 
 //Add nurse controller
 exports.addNurse = (req, res) => {
-    res.render("reception/addNurse.ejs", {
+    res.render("reception/receptionDashboard.ejs", {
+        main_content: "addNurse",
         title: "Add Nurse",
         message: "Add a new nurse to the hospital.",
     });
@@ -86,7 +90,8 @@ exports.saveNurse = async (req, res) => {
 exports.    viewNurses = async (req, res) => {
     try {
         const nurses = await Room.getAllNurses();
-        res.render("reception/viewNurses.ejs", {
+        res.render("reception/receptionDashboard.ejs", {
+            main_content: "viewNurses",
             title: "View Nurses",
             nurses: nurses,
         });
@@ -107,7 +112,8 @@ exports.addPatientForm = async (req, res) => {
     const [nurses] = await promiseConn.query("SELECT nurse_id, nurse_name FROM nurse");
     const [doctors] = await promiseConn.query("SELECT doctor_id, doctor_name FROM doctor");
 
-    res.render("reception/addPatient", {
+    res.render("reception/receptionDashboard.ejs", {
+        main_content: "addPatient",
       title: "Add Patient",
       rooms,
       nurses,

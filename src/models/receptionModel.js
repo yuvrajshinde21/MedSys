@@ -1,6 +1,12 @@
 const conn = require("../config/dbConfig");
 const promiseConn = conn.promise();
 
+//get receptionInfo
+exports.getReceptionistInfo = async (receptionistId) => {
+    const [rows] = await promiseConn.query("SELECT * FROM reception WHERE user_id = ?", [receptionistId]);
+    return rows[0];
+};
+
 exports.saveRoom = async (room) => {
     const [result] = await promiseConn.query(
         "INSERT INTO room (room_no, room_type, room_status, charges_per_day) VALUES (?, ?, ?, ?)",
