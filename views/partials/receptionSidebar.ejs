@@ -1,0 +1,66 @@
+ <!-- Sidebar -->
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar py-4">
+        <div class="position-sticky">
+          <ul class="nav flex-column">
+
+            <!-- Patient -->
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#patientMenu" role="button" aria-expanded="false" aria-controls="patientMenu">
+                <i class="bi bi-person-fill"></i> Patient
+              </a>
+              <div class="collapse" id="patientMenu">
+                <ul class="nav flex-column ms-3">
+                  <li class="nav-item">
+                    <a class="nav-link" href="/reception/patient/add"><i class="bi bi-plus-circle"></i> Add Patient</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/reception/patient/view"><i class="bi bi-list-ul"></i> View Patient</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <!-- Room -->
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#roomMenu" role="button" aria-expanded="false" aria-controls="roomMenu">
+                <i class="bi bi-door-closed-fill"></i> Room
+              </a>
+              <div class="collapse" id="roomMenu">
+                <ul class="nav flex-column ms-3">
+                  <li class="nav-item">
+                    <a class="nav-link" href="/reception/room/add"><i class="bi bi-plus-circle"></i> Add Room</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/reception/room/view"><i class="bi bi-list-ul"></i> View Room</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <!-- Nurse -->
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#nurseMenu" role="button" aria-expanded="false" aria-controls="nurseMenu">
+                <i class="bi bi-person-badge-fill"></i> Nurse
+              </a>
+              <div class="collapse" id="nurseMenu">
+                <ul class="nav flex-column ms-3">
+                  <li class="nav-item">
+                    <a class="nav-link" href="/reception/nurse/add"><i class="bi bi-plus-circle"></i> Add Nurse</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/reception/nurse/view"><i class="bi bi-list-ul"></i> View Nurse</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <!-- Logout -->
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="/auth/logout">
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </nav>

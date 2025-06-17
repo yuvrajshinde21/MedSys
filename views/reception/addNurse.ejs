@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Nurse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/admin.css" /> <!-- Your custom CSS -->
+    <style>
+        main {
+            padding-top: 80px; /* Ensure space below header */
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto; /* Center horizontally */
+            background-color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/header') %>
+    <div class="container-fluid">
+        <div class="row">
+            <%- include('../partials/receptionSidebar') %>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <h2 class="mb-4">Add Nurse</h2>
+
+                <form action="/reception/nurse/save" method="POST" class="form-container">
+                    <div class="mb-3">
+                        <label for="nurse_name" class="form-label">Nurse Name</label>
+                        <input type="text" class="form-control" id="nurse_name" name="nurse_name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nurse_contact" class="form-label">Contact Number</label>
+                        <input type="text" class="form-control" id="nurse_contact" name="nurse_contact" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nurse_shift" class="form-label">Shift</label>
+                        <select class="form-select" id="nurse_shift" name="nurse_shift" required>
+                            <option value="">-- Select Shift --</option>
+                            <option value="Morning">Morning</option>
+                            <option value="Evening">Evening</option>
+                            <option value="Night">Night</option>
+                        </select>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Save Nurse
+                        </button>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
