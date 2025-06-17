@@ -8,6 +8,7 @@ const doctor_image = document.getElementById("doctor_image");
 const doctor_specialization = document.getElementById("doctor_specialization");
 const doctor_status = document.getElementById("status");
 const doctor_password = document.getElementById("password");
+
 // Error Divs
 const nameErrorDiv = document.getElementById("doctorNameError");
 const usernameErrorDiv = document.getElementById("usernameError");
@@ -102,29 +103,29 @@ function validateStatus() {
     return true;
 }
 
-function validateImage() {
-    const file = doctor_image.files[0];
-    const validTypes = ["image/jpeg", "image/png", "image/gif"];
-    const maxSize = 2 * 1024 * 1024; // 2MB
+// function validateImage() {
+//     const file = doctor_image.files[0];
+//     const validTypes = ["image/jpeg", "image/png", "image/gif"];
+//     const maxSize = 2 * 1024 * 1024; // 2MB
 
-    if (!file) {
-        imageErrorDiv.textContent = "Upload a doctor image.";
-        return false;
-    }
+//     if (!file) {
+//         imageErrorDiv.textContent = "Upload a doctor image.";
+//         return false;
+//     }
 
-    if (!validTypes.includes(file.type)) {
-        imageErrorDiv.textContent = "Only JPG, PNG, and GIF formats allowed.";
-        return false;
-    }
+//     if (!validTypes.includes(file.type)) {
+//         imageErrorDiv.textContent = "Only JPG, PNG, and GIF formats allowed.";
+//         return false;
+//     }
 
-    if (file.size > maxSize) {
-        imageErrorDiv.textContent = "Image must be under 2MB.";
-        return false;
-    }
+//     if (file.size > maxSize) {
+//         imageErrorDiv.textContent = "Image must be under 2MB.";
+//         return false;
+//     }
 
-    imageErrorDiv.textContent = "";
-    return true;
-}
+//     imageErrorDiv.textContent = "";
+//     return true;
+// }
 
 
 function validatePassword() {
@@ -156,7 +157,7 @@ function validateDoctorForm() {
     const validExperience = validateExperience();
     const validSpecialization = validateSpecialization();
     const validStatus = validateStatus();
-    const validImage = validateImage();
+    // const validImage = validateImage();
     const validPassword = validatePassword();
 
     return (
@@ -167,12 +168,11 @@ function validateDoctorForm() {
         validExperience &&
         validSpecialization &&
         validStatus &&
-        validImage &&
+        // validImage &&
         validPassword
     );
 }
 
-// Live feedback
 doctor_name.addEventListener("input", validateDoctorname);
 doctor_username.addEventListener("input", validateDoctorUsername);
 doctor_contact.addEventListener("input", validateContact);
@@ -180,6 +180,11 @@ doctor_email.addEventListener("input", validateEmail);
 doctor_experience.addEventListener("input", validateExperience);
 doctor_specialization.addEventListener("change", validateSpecialization);
 doctor_status.addEventListener("change", validateStatus);
-doctor_image.addEventListener("change", validateImage);
+// doctor_image.addEventListener("change", validateImage);
 doctor_password.addEventListener("input", validatePassword);
 
+document.querySelector("form").addEventListener("submit", function (e) {
+    if (!validateDoctorForm()) {
+        e.preventDefault(); // Prevent submission
+    }
+});

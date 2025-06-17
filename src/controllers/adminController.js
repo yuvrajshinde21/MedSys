@@ -117,7 +117,8 @@ exports.editDoctor = asynchandler(async (req, res) => {
     const doctorImage = req.file ? req.file.filename : req.body.existing_image;
 
     if (!doctor_name || !doctor_specialization || !doctor_contact || !doctor_email || !doctor_experience || !status) {
-        console.log(doctor_name, doctor_specialization, doctor_contact, doctor_email, doctor_experience, status);
+        // console.log(doctor_name, doctor_specialization, doctor_contact, doctor_email, doctor_experience, status);
+        const specializations = await adminModel.getSpecializations();
         return res.render("admin/adminDashboard.ejs", {
             main_content: "editDoctor",
             doctor: {
@@ -129,6 +130,7 @@ exports.editDoctor = asynchandler(async (req, res) => {
                 doctor_experience: parseInt(doctor_experience),
                 status: status,
             },
+            specializations,
             errorMessage: "All required fields must be filled.",
         });
     }
