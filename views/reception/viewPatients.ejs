@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h2 class="text-primary">Patient Records</h2>
           <a href="/reception/patients/new" class="btn btn-outline-primary">
-            <i class="bi bi-person-plus"></i> Add Patient
+            ➕ Add Patient
           </a>
         </div>
 
@@ -29,32 +29,54 @@
               </tr>
             </thead>
             <tbody>
-              <% if (patients.length > 0) { %>
-                <% patients.forEach(patient => { %>
+              <% if (patients.length> 0) { %>
+                <% patients.forEach(patient=> { %>
                   <tr>
-                    <td><%= patient.patient_id %></td>
-                    <td><%= patient.patient_name %></td>
-                    <td><%= patient.patient_age %></td>
-                    <td><%= patient.patient_gender %></td>
-                    <td><%= patient.patient_contact %></td>
-                    <td><%= patient.patient_issue %></td>
-                    <td><%= patient.admitted_date ? patient.admitted_date.toISOString().split('T')[0] : '' %></td>
-                    <td><%= patient.discharge_date ? patient.discharge_date.toISOString().split('T')[0] : '' %></td>
-                    <td><%= patient.room_no %></td>
-                    <td><%= patient.nurse_id %></td>
-                    <td><%= patient.doctor_id %></td>
+                    <td>
+                      <%= patient.patient_id %>
+                    </td>
+                    <td>
+                      <%= patient.patient_name %>
+                    </td>
+                    <td>
+                      <%= patient.patient_age %>
+                    </td>
+                    <td>
+                      <%= patient.patient_gender %>
+                    </td>
+                    <td>
+                      <%= patient.patient_contact %>
+                    </td>
+                    <td>
+                      <%= patient.patient_issue %>
+                    </td>
+                    <td>
+                      <%= patient.admitted_date ? patient.admitted_date.toISOString().split('T')[0] : '' %>
+                    </td>
+                    <td>
+                      <%= patient.discharge_date ? patient.discharge_date.toISOString().split('T')[0] : '' %>
+                    </td>
+                    <td>
+                      <%= patient.room_no %>
+                    </td>
+                    <td>
+                      <%= patient.nurse_id %>
+                    </td>
+                    <td>
+                      <%= patient.doctor_id %>
+                    </td>
                     <td>
                       <span class="badge bg-<%= patient.status === 'Admitted' ? 'success' : 'secondary' %>">
                         <%= patient.status %>
                       </span>
                     </td>
                   </tr>
-                <% }) %>
-              <% } else { %>
-                <tr>
-                  <td colspan="12" class="text-muted">No patients found.</td>
-                </tr>
-              <% } %>
+                  <% }) %>
+                    <% } else { %>
+                      <tr>
+                        <td colspan="12" class="text-muted">No patients found.</td>
+                      </tr>
+                      <% } %>
             </tbody>
           </table>
         </div>
