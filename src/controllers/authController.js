@@ -54,12 +54,10 @@ exports.handleLogin = asynchandler(async function (req, res) {
 
     //admin
     const receptionist = await getUserById(user.user_id);
-    console.log(user.user_id);
-    console.log(receptionist);
     if (user.role === "admin") {
-        res.render("admin/adminDashboard");
+        return res.render("admin/adminDashboard");
     } else if (user.role === "doctor") {
-        res.render("doctor/doctorDashboard.ejs", {
+        return res.render("doctor/doctorDashboard.ejs", {
             main_content:"doctorInfo",
             doctorName: "John Doe",
             totalAppointments: 12,
@@ -82,12 +80,12 @@ exports.handleLogin = asynchandler(async function (req, res) {
         });
 
     } else if (user.role === "reception") {
-        res.render("reception/receptionDashboard.ejs", {
+        return res.render("reception/receptionDashboard.ejs", {
             main_content: "receptionistInfo", // ✅ match the actual filename
             receptionist: receptionist,
         });
     } else {
-        res.render("login.ejs", { error: "invalid user role!" });
+        return res.render("login.ejs", { error: "invalid user role!" });
     }
 
   //admin

@@ -49,8 +49,8 @@
       </a>
       <div class="collapse" id="patientsMenu">
         <ul class="btn-toggle-nav list-unstyled ps-3">
-          <li><a href="#" class="nav-link">Add</a></li>
-          <li><a href="#" class="nav-link">View</a></li>
+          <li><a href="/reception/patients/new" class="nav-link">Add</a></li>
+          <li><a href="/reception/patients" class="nav-link">View</a></li>
           <li><a href="#" class="nav-link">Bill</a></li>
         </ul>
       </div>
@@ -61,8 +61,8 @@
       </a>
       <div class="collapse" id="roomMenu">
         <ul class="btn-toggle-nav list-unstyled ps-3">
-          <li><a href="#" class="nav-link">Add</a></li>
-          <li><a href="#" class="nav-link">View</a></li>
+          <li><a href="/reception/rooms/new" class="nav-link">Add</a></li>
+          <li><a href="/reception/rooms" class="nav-link">View</a></li>
         </ul>
       </div>
     </li>
@@ -72,8 +72,8 @@
       </a>
       <div class="collapse" id="nurseMenu">
         <ul class="btn-toggle-nav list-unstyled ps-3">
-          <li><a href="#" class="nav-link">Add</a></li>
-          <li><a href="#" class="nav-link">View</a></li>
+          <li><a href="/reception/nurses/new" class="nav-link">Add</a></li>
+          <li><a href="/reception/nurses" class="nav-link">View</a></li>
         </ul>
       </div>
     </li>
@@ -93,7 +93,9 @@
 
 <!-- Main Content -->
 <div class="main-content">
-    <%- include(main_content) %>
+    <% if(typeof main_content !== "undefined") { %>
+        <%- include(main_content) %>
+    <% } %>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
