@@ -4,6 +4,6 @@ module.exports = (err, req, res, next) => {
     res.status(err.status || 500).render("error.ejs", {
         title: "Error",
         message: err.message || "Something went wrong!",
-        stack: err.stack, // helpful in dev
+        stack: err.stack // helpful in dev
     });
 };
