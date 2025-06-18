@@ -1,111 +1,90 @@
-<div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-4">
-          <h4 class="mb-4 text-center text-primary"><%= title %></h4>
+<form action="/reception/patients/create" method="POST" class="p-3 border rounded shadow w-75 mx-auto ">
+    <h4>Book Appointment</h4>
 
-          <form action="/reception/patients" method="POST">
-            <!-- Patient Name -->
-            <div class="mb-3">
-              <label for="patient_name" class="form-label">Patient Name</label>
-              <input type="text" class="form-control" id="patient_name" name="patient_name" required>
-            </div>
-
-            <!-- Patient Age -->
-            <div class="mb-3">
-              <label for="patient_age" class="form-label">Patient Age</label>
-              <input type="number" class="form-control" id="patient_age" name="patient_age" required>
-            </div>
-
-            <!-- Gender -->
-            <div class="mb-3">
-              <label for="patient_gender" class="form-label">Gender</label>
-              <select class="form-select" id="patient_gender" name="patient_gender" required>
-                <option value="">-- Select Gender --</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <!-- Contact -->
-            <div class="mb-3">
-              <label for="patient_contact" class="form-label">Contact</label>
-              <input type="text" class="form-control" id="patient_contact" name="patient_contact" required>
-            </div>
-
-            <!-- Medical Issue -->
-            <div class="mb-3">
-              <label for="patient_issue" class="form-label">Medical Issue</label>
-              <input type="text" class="form-control" id="patient_issue" name="patient_issue" required>
-            </div>
-
-            <!-- Admitted Date -->
-            <div class="mb-3">
-              <label for="admitted_date" class="form-label">Admitted Date</label>
-              <input type="date" class="form-control" id="admitted_date" name="admitted_date" value="<%= currentDate %>" required>
-            </div>
-
-            <!-- Room Selection -->
-            <div class="mb-3">
-              <label for="room_no" class="form-label">Room</label>
-              <select class="form-select" id="room_no" name="room_no" required>
-                <option value="">-- Select Available Room --</option>
-                <% rooms.forEach(room => { %>
-                  <option value="<%= room.room_no %>">
-                    <%= room.room_no %> - <%= room.room_type %>
-                  </option>
-                <% }) %>
-              </select>
-            </div>
-
-            <!-- Nurse Selection -->
-            <div class="mb-3">
-              <label for="nurse_id" class="form-label">Nurse</label>
-              <select class="form-select" id="nurse_id" name="nurse_id" required>
-                <option value="">-- Select Nurse --</option>
-                <% nurses.forEach(nurse => { %>
-                  <option value="<%= nurse.nurse_id %>">
-                    <%= nurse.nurse_name %>
-                  </option>
-                <% }) %>
-              </select>
-            </div>
-
-            <!-- Doctor Selection -->
-            <div class="mb-3">
-              <label for="doctor_id" class="form-label">Doctor</label>
-              <select class="form-select" id="doctor_id" name="doctor_id" required>
-                <option value="">-- Select Doctor --</option>
-                <% doctors.forEach(doctor => { %>
-                  <option value="<%= doctor.doctor_id %>">
-                    <%= doctor.doctor_name %>
-                  </option>
-                <% }) %>
-              </select>
-            </div>
-
-            <!-- Status -->
-            <div class="mb-4">
-              <label for="status" class="form-label">Status</label>
-              <select class="form-select" id="status" name="status" required>
-                <option value="">-- Select Status --</option>
-                <option value="Admitted">Admitted</option>
-                <option value="Discharged">Discharged</option>
-              </select>
-            </div>
-
-            <!-- Submit -->
-            <div class="text-center">
-              <button type="submit" class="btn btn-success w-100">
-                <i class="bi bi-save me-1"></i> Save Patient
-              </button>
-            </div>
-          </form>
-
-        </div>
-      </div>
+    <div class="mb-2">
+        <label>Patient Name</label>
+        <input type="text" name="patient_name" class="form-control" required>
     </div>
-  </div>
-</div>
+
+    <div class="mb-2">
+        <label>Age</label>
+        <input type="number" name="patient_age" class="form-control" required>
+    </div>
+
+    <div class="mb-2">
+        <label>Gender</label>
+        <select name="patient_gender" class="form-control" required>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+        </select>
+    </div>
+
+    <div class="mb-2">
+        <label>Contact</label>
+        <input type="text" name="patient_contact" class="form-control" required>
+    </div>
+
+    <div class="mb-2">
+        <label>Issue</label>
+        <textarea name="patient_issue" class="form-control" required></textarea>
+    </div>
+
+    <div class="mb-2">
+        <label>Specialization</label>
+        <select name="specialization_id" id="specialization" class="form-control" required>
+            <option selected disabled>Select Specialization</option>
+            <% specializations.forEach(s=> { %>
+                <option value="<%= s.specialization_id %>">
+                    <%= s.specialization_name %>
+                </option>
+                <% }) %>
+        </select>
+    </div>
+
+    <div class="mb-2">
+        <label>Doctor</label>
+        <select name="doctor_id" id="doctor" class="form-control" required></select>
+    </div>
+
+    <div class="mb-2">
+        <label>Date</label>
+        <input type="date" name="appointment_date" id="appointment_date" class="form-control" required
+            min="<%= new Date().toISOString().split('T')[0] %>">
+    </div>
+
+    <div class="mb-2">
+        <label>Time Slot</label>
+        <select name="appointment_time" id="available_slots" class="form-control" required></select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Book Appointment</button>
+</form>
+
+<script>
+    document.getElementById("specialization").addEventListener("change", async function () {
+        const res = await fetch(`/reception/doctors/${this.value}`);
+        const doctors = await res.json();
+        const doctorSelect = document.getElementById("doctor");
+        doctorSelect.innerHTML = '<option selected disabled>Select Doctor</option>';
+        doctors.forEach(d => {
+            doctorSelect.innerHTML += `<option value="${d.doctor_id}">${d.doctor_name}</option>`;
+        });
+    });
+
+    document.getElementById("appointment_date").addEventListener("change", fetchSlots);
+    document.getElementById("doctor").addEventListener("change", fetchSlots);
+
+    async function fetchSlots() {
+        const doctorId = document.getElementById("doctor").value;
+        const date = document.getElementById("appointment_date").value;
+        if (!doctorId || !date) return;
+        const res = await fetch(`/reception/doctors/${doctorId}/slots?date=${date}`);
+        const slots = await res.json();
+        const slotSelect = document.getElementById("available_slots");
+        slotSelect.innerHTML = slots.length === 0 ? '<option disabled>No slots available</option>' : '';
+        slots.forEach(t => {
+            slotSelect.innerHTML += `<option value="${t}">${t}</option>`;
+        });
+    }
+</script>
