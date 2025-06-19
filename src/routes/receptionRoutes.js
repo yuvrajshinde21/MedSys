@@ -78,7 +78,8 @@ router.get("/medicines", medicineController.viewMedicines); // GET /reception/me
 router.post("/medicines/delete/:medicineId", medicineController.deleteMedicine); // POST /reception/medicines/delete/:medicineId
 
 
-
+//Genearate bill
+router.get("/bill/:patientId", receptionController.generateBill); 
 
 
 module.exports = router;
