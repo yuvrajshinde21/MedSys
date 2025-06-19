@@ -10,6 +10,7 @@
             <div class="mb-3">
               <label for="room_no" class="form-label">Room Number</label>
               <input type="number" class="form-control" id="room_no" name="room_no" required>
+              <div id="roomNoError" class="text-danger mt-1" style="font-size: 14px;"></div>
             </div>
 
             <!-- Room Type -->
@@ -18,7 +19,7 @@
               <select class="form-select" id="room_type" name="room_type" required>
                 <option value="">-- Select Room Type --</option>
                 <option value="General">General</option>
-                <option value="Semi-Private">Semi-Private</option>
+                <option value="ICU">Semi-Private</option>
                 <option value="Private">Private</option>
               </select>
             </div>
