@@ -2,18 +2,16 @@ const express = require("express");
 const router = express.Router();
 const doctorController = require("../controllers/doctorController");
 
+//get scheduled appoiments
 router.route("/appointments/scheduled").get(doctorController.getScheduledAppointments);
-
-router.get('/appointments/prescribe/:appointmentId', doctorController.showPrescriptionForm);
-
+//show prisption form and create priscption
 router.route('/appointments/prescribe/:appointmentId').get(doctorController.showPrescriptionForm).post(doctorController.createPrescriptionAndAdmissions);
 
 //admited
 //show admitedd patient for specific doctor
 router.route("/admitted-patients").get(doctorController.getAdmittedPatientsOfDoctor);
-// routes/doctorRoutes.js
-router.get('/admissions/prescribe/admitted-patients/:appointmentId', doctorController.showAdmittedPrescriptionForm);
-router.post('/admissions/prescribe/:admissionId', doctorController.createAdmittedPrescription);
+//show priscption and create [resption]
+router.route("/admitted-patients/prescribe/:admissionId").get(doctorController.showAdmittedPatientPrescriptionForm).post( doctorController.createAdmittedPrescription);
 
 
 // POST /doctor/prescriptions/add

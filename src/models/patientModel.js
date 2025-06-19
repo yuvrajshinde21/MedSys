@@ -25,10 +25,42 @@ const promiseConn = conn.promise();
 // };
 
 // View all patients
-exports.getAllPatients = async () => {
-    const [rows] = await promiseConn.query("select * from patient");
-    return rows;
+exports.fetchBasicPatients = async () => {
+  const [rows] = await promiseConn.query(`
+    SELECT 
+      p.patient_id,
+      p.patient_name,
+      p.patient_age,
+      p.patient_gender,
+      p.patient_contact,
+
+      -- Most recent appointment status
+      (
+        SELECT status 
+        FROM appointments 
+        WHERE appointments.patient_id = p.patient_id 
+        ORDER BY appointment_date DESC 
+        LIMIT 1
+      ) AS appointment_status,
+
+      -- Most recent admission status
+      (
+        SELECT status 
+        FROM admissions 
+        WHERE admissions.patient_id = p.patient_id 
+        ORDER BY admitted_date DESC 
+        LIMIT 1
+      ) AS admission_status
+
+    FROM patients p
+    ORDER BY p.patient_id DESC
+  `);
+
+  return rows;
 };
+
+
+
 
 
 
