@@ -54,7 +54,7 @@
       <h5>💊 New Prescription for Admitted Patient</h5>
     </div>
     <div class="card-body">
-      <form action="/doctor/admissions/prescribe/<%= admission.admission_id %>" method="POST">
+      <form action="/doctor/admitted-patients/prescribe/<%= admission.admission_id %>" method="POST">
         <input type="hidden" name="patient_id" value="<%= admission.patient_id %>">
         <input type="hidden" name="doctor_id" value="<%= admission.doctor_id %>">
 

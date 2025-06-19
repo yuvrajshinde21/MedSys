@@ -70,7 +70,7 @@ exports.createPrescriptionAndAdmissions = asynchandler(async (req, res) => {
     }
     //if admited
     if (action === 'Admitted') {
-        await doctorModel.admitPatient(patient_id, doctor_id, admitted_date, action, icu_required,appointment_id);
+        await doctorModel.admitPatient(patient_id, doctor_id, admitted_date, action, icu_required, appointment_id);
     }
     res.redirect('/doctor/appointments/scheduled');
 
@@ -82,78 +82,76 @@ exports.getAdmittedPatientsOfDoctor = asynchandler(async (req, res) => {
     const doctorid = req.user.doctorId;
 
     const admittedPatientsData = await doctorModel.fetchAdmittedPatientsOfDoctor(doctorid);
-console.log(admittedPatientsData);
+    console.log(admittedPatientsData);
     res.render('doctor/doctorDashboard', {
         main_content: 'admittedPatients',
-        admittedPatientsData : admittedPatientsData
+        admittedPatientsData: admittedPatientsData
     });
 });
 
-
-//for admited===================================================
-// controller/doctorController.js
 //show admited patient preception form
-exports.showAdmittedPrescriptionForm = async (req, res) => {
+exports.showAdmittedPatientPrescriptionForm = asynchandler(async (req, res) => {
+
     const admissionId = req.params.admissionId;
-    const admissionDetails = await doctorModel.getAdmissionDetails(admissionId);
+
+    //get admission details
+    const admission = await doctorModel.getAdmissionDetails(admissionId);
+
+    const appointmentId = admission.appointment_id;
+    const patientId = admission.patient_id;
+
+    //get medicines
     const medicines = await doctorModel.getMedicines();
-    const previousPrescriptions = await doctorModel.getPriviousPrescriptions(admissionDetails.patient_id, null);
-    res.render('doctor/doctorDashboard', {
-        main_content: 'admitted_prescribe_form',
-        admission: admissionDetails,
+    //fetch privious priscption skip current
+    const previousPrescriptions = await doctorModel.getPriviousPrescriptions(patientId, appointmentId);
+
+    res.render("doctor/doctorDashboard", {
+        main_content: "admitted_prescribe_form",
+        admission,
+        appointmentId,
         medicines,
         previousPrescriptions
     });
-    //     const appointmentId = req.params.appointmentId;
+});
 
-    // const appoiment = await doctorModel.getScheduledAppointmentByID(
-    //     appointmentId
-    // );
-    // const patientId = appoiment.patient_id;
-    // const medicines = await doctorModel.getMedicines();
-    // console.log('Fetching previous prescriptions for', patientId, 'excluding', appointmentId);
-
-    // const prescriptions = await doctorModel.getPriviousPrescriptions(patientId, appointmentId)
-    // console.log("Previous Prescriptions:", prescriptions);
-
-    // res.render("doctor/doctorDashboard", {
-    //     main_content: "prescribe_form",
-    //     appointment: appoiment,
-    //     medicines: medicines,
-    //     previousPrescriptions: prescriptions
-    // });
-};
-
-exports.createAdmittedPrescription = async (req, res) => {
-  try {
-    const admission_id = req.params.admissionId;
+//create precption for admited patient
+// @desc Create prescription for an admitted patient
+// @route POST /doctor/admitted-patients/prescribe/:admissionId
+exports.createAdmittedPrescription = asynchandler(async (req, res) => {
+    const admissionId = req.params.admissionId;
     const { patient_id, doctor_id, medicine_id, dosage, frequency, quantity } = req.body;
+    // 1. Get the appointment_id linked to this admission
+    const result = await doctorModel.getAppoimentIdFromAdmission(admissionId)
 
-    // Filter valid medicines
-    const validMedicines = medicine_id.map((id, i) => ({
-      medicine_id: id,
-      dosage: dosage[i],
-      frequency: frequency[i],
-      quantity: quantity[i]
-    })).filter(m => m.medicine_id && m.dosage && m.frequency && m.quantity);
+    if (result.length === 0) {
+        throw new Error("Admission record not found");
+    }
+    const appointmentId = result[0].appointment_id;
 
-    // Insert prescriptions (no appointment_id since this is for admitted patients)
-    for (const med of validMedicines) {
-      await doctorModel.insertPrescription(
-        null, //appoiment_id
-        med.medicine_id,
-        med.quantity,
-        med.dosage,
-        med.frequency,
-        patient_id
-      );
+    const validMedicines = medicine_id.map((id, i) => {
+        return {
+            medicine_id: id,
+            quantity: quantity[i],
+            dosage: dosage[i],
+            frequency: frequency[i]
+        }
+    }).filter(med => med.medicine_id && med.quantity && med.frequency && med.dosage);
+
+    // 2. Insert prescriptions
+    for (let medicine of validMedicines) {
+        await doctorModel.insertPrescription(appointmentId, medicine.medicine_id, medicine.quantity, medicine.dosage, medicine.frequency, patient_id);
     }
 
-    // Redirect back to admitted patients list
-    res.redirect("/doctor/admitted-patients");
-  } catch (err) {
-    console.error("Error prescribing for admitted patient:", err.message);
-    res.status(500).send("Internal Server Error");
-  }
-};
+    // 3. Optionally mark appointment status as 'Completed'
+    // {
+    //   patient_id: '3',
+    //   doctor_id: '10',
+    //   medicine_id: [ '10' ],
+    //   dosage: [ '100 mg' ],
+    //   frequency: [ 'Twice Daily' ],
+    //   quantity: [ '2' ]
+    // }
 
+    res.redirect("/doctor/admitted-patients"); 
+
+});

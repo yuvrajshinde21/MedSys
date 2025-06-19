@@ -41,7 +41,7 @@ exports.getMedicines = async () => {
 //get privious prisptions 
 // Get previous prescriptions (excluding current appointment)
 exports.getPriviousPrescriptions = async (patientId, currentAppointmentId) => {
-  const [rows] = await promiseConn.execute(`
+    const [rows] = await promiseConn.execute(`
     SELECT 
       p.appointment_id,
       a.appointment_date AS prescription_date,
@@ -53,32 +53,57 @@ exports.getPriviousPrescriptions = async (patientId, currentAppointmentId) => {
     JOIN appointments a ON p.appointment_id = a.appointment_id
     JOIN medicines m ON p.medicine_id = m.medicine_id
     WHERE p.patient_id = ? 
-      AND p.appointment_id != ?
+      
     ORDER BY a.appointment_date DESC
-  `, [patientId, currentAppointmentId]);
+  `, [patientId]);
+//  WHERE p.patient_id = ? 
+//       AND p.appointment_id != ?
+//     ORDER BY a.appointment_date DESC
+//   `, [patientId, currentAppointmentId]);
+    // Group prescriptions by appointment_id
+    const grouped = {};
 
-  // Group by appointment_id
-  const grouped = {};
+    for (const row of rows) {
+        const id = row.appointment_id;
+        if (!grouped[id]) {
+            grouped[id] = {
+                prescription_date: row.prescription_date,
+                medicines: []
+            };
+        }
 
-  for (const row of rows) {
-    const id = row.appointment_id;
-    if (!grouped[id]) {
-      grouped[id] = {
-        prescription_date: row.prescription_date,
-        medicines: []
-      };
+        grouped[id].medicines.push({
+            medicine_name: row.medicine_name,
+            dosage: row.dosage,
+            frequency: row.frequency,
+            quantity: row.quantity
+        });
     }
 
-    grouped[id].medicines.push({
-      medicine_name: row.medicine_name,
-      dosage: row.dosage,
-      frequency: row.frequency,
-      quantity: row.quantity
-    });
-  }
+    // Return array of grouped prescriptions
+    return Object.values(grouped);
 
-  // Convert grouped object to array
-  return Object.values(grouped);
+    //   const grouped = new Map();
+
+    // for (const row of rows) {
+    //   const id = row.appointment_id;
+    //   if (!grouped.has(id)) {
+    //     grouped.set(id, {
+    //       prescription_date: row.prescription_date,
+    //       medicines: []
+    //     });
+    //   }
+
+    //   grouped.get(id).medicines.push({
+    //     medicine_name: row.medicine_name,
+    //     dosage: row.dosage,
+    //     frequency: row.frequency,
+    //     quantity: row.quantity
+    //   });
+    // }
+
+    // return Array.from(grouped.values());
+
 };
 
 
@@ -97,12 +122,12 @@ exports.markStatusCompleted = asynchandler(async (appointment_id, patient_id, st
 });
 
 // Insert a Prescription Entry
-exports.insertPrescription = asynchandler(async (appointment_id, medicine_id, quantity, dosage, frequency,patient_id) => {
+exports.insertPrescription = asynchandler(async (appointment_id, medicine_id, quantity, dosage, frequency, patient_id) => {
     const [result] = await promiseConn.query(
         `INSERT INTO prescriptions
      (appointment_id, medicine_id, quantity, dosage, frequency,patient_id)
      VALUES (?, ?, ?, ?, ?,?)`,
-        [appointment_id, medicine_id, quantity, dosage, frequency,patient_id]
+        [appointment_id, medicine_id, quantity, dosage, frequency, patient_id]
     );
     if (result.affectedRows === 0) {
         throw new Error("Failed to insert Prescription.");
@@ -110,13 +135,13 @@ exports.insertPrescription = asynchandler(async (appointment_id, medicine_id, qu
 });
 
 
-// Admit Patient
-exports.admitPatient = asynchandler(async (patient_id, doctor_id, admitted_datetime, status, icu_required,appointment_id) => {
+// Admit Patient-------------------
+exports.admitPatient = asynchandler(async (patient_id, doctor_id, admitted_datetime, status, icu_required, appointment_id) => {
     const [result] = await promiseConn.query(
         `INSERT INTO admissions
-     (patient_id, doctor_id, admitted_date, status, icu_required)
+     (patient_id, doctor_id, admitted_date, status, icu_required,appointment_id)
      VALUES (?, ?, ?, ?, ?,?)`,
-        [patient_id, doctor_id, admitted_datetime, status, icu_required,appointment_id]
+        [patient_id, doctor_id, admitted_datetime, status, icu_required, appointment_id]
     );
     if (result.affectedRows === 0) {
         throw new Error("Failed to Admit patient.");
@@ -125,7 +150,7 @@ exports.admitPatient = asynchandler(async (patient_id, doctor_id, admitted_datet
 
 // Get admitted patients for a specific doctor
 exports.fetchAdmittedPatientsOfDoctor = async (doctor_id) => {
-  const [rows] = await promiseConn.query(`
+    const [rows] = await promiseConn.query(`
     SELECT 
   a.admission_id,
   a.patient_id ,
@@ -154,30 +179,67 @@ WHERE a.doctor_id = ?
 ORDER BY a.admitted_date DESC
   `, [doctor_id]);
 
-  return rows;
+    return rows;
 };
 
+// // Get admission details by admission_id
+// exports.getAdmissionDetails = async (admissionId) => {
+//   const [rows] = await promiseConn.execute(`
+//     SELECT 
+//       a.admission_id,
+//       a.patient_id,
+//       a.doctor_id,
+//       a.admitted_date,
+//       a.icu_required,
+//       p.patient_name,
+//       p.patient_age,
+//       p.patient_gender,
+//       p.patient_contact
+//     FROM admissions a
+//     JOIN patients p ON a.patient_id = p.patient_id
+//     WHERE a.admission_id = ?
+//   `, [admissionId]);
 
+//   return rows[0]; // Return single admission record
+// };
 
-
-
-// Get admission details by admission_id
+//=================================================================================
+// Get full admission details by admissionId 
 exports.getAdmissionDetails = async (admissionId) => {
-  const [rows] = await promiseConn.execute(`
+    const [rows] = await promiseConn.execute(`
     SELECT 
       a.admission_id,
       a.patient_id,
       a.doctor_id,
       a.admitted_date,
+      a.status AS admission_status,
       a.icu_required,
+      a.appointment_id,
+
       p.patient_name,
       p.patient_age,
       p.patient_gender,
-      p.patient_contact
+      p.patient_contact,
+
+      ap.appointment_id,
+      ap.patient_issue,
+      ap.appointment_date
+
     FROM admissions a
     JOIN patients p ON a.patient_id = p.patient_id
+    JOIN appointments ap ON a.appointment_id = ap.appointment_id
+
     WHERE a.admission_id = ?
   `, [admissionId]);
 
-  return rows[0]; // Return single admission record
+    return rows[0];
 };
+
+//get appoiment_id from addmission
+exports.getAppoimentIdFromAdmission =async (admissionId) => {
+    const [rows] = await promiseConn.query(
+        `SELECT appointment_id FROM admissions WHERE admission_id = ?`,
+        [admissionId]
+    );
+    return rows;
+}

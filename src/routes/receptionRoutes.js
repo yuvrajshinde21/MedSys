@@ -58,6 +58,6 @@ router.get("/doctors/:doctorId/slots", patientController.getDoctorAvailableSlots
 
 
 // List all patients
-router.get("/patients", patientController.viewPatients);    // GET /reception/patients
+router.get("/patients", patientController.getAllPatients);    // GET /reception/patients
 
 module.exports = router;

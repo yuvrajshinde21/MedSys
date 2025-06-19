@@ -42,9 +42,9 @@ exports.createPatientAppointment = async (req, res) => {
     const appointment_date = req.body.appointment_date.trim();
     const appointment_time = req.body.appointment_time.trim();
 
-    if (!patient_name || !patient_age || !patient_contact || !patient_gender || !patient_issue || !doctor_id || !appointment_date || !appointment_time ) {
+    if (!patient_name || !patient_age || !patient_contact || !patient_gender || !patient_issue || !doctor_id || !appointment_date || !appointment_time) {
         throw new Error("All fields are required!");//===render err message later
-        
+
     }
 
     const appointment_datetime = `${appointment_date} ${appointment_time}:00`;
@@ -74,21 +74,16 @@ exports.createPatientAppointment = async (req, res) => {
     }
 };
 
-// View all patients controller
-exports.viewPatients = async (req, res) => {
-    try {
-        const patients = await patientModel.getAllPatients();
-        res.render("reception/receptionDashboard.ejs", {
-            main_content: "viewPatients",
-            title: "View Patients",
-            patients: patients,
-        });
-    } catch (err) {
-        console.error("Error fetching patients:", err);
-        res.status(500).send("Error fetching patients");
-    }
-};
 
+exports.getAllPatients = asynchandler(async (req, res) => {
+    const patients = await patientModel.fetchBasicPatients();
+     res.render("reception/receptionDashboard.ejs", {
+        main_content: "viewPatients",
+        title: "View Patients",
+        patients,
+    });
+  
+});
 
 // Get available slots for a doctor on a specific date
 // This function retrieves the available time slots for a doctor on a given date.

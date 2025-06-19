@@ -35,7 +35,7 @@
               </td>
               <td><%= new Date(p.admitted_date).toLocaleDateString() %></td>
               <td class="text-nowrap">
-                <a href="/doctor/admitted/prescribe/<%= p.admission_id %>" class="btn btn-sm btn-primary me-2">
+                <a href="/doctor/admitted-patients/prescribe/<%= p.admission_id %>" class="btn btn-sm btn-primary me-2">
                   <i class="bi bi-capsule"></i> Prescribe
                 </a>
                 <a href="/doctor/discharge/<%= p.admission_id %>" class="btn btn-sm btn-outline-danger">
@@ -56,8 +56,8 @@
     admission_id: 2,
     patient_id: 3,
     doctor_id: 10,
-    nurse_id: null,
-    room_no: null,
+    nurse_id: null ,                ===
+    room_no: null,                  ===
     admitted_date: 2025-06-19T05:44:41.000Z,
     discharge_date: null,
     admission_status: 'Admitted',
