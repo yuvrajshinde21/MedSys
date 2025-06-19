@@ -4,6 +4,7 @@ const path = require("path");
 const cookieparser = require("cookie-parser");
 const errorHandler = require("../src/middleware/errorhandler")
 const authMiddleware = require("../src/middleware/authMiddleware")
+const isDoctor = require("../src/middleware/isDoctor")
 //
 const homeRoutes = require("./routes/homeRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -26,7 +27,7 @@ app.use("/", homeRoutes);
 app.use("/auth", authRoutes);
 //auth routes:
 app.use("/admin", authMiddleware, adminRoutes);
-// app.use("/doctor", authMiddleware, doctorRoutes);
+app.use("/doctor", authMiddleware, isDoctor.isDoctor, doctorRoutes);
 
 app.use("/reception", authMiddleware, receptionRoutes);
 

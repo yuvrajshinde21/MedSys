@@ -1,6 +1,7 @@
+const moment = require("moment");
+
 const patientModel = require("../models/patientModel");
 const asynchandler = require("express-async-handler");
-const moment = require("moment");
 
 // Add patient controller
 
@@ -41,22 +42,34 @@ exports.createPatientAppointment = async (req, res) => {
     const appointment_date = req.body.appointment_date.trim();
     const appointment_time = req.body.appointment_time.trim();
 
-    const admitted_date = `${appointment_date} ${appointment_time}`;
+    if (!patient_name || !patient_age || !patient_contact || !patient_gender || !patient_issue || !doctor_id || !appointment_date || !appointment_time ) {
+        throw new Error("All fields are required!");//===render err message later
+        
+    }
+
+    const appointment_datetime = `${appointment_date} ${appointment_time}:00`;
 
     try {
-        const result = await patientModel.createPatient(
+        // 1. Insert patient
+        const [patientResult] = await patientModel.createPatient(
             patient_name,
             patient_age,
             patient_gender,
-            patient_contact,
-            patient_issue,
-            admitted_date,
-            doctor_id
+            patient_contact
+        );
+        const patient_id = patientResult.insertId;
+
+        // 2. Insert appointment
+        await patientModel.createAppointment(
+            patient_id,
+            doctor_id,
+            appointment_datetime,
+            patient_issue
         );
 
         res.redirect("/reception");
     } catch (err) {
-        console.error("Error creating patient:", err);
+        console.error("Error creating patient appointment:", err);
         res.status(500).send("Internal server error");
     }
 };
@@ -79,6 +92,7 @@ exports.viewPatients = async (req, res) => {
 
 // Get available slots for a doctor on a specific date
 // This function retrieves the available time slots for a doctor on a given date.
+
 exports.getDoctorAvailableSlots = async (req, res) => {
     const doctorId = req.params.doctorId;
     const date = req.query.date;
@@ -87,26 +101,30 @@ exports.getDoctorAvailableSlots = async (req, res) => {
 
     const start = moment(`${date} 10:00`, "YYYY-MM-DD HH:mm");
     const end = moment(`${date} 16:00`, "YYYY-MM-DD HH:mm");
+    const now = moment();
 
     try {
-        //
         const rows = await patientModel.getBookedSlots(doctorId, date);
-        console.log("Booked rows:", rows); // ✅ Add this
-
         const bookedTimes = rows.map(r =>
-            moment(r.admitted_date).format("HH:mm")
+            moment(r.appointment_date).format("HH:mm")
         );
 
         if (bookedTimes.length >= 10) {
             return res.json([]); // Max slots filled
         }
+
         const available = [];
-        console.log("Available times:", available); // ✅ Add this
-        // Generate time slots in 30-minute intervals
-        // This loop generates time slots in 30-minute intervals between the start and end times.
+
         let slot = start.clone();
         while (slot.isBefore(end)) {
             const time = slot.format("HH:mm");
+
+            // ✅ Skip if this is today and slot time is in the past
+            if (moment(date).isSame(moment(), 'day') && slot.isBefore(now)) {
+                slot.add(30, "minutes");
+                continue;
+            }
+
             if (!bookedTimes.includes(time)) {
                 available.push(time);
             }
