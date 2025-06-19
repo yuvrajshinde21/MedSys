@@ -3,6 +3,8 @@ const router = express.Router();
 const receptionController = require("../controllers/receptionController");
 const nurseController = require("../controllers/nurseController");
 const patientController = require("../controllers/patientController");
+const medicineController = require("../controllers/medicineController");
+
 // ---------------------- Dashboard ----------------------
 router.get("/", receptionController.showReceptionDashboard); // GET /reception
 
@@ -59,5 +61,25 @@ router.get("/doctors/:doctorId/slots", patientController.getDoctorAvailableSlots
 
 // List all patients
 router.get("/patients", patientController.getAllPatients);    // GET /reception/patients
+
+
+// ---------------------- Medicine ----------------------
+
+// Show add medicine form
+router.get("/medicines/new", medicineController.addMedicine); // GET /reception/
+
+// Save medicine
+router.post("/medicines", medicineController.saveMedicine); // POST /reception/medicines
+
+//view all medicines
+router.get("/medicines", medicineController.viewMedicines); // GET /reception/medicines
+
+//delete medicine
+router.post("/medicines/delete/:medicineId", medicineController.deleteMedicine); // POST /reception/medicines/delete/:medicineId
+
+
+//Genearate bill
+router.get("/bill/:patientId", receptionController.generateBill); 
+
 
 module.exports = router;

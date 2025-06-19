@@ -124,3 +124,30 @@ exports.deleteRoom = async (req, res) => {
         res.status(500).send("Error deleting room");
     }
 };
+
+//Generate Bill
+exports.generateBill = async (req, res) => {
+  try {
+    const patientId = req.params.patientId;
+
+    const patient = await receptionModel.getPatientById(patientId);
+    const appointment = await receptionModel.getLatestAppointmentByPatient(patientId);
+    const doctor = await receptionModel.getDoctorById(appointment.doctor_id);
+    const admission = await receptionModel.getAdmissionByAppointmentId(appointment.appointment_id);
+    const room = await receptionModel.getRoomByNo(admission.room_no);
+    const nurse = await receptionModel.getNurseById(admission.nurse_id);
+    const prescriptions = await receptionModel.getPrescriptionsByPatientId(patientId);
+
+    res.render("billing/generateBill", {
+      patient,
+      doctor,
+      appointment,
+      room,
+      nurse,
+      prescriptions
+    });
+  } catch (err) {
+    console.error("Error generating bill:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
