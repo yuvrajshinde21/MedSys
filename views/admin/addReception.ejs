@@ -8,26 +8,31 @@
                 <div class="mb-3">
                     <label for="reception_name" class="form-label">Receptionist Name</label>
                     <input type="text" class="form-control" id="reception_name" name="reception_name" required>
+                <div id="receptionNameError" class="text-danger mt-1" style="font-size: 14px;"></div>
                 </div>
                 
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control" id="username" name="username" required>
+                    <div id="receptionUserNameError" class="text-danger mt-1" style="font-size: 14px;"></div>
                 </div>
 
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password" required>
+                    <div id="receptionPasswordError" class="text-danger mt-1" style="font-size: 14px;"></div>
                 </div>
 
                 <div class="mb-3">
                     <label for="reception_contact" class="form-label">Contact Number</label>
                     <input type="tel" class="form-control" id="reception_contact" name="reception_contact" required>
+                    <div id="receptionContactError" class="text-danger mt-1" style="font-size: 14px;"></div>
                 </div>
 
                 <div class="mb-3">
                     <label for="reception_email" class="form-label">Email Address</label>
                     <input type="email" class="form-control" id="reception_email" name="reception_email">
+                    <div id="receptionEmailError" class="text-danger mt-1" style="font-size: 14px;"></div>
                 </div>
 
                 <div class="mb-3">
@@ -45,7 +50,7 @@
                     <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
                 </div>
 
-                <button type="submit" class="btn btn-success">Add Receptionist</button>
+                <button type="submit" id="receptionSubmitButton" class="btn btn-success">Add Receptionist</button>
             </form>
         </div>
     </div>

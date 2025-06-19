@@ -177,3 +177,10 @@ exports.updateReception = async (reception_id, reception_name, reception_contact
         throw error; // Re-throw the error for further handling
     }
 }
+
+
+// Function to get all patients
+exports.getAllPatients = async () => {
+    const [rows] = await promiseConn.query("SELECT * FROM patient");
+    return rows;
+};

@@ -294,3 +294,20 @@ exports.editReception = asynchandler(async (req, res) => {
         errorMessage: "Receptionist updated successfully ✅",
     });
 });
+
+
+// @Desc view Patients
+// @route GET: admin/patients   
+exports.viewPatients = async (req, res) => {
+    try {
+        const patients = await adminModel.getAllPatients();
+        res.render("admin/adminDashboard.ejs", {
+            main_content: "viewPatients",
+            title: "View Patients",
+            patients: patients,
+        });
+    } catch (err) {
+        console.error("Error fetching patients:", err);
+        res.status(500).send("Error fetching patients");
+    }
+};
