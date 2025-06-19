@@ -1,0 +1,169 @@
+<div class="container-fluid py-4">
+  <div class="row g-4">
+    <!-- Left: Patient Info -->
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-dark text-white">
+          <h5>👤 Patient Info</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Name:</strong> <%= appointment.patient_name %></p>
+          <p><strong>Age:</strong> <%= appointment.patient_age %></p>
+          <p><strong>Gender:</strong> <%= appointment.patient_gender %></p>
+          <p><strong>Contact:</strong> <%= appointment.patient_contact %></p>
+          <hr>
+          <% const d = new Date(appointment.appointment_date); %>
+          <p><strong>Date:</strong> <%= d.toLocaleDateString() %></p>
+          <p><strong>Time:</strong> <%= d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %></p>
+          <p><strong>Status:</strong> <span class="badge bg-info text-dark"><%= appointment.status %></span></p>
+          <p><strong>Issue:</strong> <span class="text-danger"><%= appointment.patient_issue %></span></p>
+        </div>
+      </div>
+    </div>
+
+   <!-- Right: Previous Prescriptions -->
+<div class="col-md-8">
+  <div class="card shadow-sm h-100">
+    <div class="card-header bg-light">
+      <h5>📚 Previous Prescriptions</h5>
+    </div>
+    <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+      <% if (typeof previousPrescriptions !== 'undefined' && Array.isArray(previousPrescriptions) && previousPrescriptions.length > 0) { %>
+        <% previousPrescriptions.forEach(prescription => { %>
+          <div class="border-bottom mb-3 pb-2">
+            <p class="mb-1">
+              <strong>Date:</strong> <%= new Date(prescription.prescription_date).toLocaleDateString() %>
+            </p>
+            <p class="mb-1"><strong>Medicines:</strong></p>
+            <ul class="mb-2">
+              <% prescription.medicines.forEach(med => { %>
+                <li>
+                  <%= med.medicine_name %> 
+                  (<%= med.dosage %>, <%= med.frequency %>, Qty: <%= med.quantity %>)
+                </li>
+              <% }) %>
+            </ul>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="text-muted">No previous prescriptions found.</div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+  <!-- New Prescription Form -->
+  <div class="card shadow-sm mt-4">
+    <div class="card-header bg-success text-white">
+      <h5 class="mb-0">💊 New Prescription</h5>
+    </div>
+    <div class="card-body">
+      <form action="/doctor/appointments/prescribe/<%= appointment.appointment_id %>" method="POST">
+        <input type="hidden" name="appointment_id" value="<%= appointment.appointment_id %>">
+        <input type="hidden" name="patient_id" value="<%= appointment.patient_id %>">
+        <input type="hidden" name="doctor_id" value="<%= appointment.doctor_id %>">
+
+        <!-- Medicine Fields -->
+        <div id="medicine-section">
+          <div class="row g-2 align-items-end medicine-group">
+            <div class="col-md-3">
+              <label>Medicine</label>
+              <select name="medicine_id[]" class="form-select" >
+                <option value="">Select</option>
+                <% medicines.forEach(med => { %>
+                  <option value="<%= med.medicine_id %>"><%= med.medicine_name %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label>Dosage</label>
+              <input type="text" name="dosage[]" class="form-control" >
+            </div>
+            <div class="col-md-3">
+              <label>Frequency</label>
+              <select name="frequency[]" class="form-select" >
+                <option value="">Select</option>
+                <option value="Once Daily">Once Daily</option>
+                <option value="Twice Daily">Twice Daily</option>
+                <option value="After Food">After Food</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label>Qty</label>
+              <input type="number" name="quantity[]" class="form-control" min="1" >
+            </div>
+            <div class="col-md-1 text-end">
+              <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeMedicine(this)">✖</button>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-outline-primary btn-sm mt-3" onclick="addMedicine()">+ Add</button>
+
+        <!-- Next Action -->
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <label>Next Action</label>
+            <select name="next_action" id="next-action" class="form-select" onchange="toggleIcu()" >
+              <option value="Visited">Mark as Visited</option>
+              <option value="Admitted">Admit Patient</option>
+            </select>
+          </div>
+          <div class="col-md-6" id="icu-section" style="display: none;">
+            <div class="form-check mt-4">
+              <input class="form-check-input" type="checkbox" name="icu_required" id="icu-required" value="1">
+              <label class="form-check-label" for="icu-required">🏥 ICU Required?</label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-4 w-100">✅ Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  function addMedicine() {
+    const section = document.getElementById("medicine-section");
+    const group = document.createElement("div");
+    group.className = "row g-2 align-items-end medicine-group mt-2";
+    group.innerHTML = `
+      <div class="col-md-3">
+        <select name="medicine_id[]" class="form-select" required>
+          <option value="">Select</option>
+          <% medicines.forEach(med => { %>
+            <option value="<%= med.medicine_id %>"><%= med.medicine_name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <input type="text" name="dosage[]" class="form-control" placeholder="e.g. 500mg" required>
+      </div>
+      <div class="col-md-3">
+        <select name="frequency[]" class="form-select" required>
+          <option value="">Frequency</option>
+          <option value="Once Daily">Once Daily</option>
+          <option value="Twice Daily">Twice Daily</option>
+          <option value="After Food">After Food</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <input type="number" name="quantity[]" class="form-control" placeholder="Qty" required min="1">
+      </div>
+      <div class="col-md-1 text-end">
+        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeMedicine(this)">✖</button>
+      </div>
+    `;
+    section.appendChild(group);
+  }
+
+  function removeMedicine(button) {
+    button.closest(".medicine-group").remove();
+  }
+
+  function toggleIcu() {
+    const selected = document.getElementById("next-action").value;
+    document.getElementById("icu-section").style.display = selected === "Admitted" ? "block" : "none";
+  }
+
+  document.addEventListener("DOMContentLoaded", toggleIcu);
+</script>

@@ -1,0 +1,75 @@
+<div class="container py-4">
+  <h3 class="mb-4 text-success">🏥 Admitted Patients</h3>
+
+  <% if (typeof admittedPatientsData !== 'undefined' && admittedPatientsData.length > 0) { %>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle table-hover shadow-sm">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Patient Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Contact</th>
+            <th>Issue</th>
+            <th>Room No</th>
+            <th>ICU</th>
+            <th>Admitted On</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% admittedPatientsData.forEach((p, i) => { %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <td><strong><%= p.patient_name %></strong></td>
+              <td><%= p.patient_age %></td>
+              <td><%= p.patient_gender %></td>
+              <td><%= p.patient_contact %></td>
+              <td><%= p.patient_issue || '-' %></td>
+              <td><%= p.room_no || 'N/A' %></td>
+              <td>
+                <span class="badge <%= p.icu_required ? 'bg-danger' : 'bg-success' %>">
+                  <%= p.icu_required ? 'ICU' : 'GENERAL' %>
+                </span>
+              </td>
+              <td><%= new Date(p.admitted_date).toLocaleDateString() %></td>
+              <td class="text-nowrap">
+                <a href="/doctor/admitted/prescribe/<%= p.admission_id %>" class="btn btn-sm btn-primary me-2">
+                  <i class="bi bi-capsule"></i> Prescribe
+                </a>
+                <a href="/doctor/discharge/<%= p.admission_id %>" class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-box-arrow-right"></i> Discharge
+                </a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info"><i class="bi bi-info-circle-fill me-2"></i>No admitted patients found.</div>
+  <% } %>
+</div>
+<!-- [
+  {
+    admission_id: 2,
+    patient_id: 3,
+    doctor_id: 10,
+    nurse_id: null,
+    room_no: null,
+    admitted_date: 2025-06-19T05:44:41.000Z,
+    discharge_date: null,
+    admission_status: 'Admitted',
+    icu_required: 0,
+    admitted_appointment_id: 3,
+    patient_name: 'xyz',
+    patient_age: 45,
+    patient_gender: 'Male',
+    patient_contact: '122',
+    appointment_id: 3,
+    patient_issue: 'compile time err',
+    appointment_date: 2025-06-18T04:30:00.000Z,
+    appointment_status: 'Completed'
+  },
+  ] -->

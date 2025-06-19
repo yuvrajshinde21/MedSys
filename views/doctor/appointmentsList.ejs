@@ -1,0 +1,73 @@
+<div class="container py-4">
+    <h3 class="mb-4">🗓️ Scheduled Appointments</h3>
+
+    <% if (appointments.length> 0) { %>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+            <% appointments.slice(0, 6).forEach((appointment, index)=> { %>
+                <div class="col">
+                    <div class="card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <span>
+                                <strong>#<%= index + 1 %> - <i class="bi bi-person-fill"></i>
+                                        <%= appointment.patient_name %></strong>
+                            </span>
+                            <span class="badge bg-warning text-dark">
+                                <%= appointment.status %>
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <p><i class="bi bi-calendar2-week me-1 text-secondary"></i><strong>Age:</strong>
+                                <%= appointment.patient_age %>
+                            </p>
+                            <p><i class="bi bi-gender-ambiguous me-1 text-secondary"></i><strong>Gender:</strong>
+                                <%= appointment.patient_gender %>
+                            </p>
+                            <p><i class="bi bi-telephone-fill me-1 text-secondary"></i><strong>Contact:</strong>
+                                <%= appointment.patient_contact %>
+                            </p>
+                            <p><i class="bi bi-heart-pulse-fill me-1 text-danger"></i><strong>Issue:</strong> <span
+                                    class="text-danger">
+                                    <%= appointment.patient_issue %>
+                                </span></p>
+                            <p><i class="bi bi-clock-history me-1 text-secondary"></i><strong>Date:</strong>
+                                <%= new Date(appointment.appointment_date).toLocaleString() %>
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent text-end">
+                            <a href="/doctor/appointments/prescribe/<%= appointment.appointment_id %>"
+                                class="btn btn-sm btn-primary rounded-pill">
+                                <i class="bi bi-capsule me-1"></i>Prescribe
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+        <% } else { %>
+            <div class="alert alert-info"><i class="bi bi-info-circle-fill me-1"></i>No scheduled appointments found.
+            </div>
+            <% } %>
+</div>
+<style>
+    .card {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-body p {
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .card-header strong {
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        font-size: 0.85rem;
+    }
+</style>

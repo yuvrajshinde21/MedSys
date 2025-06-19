@@ -63,26 +63,33 @@ exports.getDoctorsBySpecialization = async (specializationId) => {
     return rows;
 };
 
-//insert patient
-exports.createPatient = async (patient_name, patient_age, patient_gender, patient_contact,
-    patient_issue, admitted_date, doctor_id) => {
-    const [rows] = await promiseConn.query(`
-      INSERT INTO patient (
-        patient_name, patient_age, patient_gender, patient_contact,
-        patient_issue, admitted_date, doctor_id, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, 'Scheduled')
-    `, [
-        patient_name, patient_age, patient_gender, patient_contact,
-        patient_issue, admitted_date, doctor_id
-    ]);
-    return rows.insertId;
+//insert patient===
+exports.createPatient = async (name, age, gender, contact) => {
+    return await promiseConn.query(
+        `INSERT INTO patients 
+        (patient_name, patient_age, patient_gender, patient_contact)
+        VALUES (?, ?, ?, ?)`,
+        [name, age, gender, contact]
+    );
 };
+//create appointment
+exports.createAppointment = async (patient_id, doctor_id, appointment_datetime, issue) => {
+    return await promiseConn.query(
+        `INSERT INTO appointments 
+        (patient_id, doctor_id, appointment_date, patient_issue,status)
+        VALUES (?, ?, ?, ?,'Scheduled')`,
+        [patient_id, doctor_id, appointment_datetime,issue]
+    );
+};
+//===
+
 
 //get booked slots by doctor id
 exports.getBookedSlots = async (doctorId, appointmentDate) => {
     const [rows] = await promiseConn.query(
-        `SELECT admitted_date FROM patient 
-       WHERE doctor_id = ? AND DATE(admitted_date) = ?`,
+        `SELECT appointment_date FROM appointments 
+         WHERE doctor_id = ? AND DATE(appointment_date) = ? 
+         AND status = 'Scheduled'`,
         [doctorId, appointmentDate]
     );
     return rows;
