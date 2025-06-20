@@ -152,6 +152,7 @@ exports.viewPatientDetails = asyncHandler(async (req, res) => {
     const bill = await patientModel.getBillByPatientId(patientId);
     const availableRooms = await receptionModel.getAvailableRooms();
     const availableNurses = await receptionModel.getAvailableNurses();
+    console.log(patientDetails )
     res.render("reception/receptionDashboard", {
         main_content: "patient_full_details",
         title: "Patient Details",
