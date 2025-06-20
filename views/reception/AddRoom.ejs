@@ -1,21 +1,21 @@
 <div class="container py-4">
   <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card shadow-sm border-0 rounded-4">
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
         <div class="card-body p-4">
           <h4 class="mb-4 text-center text-primary">Room Details Form</h4>
 
           <form action="/reception/rooms" method="POST">
             <!-- Room Number -->
             <div class="mb-3">
-              <label for="room_no" class="form-label">Room Number</label>
+              <label for="room_no" class="form-label fw-semibold">Room Number</label>
               <input type="number" class="form-control" id="room_no" name="room_no" required>
-              <div id="roomNoError" class="text-danger mt-1" style="font-size: 14px;"></div>
+              <div id="roomNoError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
             </div>
 
             <!-- Room Type -->
             <div class="mb-3">
-              <label for="room_type" class="form-label">Room Type</label>
+              <label for="room_type" class="form-label fw-semibold">Room Type</label>
               <select class="form-select" id="room_type" name="room_type" required>
                 <option value="">-- Select Room Type --</option>
                 <option value="General">General</option>
@@ -26,7 +26,7 @@
 
             <!-- Room Status -->
             <div class="mb-3">
-              <label for="room_status" class="form-label">Room Status</label>
+              <label for="room_status" class="form-label fw-semibold">Room Status</label>
               <select class="form-select" id="room_status" name="room_status" required>
                 <option value="">-- Select Room Status --</option>
                 <option value="Available">Available</option>
@@ -36,13 +36,13 @@
 
             <!-- Charges Per Day -->
             <div class="mb-4">
-              <label for="charges_per_day" class="form-label">Charges Per Day (₹)</label>
+              <label for="charges_per_day" class="form-label fw-semibold">Charges Per Day (₹)</label>
               <input type="number" step="0.01" class="form-control" id="charges_per_day" name="charges_per_day" required>
             </div>
 
             <!-- Submit Button -->
             <div class="text-center">
-              <button type="submit" class="btn btn-success px-4">
+              <button type="submit" class="btn btn-success px-4 py-2">
                 <i class="bi bi-save me-1"></i> Save Room
               </button>
             </div>

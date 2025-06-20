@@ -1,51 +1,62 @@
-<div class="container-fluid py-4">
+<div class="container mt-4">
   <div class="row justify-content-center">
-    <main class="col-lg-8 px-md-4">
-      <h2 class="mb-4 text-center text-primary"><%= title %></h2>
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
+        <div class="card-body p-4">
+          <h4 class="text-primary text-center mb-4">✏️ Edit Nurse</h4>
 
-      <form action="/reception/nurses/<%= nurse.nurse_id %>/update" method="POST" class="bg-white p-4 rounded-4 shadow-sm border">
-        <div class="mb-3">
-          <label for="nurse_name" class="form-label">Nurse Name</label>
-          <input 
-            type="text" 
-            id="nurse_name" 
-            name="nurse_name" 
-            class="form-control" 
-            value="<%= nurse.nurse_name %>" 
-            required
-          >
-        </div>
+          <form action="/reception/nurses/<%= nurse.nurse_id %>/update" method="POST">
+            <!-- Nurse Name -->
+            <div class="mb-3">
+              <label for="nurse_name" class="form-label fw-semibold">Nurse Name</label>
+              <input 
+                type="text" 
+                id="nurse_name" 
+                name="nurse_name" 
+                class="form-control" 
+                value="<%= nurse.nurse_name %>" 
+                required
+              >
+            </div>
 
-        <div class="mb-3">
-          <label for="nurse_contact" class="form-label">Contact</label>
-          <input 
-            type="text" 
-            id="nurse_contact" 
-            name="nurse_contact" 
-            class="form-control" 
-            value="<%= nurse.nurse_contact %>" 
-            required
-          >
-        </div>
+            <!-- Contact -->
+            <div class="mb-3">
+              <label for="nurse_contact" class="form-label fw-semibold">Contact</label>
+              <input 
+                type="text" 
+                id="nurse_contact" 
+                name="nurse_contact" 
+                class="form-control" 
+                value="<%= nurse.nurse_contact %>" 
+                required
+              >
+            </div>
 
-        <div class="mb-3">
-          <label for="nurse_shift" class="form-label">Shift</label>
-          <select 
-            id="nurse_shift" 
-            name="nurse_shift" 
-            class="form-select" 
-            required
-          >
-            <option value="Morning" <%= nurse.nurse_shift === 'Morning' ? 'selected' : '' %>>Morning</option>
-            <option value="Evening" <%= nurse.nurse_shift === 'Evening' ? 'selected' : '' %>>Evening</option>
-            <option value="Night" <%= nurse.nurse_shift === 'Night' ? 'selected' : '' %>>Night</option>
-          </select>
-        </div>
+            <!-- Shift -->
+            <div class="mb-3">
+              <label for="nurse_shift" class="form-label fw-semibold">Shift</label>
+              <select 
+                id="nurse_shift" 
+                name="nurse_shift" 
+                class="form-select" 
+                required
+              >
+                <option value="Morning" <%= nurse.nurse_shift === 'Morning' ? 'selected' : '' %>>Morning</option>
+                <option value="Evening" <%= nurse.nurse_shift === 'Evening' ? 'selected' : '' %>>Evening</option>
+                <option value="Night" <%= nurse.nurse_shift === 'Night' ? 'selected' : '' %>>Night</option>
+              </select>
+            </div>
 
-        <div class="text-center">
-          <button type="submit" class="btn btn-outline-primary px-4">Update Nurse</button>
+            <!-- Submit -->
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-success px-4">
+                <i class="bi bi-pencil-square me-1"></i> Update Nurse
+              </button>
+              <a href="/reception/nurses" class="btn btn-secondary ms-2 px-4">🔙 Cancel</a>
+            </div>
+          </form>
         </div>
-      </form>
-    </main>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,30 +1,55 @@
-<form action="/reception/rooms/<%= room.room_no %>/update" method="POST">
-  <div class="mb-3">
-    <label class="form-label">Room No</label>
-    <input type="text" class="form-control" name="room_no" value="<%= room.room_no %>" readonly>
-  </div>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
+        <div class="card-body p-4">
+          <h4 class="text-primary mb-4 text-center">🏨 Edit Room Details</h4>
 
-  <div class="mb-3">
-    <label class="form-label">Room Type</label>
-    <select class="form-select" name="room_type">
-      <% roomTypes.forEach(type => { %>
-        <option value="<%= type %>" <%= type === room.room_type ? "selected" : "" %>><%= type %></option>
-      <% }) %>
-    </select>
-  </div>
+          <form action="/reception/rooms/<%= room.room_no %>/update" method="POST">
+            <!-- Room Number -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Room No</label>
+              <input type="text" class="form-control" name="room_no" value="<%= room.room_no %>" readonly>
+            </div>
 
-  <div class="mb-3">
-    <label class="form-label">Room Status</label>
-    <select class="form-select" name="room_status">
-      <option value="Available" <%= room.room_status === "Available" ? "selected" : "" %>>Available</option>
-      <option value="Occupied" <%= room.room_status === "Occupied" ? "selected" : "" %>>Occupied</option>
-    </select>
-  </div>
+            <!-- Room Type -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Room Type</label>
+              <select class="form-select" name="room_type">
+                <% roomTypes.forEach(type => { %>
+                  <option value="<%= type %>" <%= type === room.room_type ? "selected" : "" %>>
+                    <%= type %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
 
-  <div class="mb-3">
-    <label class="form-label">Charges Per Day (₹)</label>
-    <input type="number" step="0.01" class="form-control" name="charges_per_day" value="<%= room.charges_per_day %>" required>
-  </div>
+            <!-- Room Status -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Room Status</label>
+              <select class="form-select" name="room_status">
+                <option value="Available" <%= room.room_status === "Available" ? "selected" : "" %>>Available</option>
+                <option value="Occupied" <%= room.room_status === "Occupied" ? "selected" : "" %>>Occupied</option>
+              </select>
+            </div>
 
-  <button type="submit" class="btn btn-primary">Update Room</button>
-</form>
+            <!-- Charges Per Day -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Charges Per Day (₹)</label>
+              <input type="number" step="0.01" class="form-control" name="charges_per_day"
+                value="<%= room.charges_per_day %>" required>
+            </div>
+
+            <!-- Submit -->
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-success px-4">
+                <i class="bi bi-pencil-square me-1"></i> Update Room
+              </button>
+              <a href="/reception/rooms" class="btn btn-secondary ms-2 px-4">🔙 Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

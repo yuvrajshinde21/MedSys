@@ -1,62 +1,65 @@
-<div class="sidebar">
-            <ul class="nav flex-column">
+<div class="sidebar p-3 bg-light" style="width: 250px; min-height: 100vh;">
+  <ul class="nav flex-column">
 
-                <!-- Doctor Section -->
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#doctorMenu" role="button"
-                        aria-expanded="false" aria-controls="doctorMenu">
-                        <i class="fas fa-user-md"></i> Doctor
-                    </a>
-                    <div class="collapse" id="doctorMenu">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/auth/addDoctor">
-                                    <i class="fas fa-user-plus"></i> Add Doctor
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/auth/viewDoctors">
-                                    <i class="fas fa-eye"></i> View Doctor
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+    <!-- Doctor Section -->
+    <li class="nav-item mb-2">
+      <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#doctorMenu" role="button"
+        aria-expanded="false" aria-controls="doctorMenu" aria-label="Toggle Doctor Menu">
+        <span><i class="fas fa-user-md me-2"></i> Doctor</span>
+        <i class="fas fa-chevron-down small"></i>
+      </a>
+      <div class="collapse" id="doctorMenu">
+        <ul class="nav flex-column ps-3">
+          <li class="nav-item">
+            <a class="nav-link" href="/auth/addDoctor">
+              <i class="fas fa-user-plus me-2"></i> Add Doctor
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/auth/viewDoctors">
+              <i class="fas fa-eye me-2"></i> View Doctor
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
 
-                <!-- Reception Section -->
-                <li class="nav-item">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="collapse" href="#receptionMenu" role="button"
-                        aria-expanded="false" aria-controls="receptionMenu">
-                        <i class="fas fa-concierge-bell"></i> Reception
-                    </a>
-                    <div class="collapse" id="receptionMenu">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin/dashboard?page=add-reception">
-                                    <i class="fas fa-user-plus"></i> Add Reception
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin/dashboard?page=view-reception">
-                                    <i class="fas fa-eye"></i> View Reception
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+    <!-- Reception Section -->
+    <li class="nav-item mb-2">
+      <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#receptionMenu" role="button"
+        aria-expanded="false" aria-controls="receptionMenu" aria-label="Toggle Reception Menu">
+        <span><i class="fas fa-concierge-bell me-2"></i> Reception</span>
+        <i class="fas fa-chevron-down small"></i>
+      </a>
+      <div class="collapse" id="receptionMenu">
+        <ul class="nav flex-column ps-3">
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/dashboard?page=add-reception">
+              <i class="fas fa-user-plus me-2"></i> Add Reception
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/dashboard?page=view-reception">
+              <i class="fas fa-eye me-2"></i> View Reception
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
 
-                <!-- Patients -->
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/dashboard?page=view-patients">
-                        <i class="fas fa-users"></i> View Patients
-                    </a>
-                </li>
+    <!-- Patients -->
+    <li class="nav-item mb-2">
+      <a class="nav-link" href="/admin/dashboard?page=view-patients">
+        <i class="fas fa-users me-2"></i> View Patients
+      </a>
+    </li>
 
-                <!-- Logout -->
-                <li class="nav-item">
-                    <a class="nav-link text-danger" href="/auth/logout">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
-                </li>
-            </ul>
-        </div>
+    <!-- Logout -->
+    <li class="nav-item">
+      <a class="nav-link text-danger" href="/auth/logout">
+        <i class="fas fa-sign-out-alt me-2"></i> Logout
+      </a>
+    </li>
+
+  </ul>
+</div>

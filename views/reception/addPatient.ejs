@@ -1,90 +1,106 @@
-<form action="/reception/patients/create" method="POST" class="p-3 border rounded shadow w-75 mx-auto ">
-    <h4>Book Appointment</h4>
+<div class="container py-4">
+  <form action="/reception/patients/create" method="POST"
+    class="p-4 border-0 rounded-4 shadow w-100 w-md-75 mx-auto"
+    style="background-color: #f0f8ff; max-width: 48rem;">
 
-    <div class="mb-2">
-        <label>Patient Name</label>
-        <input type="text" name="patient_name" class="form-control" required>
+    <h4 class="text-primary mb-4 text-center">Book Appointment</h4>
+
+    <div class="mb-3">
+      <label class="form-label">Patient Name</label>
+      <input type="text" name="patient_name" class="form-control" required>
     </div>
 
-    <div class="mb-2">
-        <label>Age</label>
-        <input type="number" name="patient_age" class="form-control" required>
+    <div class="mb-3">
+      <label class="form-label">Age</label>
+      <input type="number" name="patient_age" class="form-control" required>
     </div>
 
-    <div class="mb-2">
-        <label>Gender</label>
-        <select name="patient_gender" class="form-control" required>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-        </select>
+    <div class="mb-3">
+      <label class="form-label">Gender</label>
+      <select name="patient_gender" class="form-control" required>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
     </div>
 
-    <div class="mb-2">
-        <label>Contact</label>
-        <input type="text" name="patient_contact" class="form-control" required>
+    <div class="mb-3">
+      <label class="form-label">Contact</label>
+      <input type="text" name="patient_contact" class="form-control" required>
     </div>
 
-    <div class="mb-2">
-        <label>Issue</label>
-        <textarea name="patient_issue" class="form-control" required></textarea>
+    <div class="mb-3">
+      <label class="form-label">Issue</label>
+      <textarea name="patient_issue" class="form-control" required></textarea>
     </div>
 
-    <div class="mb-2">
-        <label>Specialization</label>
-        <select name="specialization_id" id="specialization" class="form-control" required>
-            <option selected disabled>Select Specialization</option>
-            <% specializations.forEach(s=> { %>
-                <option value="<%= s.specialization_id %>">
-                    <%= s.specialization_name %>
-                </option>
-                <% }) %>
-        </select>
+    <div class="mb-3">
+      <label class="form-label">Specialization</label>
+      <select name="specialization_id" id="specialization" class="form-control" required>
+        <option selected disabled>Select Specialization</option>
+        <% specializations.forEach(s => { %>
+          <option value="<%= s.specialization_id %>">
+            <%= s.specialization_name %>
+          </option>
+        <% }) %>
+      </select>
     </div>
 
-    <div class="mb-2">
-        <label>Doctor</label>
-        <select name="doctor_id" id="doctor" class="form-control" required></select>
+    <div class="mb-3">
+      <label class="form-label">Doctor</label>
+      <select name="doctor_id" id="doctor" class="form-control" required>
+        <option selected disabled>Select Doctor</option>
+      </select>
     </div>
 
-    <div class="mb-2">
-        <label>Date</label>
-        <input type="date" name="appointment_date" id="appointment_date" class="form-control" required
-            min="<%= new Date().toISOString().split('T')[0] %>">
+    <div class="mb-3">
+      <label class="form-label">Date</label>
+      <input type="date" name="appointment_date" id="appointment_date" class="form-control" required
+        min="<%= new Date().toISOString().split('T')[0] %>">
     </div>
 
-    <div class="mb-2">
-        <label>Time Slot</label>
-        <select name="appointment_time" id="available_slots" class="form-control" required></select>
+    <div class="mb-3">
+      <label class="form-label">Time Slot</label>
+      <select name="appointment_time" id="available_slots" class="form-control" required>
+        <option selected disabled>Select Time</option>
+      </select>
     </div>
 
-    <button type="submit" class="btn btn-success">Book Appointment</button>
-</form>
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-success px-4 py-2">
+        <i class="bi bi-calendar-check me-1"></i> Book Appointment
+      </button>
+    </div>
+  </form>
+</div>
 
+<!-- Script to Load Doctors and Slots -->
 <script>
-    document.getElementById("specialization").addEventListener("change", async function () {
-        const res = await fetch(`/reception/doctors/${this.value}`);
-        const doctors = await res.json();
-        const doctorSelect = document.getElementById("doctor");
-        doctorSelect.innerHTML = '<option selected disabled>Select Doctor</option>';
-        doctors.forEach(d => {
-            doctorSelect.innerHTML += `<option value="${d.doctor_id}">${d.doctor_name}</option>`;
-        });
+  document.getElementById("specialization").addEventListener("change", async function () {
+    const res = await fetch(`/reception/doctors/${this.value}`);
+    const doctors = await res.json();
+    const doctorSelect = document.getElementById("doctor");
+    doctorSelect.innerHTML = '<option selected disabled>Select Doctor</option>';
+    doctors.forEach(d => {
+      doctorSelect.innerHTML += `<option value="${d.doctor_id}">${d.doctor_name}</option>`;
     });
+  });
 
-    document.getElementById("appointment_date").addEventListener("change", fetchSlots);
-    document.getElementById("doctor").addEventListener("change", fetchSlots);
+  document.getElementById("appointment_date").addEventListener("change", fetchSlots);
+  document.getElementById("doctor").addEventListener("change", fetchSlots);
 
-    async function fetchSlots() {
-        const doctorId = document.getElementById("doctor").value;
-        const date = document.getElementById("appointment_date").value;
-        if (!doctorId || !date) return;
-        const res = await fetch(`/reception/doctors/${doctorId}/slots?date=${date}`);
-        const slots = await res.json();
-        const slotSelect = document.getElementById("available_slots");
-        slotSelect.innerHTML = slots.length === 0 ? '<option disabled>No slots available</option>' : '';
-        slots.forEach(t => {
-            slotSelect.innerHTML += `<option value="${t}">${t}</option>`;
-        });
-    }
+  async function fetchSlots() {
+    const doctorId = document.getElementById("doctor").value;
+    const date = document.getElementById("appointment_date").value;
+    if (!doctorId || !date) return;
+    const res = await fetch(`/reception/doctors/${doctorId}/slots?date=${date}`);
+    const slots = await res.json();
+    const slotSelect = document.getElementById("available_slots");
+    slotSelect.innerHTML = slots.length === 0
+      ? '<option disabled>No slots available</option>'
+      : '<option selected disabled>Select Time</option>';
+    slots.forEach(t => {
+      slotSelect.innerHTML += `<option value="${t}">${t}</option>`;
+    });
+  }
 </script>

@@ -5,19 +5,27 @@
     <div class="col-lg-10">
       <div class="card shadow-sm border-0 rounded-4">
         <div class="card-body">
-          <h3 class="text-primary text-center mb-4">All Medicines</h3>
 
+          <!-- Title + Add Button -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="text-primary mb-0">💊 All Medicines</h3>
+            <a href="/reception/medicines/add" class="btn btn-outline-success">
+              <i class="bi bi-plus-lg me-1"></i> Add Medicine
+            </a>
+          </div>
+
+          <!-- Medicine Table -->
           <% if (medicines.length === 0) { %>
             <p class="text-center text-muted">No medicines found.</p>
           <% } else { %>
             <div class="table-responsive">
-              <table class="table table-striped table-bordered align-middle">
+              <table class="table table-bordered table-hover align-middle text-center">
                 <thead class="table-primary">
                   <tr>
-                    <th>#ID</th>
-                    <th>Medicine Name</th>
-                    <th>Price (₹)</th>
-                    <th>Actions</th>
+                    <th>🆔 ID</th>
+                    <th>💊 Name</th>
+                    <th>💰 Price (₹)</th>
+                    <th>⚙️ Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -27,9 +35,11 @@
                       <td><%= med.medicine_name %></td>
                       <td>₹<%= parseFloat(med.price).toFixed(2) %></td>
                       <td>
-                        <form action="/reception/medicines/delete/<%= med.medicine_id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this medicine?');">
-                          <button type="submit" class="btn btn-danger btn-sm">
-                            <i class="bi bi-trash"></i> Delete
+                        <form action="/reception/medicines/delete/<%= med.medicine_id %>" method="POST"
+                              onsubmit="return confirm('Are you sure you want to delete this medicine?');"
+                              class="d-inline">
+                          <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash-fill"></i>
                           </button>
                         </form>
                       </td>
@@ -40,11 +50,6 @@
             </div>
           <% } %>
 
-          <div class="text-end mt-3">
-            <a href="/reception/medicines/add" class="btn btn-success">
-              <i class="bi bi-plus-lg me-1"></i> Add New Medicine
-            </a>
-          </div>
         </div>
       </div>
     </div>

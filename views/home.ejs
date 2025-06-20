@@ -3,13 +3,17 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MedSys+ | Smart Hospital Management System</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <style>
+    html {
+      font-size: 16px;
+    }
+
     /* General Styles */
     body {
       font-family: Arial, sans-serif;
@@ -28,37 +32,62 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 0;
+      padding: 0.625rem 0;
     }
 
     .navbar-nav {
       background-color: #0baeef;
-      padding: 10px 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 0.625rem 1.25rem;
+      border-radius: 0.625rem;
+      box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.1);
       display: flex;
       justify-content: center;
-      gap: 15px;
+      gap: 0.9375rem;
     }
 
     .navbar-brand img {
-      margin-left: 100px;
+      margin-left: 6.25rem;
       border-radius: 50%;
-      /* Make the logo circular */
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .navbar-brand img:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+      box-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.7);
     }
 
     .navbar .nav-link {
       color: #060606 !important;
+      padding: 0.5rem 1rem;
+      position: relative;
+      transition: all 0.3s ease;
     }
 
     .navbar .nav-link:hover {
       color: hsl(63, 100%, 51%) !important;
+    }
+
+    .navbar .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 0.125rem;
+      left: 0;
+      bottom: 0;
+      background-color: #0d6efd;
+      transition: 0.3s;
+    }
+
+    .navbar .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .navbar .nav-link i {
+      transition: transform 0.3s ease;
+    }
+
+    .navbar .nav-link:hover i {
+      transform: scale(1.2);
     }
 
     /* Header */
@@ -66,36 +95,36 @@
       background: linear-gradient(to right, #007bff, #00c6ff);
       color: #fff;
       text-align: center;
-      padding: 100px 20px 60px;
+      padding: 6.25rem 1.25rem 3.75rem;
       position: relative;
     }
 
     .header-content {
       background: rgba(255, 255, 255, 0.9);
-      border-radius: 15px;
-      padding: 30px;
-      max-width: 800px;
+      border-radius: 0.9375rem;
+      padding: 1.875rem;
+      max-width: 50rem;
       margin: 0 auto;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      transform: translateY(50px);
+      box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.2);
+      transform: translateY(3.125rem);
     }
 
     header h1 {
       font-weight: bold;
       font-size: 2.5rem;
-      margin-bottom: 10px;
+      margin-bottom: 0.625rem;
       color: #007bff;
     }
 
     header p {
       font-size: 1.2rem;
-      margin: 0 0 20px;
+      margin: 0 0 1.25rem;
       color: #555;
     }
 
     /* Section spacing */
     section {
-      padding: 60px 20px;
+      padding: 3.75rem 1.25rem;
       text-align: center;
     }
 
@@ -124,25 +153,25 @@
     section h2 {
       color: #007bff;
       font-weight: bold;
-      border-bottom: 3px solid #007bff;
+      border-bottom: 0.1875rem solid #007bff;
       display: inline-block;
-      padding-bottom: 5px;
-      margin-bottom: 30px;
+      padding-bottom: 0.3125rem;
+      margin-bottom: 1.875rem;
     }
 
     /* Cards */
     .feature-card {
       background: #fff;
       border: none;
-      padding: 20px;
-      min-height: 200px;
-      margin-bottom: 30px;
+      padding: 1.25rem;
+      min-height: 12.5rem;
+      margin-bottom: 1.875rem;
       transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-0.3125rem);
+      box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1);
     }
 
     .card-title {
@@ -157,7 +186,7 @@
     footer {
       background: #343a40;
       color: #fff;
-      padding: 20px 0;
+      padding: 1.25rem 0;
       text-align: center;
     }
 
@@ -175,28 +204,32 @@
       background-color: #0056b3;
     }
 
-    .display-4 {
-      margin-top: 50px;
-      color: #f8f9fa;
-    }
-
     /* Images */
     .carousel-item img {
-      max-height: 500px;
+      max-height: 31.25rem;
       object-fit: cover;
       width: 100%;
     }
 
     .img-fluid {
       max-width: 50%;
-      height: 50%;
-      border-radius: 10px;
-      /* remove circle if not needed */
+      height: auto;
+      border-radius: 0.625rem;
       display: block;
-      margin: 0 auto 20px;
-      /* center images and give bottom space */
+      margin: 0 auto 1.25rem;
     }
 
+    /* Fade-in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(1.25rem);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     /* Utility */
     .text-center {
@@ -205,52 +238,50 @@
 
     /* Spacing between header and section */
     header+section {
-      margin-top: 30px;
+      margin-top: 1.875rem;
     }
 
-    .navbar-nav .nav-link {
-      position: relative;
-      padding: 8px 15px;
-      transition: all 0.3s ease;
+    /* Responsive */
+    @media (max-width: 768px) {
+      header {
+        padding: 3rem 1rem 2rem;
+      }
+
+      header h1 {
+        font-size: 2rem;
+      }
+
+      .header-content {
+        max-width: 100%;
+        transform: none;
+        padding: 1rem;
+      }
+
+      .navbar-brand img {
+        margin-left: 1rem;
+        height: 30px;
+      }
+
+      .img-fluid {
+        max-width: 75%;
+      }
     }
 
-    .navbar-nav .nav-link:hover {
-      color: #0d6efd;
-      /* Bootstrap Primary Color */
-    }
-
-    .navbar-nav .nav-link::after {
-      content: '';
-      position: absolute;
-      width: 0%;
-      height: 2px;
-      left: 0;
-      bottom: 0;
-      background-color: #0d6efd;
-      transition: 0.3s;
-    }
-
-    .navbar-nav .nav-link:hover::after {
-      width: 100%;
-    }
-
-    .navbar-nav .nav-link i {
-      transition: transform 0.3s ease;
-    }
-
-    .navbar-nav .nav-link:hover i {
-      transform: scale(1.2);
+    @media (max-width: 576px) {
+      .navbar-nav {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+      }
     }
   </style>
-
 </head>
 
 <body>
-
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <a class="navbar-brand d-flex align-items-center" href="/" style="height: 100%;">
-      <img src="/images/hospital-logo.png" alt="MedSys+ Logo" height="40" class="me-2 d-inline-block align-middle">
+      <img src="/images/hospital-logo.png" alt="MedSys+ Logo" height="40" class="me-2 d-inline-block align-middle" />
       <span class="fw-bold fs-4 text-white mb-0 align-middle">MedSys+</span>
     </a>
     <div class="container">
@@ -284,25 +315,28 @@
     </div>
   </nav>
 
-
-
   <header class="bg-light text-center py-5">
-    <div class="container">
-      <h1 class="display-4">Welcome to MedSys+ </h1>
-      <p class="lead">Manage patients, doctors, appointments, billing, and more in one smart system.</p>
+    <div class="container header-content fade-in">
+      <h1 class="display-4">Welcome to MedSys+</h1>
+      <p class="lead">
+        Manage patients, doctors, appointments, billing, and more in one smart system.
+      </p>
       <a href="/auth/login" class="btn btn-primary btn-lg">Get Started</a>
     </div>
   </header>
+
   <!-- About -->
-  <section id="about" class="container py-5">
+  <section id="about" class="container py-5 fade-in">
     <h2 class="text-center mb-4">About MedSys+</h2>
-    <p class="text-center">MedSys+ is a modern hospital management system designed to enhance patient care, reduce
-      administrative burdens, and improve operational efficiency. Our system integrates patient records, appointments,
-      billing, pharmacy, and more into one powerful platform.</p>
+    <p class="text-center">
+      MedSys+ is a modern hospital management system designed to enhance patient care, reduce administrative
+      burdens, and improve operational efficiency. Our system integrates patient records, appointments,
+      billing, pharmacy, and more into one powerful platform.
+    </p>
   </section>
 
   <!-- Features -->
-  <section id="features" class="container py-5">
+  <section id="features" class="container py-5 fade-in">
     <h2 class="text-center mb-4">Key Features</h2>
     <div class="row text-center">
       <div class="col-md-4 mb-4">
@@ -356,154 +390,148 @@
     </div>
   </section>
 
+  <!-- More About Section -->
+  <h2 class="text-center" style="margin: 0.625rem 0 1.25rem; font-weight: 500; font-size: 2rem;" id="Facilities">
+    More About MedSys+
+  </h2>
 
-  <h2 class="text-center" style="margin: 10px;padding: 20px;font-weight: 500;font-size: 2em;" id="Facilities">More About
-    MedSys+ </h2>
-  <!-- B-HMS Software Details -->
-  <section id="bhms" class="container py-5">
-
-    <!-- Row 1 -->
+  <section id="bhms" class="container py-5 fade-in">
+    <!-- Each row with image and text, alternating sides -->
     <div class="row align-items-center mb-5">
       <div class="col-md-6">
         <img src="https://www.bharuwasolutions.com/lp/public/frontend/images/ipd-opd.svg"
-          class="img-fluid rounded shadow" alt="OPD IPD Management">
+          class="img-fluid rounded shadow" alt="OPD IPD Management" />
       </div>
       <div class="col-md-6">
         <h3>OPD/IPD & Patient Management</h3>
-        <p>Manage ward occupancy, track patient histories, and generate customizable forms for seamless OPD and IPD
+        <p>
+          Manage ward occupancy, track patient histories, and generate customizable forms for seamless OPD and IPD
           management with a comprehensive patient management system that streamlines healthcare processes and
           improves patient care.
-
           Enables easy demographic capture, unique UHID generation, and appointment scheduling based on doctor
-          availability.</p>
+          availability.
+        </p>
       </div>
     </div>
 
-    <!-- Row 2 -->
     <div class="row align-items-center mb-5">
       <div class="col-md-6 order-md-2">
         <img src="https://www.bharuwasolutions.com/lp/public/frontend/images/billing.svg"
-          class="img-fluid rounded shadow" alt="Insurance Billing">
+          class="img-fluid rounded shadow" alt="Insurance Billing" />
       </div>
       <div class="col-md-6 order-md-1">
         <h3>Insurance & Billing</h3>
-        <p>Managing OPD, IPD, and emergency billing with multiple payment modes, discounts, and payment gateway
+        <p>
+          Managing OPD, IPD, and emergency billing with multiple payment modes, discounts, and payment gateway
           integration using advanced hospital billing software is one aspect of our hospital management system.
-
-          Handle TPA/insurance company-specific charges and credit bills seamlessly.</p>
+          Handle TPA/insurance company-specific charges and credit bills seamlessly.
+        </p>
       </div>
     </div>
 
-    <!-- Row 3 -->
     <div class="row align-items-center mb-5">
       <div class="col-md-6">
         <img src="https://www.bharuwasolutions.com/lp/public/frontend/images/billing.svg"
-          class="img-fluid rounded shadow" alt="Inventory Management">
+          class="img-fluid rounded shadow" alt="Inventory Management" />
       </div>
       <div class="col-md-6">
         <h3>Inventory Management</h3>
-        <p>Gain control over hospital resources with centralized inventory tracking.​
-
-          From procurement to consumption, manage stock levels, supplier relationships, and interdepartmental
-          requisitions seamlessly.​</p>
+        <p>
+          Gain control over hospital resources with centralized inventory tracking.​ From procurement to consumption,
+          manage stock levels, supplier relationships, and interdepartmental requisitions seamlessly.​
+        </p>
       </div>
     </div>
 
-    <!-- Row 4 -->
     <div class="row align-items-center mb-5">
       <div class="col-md-6 order-md-2">
         <img src="https://www.bharuwasolutions.com/lp/public/frontend/images/pharmacy.svg"
-          class="img-fluid rounded shadow" alt="Pharmacy Management">
+          class="img-fluid rounded shadow" alt="Pharmacy Management" />
       </div>
       <div class="col-md-6 order-md-1">
         <h3>Pharmacy Management</h3>
-        <p>Optimize inventory levels and ensure the availability of critical drugs with an integrated pharmacy
-          management software.
-
-          Pharmacy software helps billing, track sales, manage prescriptions, and maintain compliance with real-time
-          stock monitoring and automated reorder points.</p>
+        <p>
+          Optimize inventory levels and ensure the availability of critical drugs with an integrated pharmacy
+          management software. Pharmacy software helps billing, track sales, manage prescriptions, and maintain
+          compliance with real-time stock monitoring and automated reorder points.
+        </p>
       </div>
     </div>
 
-    <!-- Row 5 -->
     <div class="row align-items-center mb-5">
       <div class="col-md-6">
         <img src="https://www.bharuwasolutions.com/lp/public/frontend/images/nursing.svg"
-          class="img-fluid rounded shadow" alt="Nursing Console">
+          class="img-fluid rounded shadow" alt="Nursing Console" />
       </div>
       <div class="col-md-6">
         <h3>Nursing Console</h3>
-        <p>Centralized console to manage vitals, progress notes, and patient services.​
-
-          Enable nurses to order investigations, manage OT bookings, and access lab reports.​</p>
+        <p>
+          Centralized console to manage vitals, progress notes, and patient services.​ Enable nurses to order
+          investigations, manage OT bookings, and access lab reports.​ 
+        </p>
       </div>
     </div>
 
-    <!-- Row 6 -->
     <div class="row align-items-center mb-5">
       <div class="col-md-6 order-md-2">
         <img src="https://www.bharuwasolutions.com/lp/public/frontend/images/online.svg"
-          class="img-fluid rounded shadow" alt="Appointments and Queue">
+          class="img-fluid rounded shadow" alt="Appointments and Queue" />
       </div>
       <div class="col-md-6 order-md-1">
         <h3>Appointments & Queue</h3>
-        <p>A hassle-free solution that enables users to book appointments remotely while effectively managing
+        <p>
+          A hassle-free solution that enables users to book appointments remotely while effectively managing
           customer flow with doctor rosters and availability, reducing wait times, and optimizing service delivery
-          through real-time queue monitoring and advanced scheduling features.</p>
+          through real-time queue monitoring and advanced scheduling features.
+        </p>
       </div>
     </div>
 
-    <!-- Row 7 -->
     <div class="row align-items-center mb-5">
       <div class="col-md-6">
         <img src="https://www.bharuwasolutions.com/lp/public/frontend/images/reports.svg"
-          class="img-fluid rounded shadow" alt="Dashboards and MIS Reports">
+          class="img-fluid rounded shadow" alt="Dashboards and MIS Reports" />
       </div>
       <div class="col-md-6">
         <h3>Dashboards & MIS Reports</h3>
-        <p>Make data-driven decisions with advanced dashboards and real-time MIS reports. ​
-
-          Monitor revenue, patient statistics, disease trends, and operational performance with customizable filters
-          for actionable insights.​</p>
+        <p>
+          Make data-driven decisions with advanced dashboards and real-time MIS reports.​ Monitor revenue, patient
+          statistics, disease trends, and operational performance with customizable filters for actionable insights.​
+        </p>
       </div>
     </div>
 
-    <!-- Row 8 -->
     <div class="row align-items-center mb-5">
       <div class="col-md-6 order-md-2">
         <img src="https://www.bharuwasolutions.com/lp/public/frontend/images/clinic.svg"
-          class="img-fluid rounded shadow" alt="Clinical Module">
+          class="img-fluid rounded shadow" alt="Clinical Module" />
       </div>
       <div class="col-md-6 order-md-1">
         <h3>Clinical Module</h3>
-        <p>Automated order generation, sample tracking, and result verification. ​
-
-          Bulk order processing, patient-specific records, and integrated radiology work order management for
-          comprehensive clinical support.​</p>
+        <p>
+          Automated order generation, sample tracking, and result verification.​ Bulk order processing, patient-specific
+          records, and integrated radiology work order management for comprehensive clinical support.​
+        </p>
       </div>
     </div>
 
-    <!-- Row 9 -->
     <div class="row align-items-center mb-5">
       <div class="col-md-6">
         <img src="https://www.bharuwasolutions.com/lp/public/frontend/images/reports.svg"
-          class="img-fluid rounded shadow" alt="Payroll Attendance">
+          class="img-fluid rounded shadow" alt="Payroll Attendance" />
       </div>
       <div class="col-md-6">
         <h3>Payroll & Attendance</h3>
-        <p>A comprehensive solution for managing payroll, attendance, and shift schedules, ensuring accurate
-          records, seamless tracking, and efficient workforce management in real time..</p>
+        <p>
+          A comprehensive solution for managing payroll, attendance, and shift schedules, ensuring accurate
+          records, seamless tracking, and efficient workforce management in real time.
+        </p>
       </div>
     </div>
   </section>
 
-
-  </div>
-  </section>
-
-
   <!-- Contact -->
-  <section id="contact" class="container py-5">
+  <section id="contact" class="container py-5 fade-in">
     <h2 class="text-center mb-4">Contact Us</h2>
     <p class="text-center">Have questions? Reach out to our team to learn more about MedSys+.</p>
     <div class="text-center">
@@ -519,7 +547,24 @@
       <p>&copy; 2025 MedSys+. All rights reserved.</p>
     </div>
   </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Fade-in on scroll
+    document.addEventListener("DOMContentLoaded", () => {
+      const elements = document.querySelectorAll('.fade-in');
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      elements.forEach(el => observer.observe(el));
+    });
+  </script>
 </body>
 
 </html>

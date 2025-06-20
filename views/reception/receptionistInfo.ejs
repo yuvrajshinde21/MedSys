@@ -3,36 +3,38 @@
     <div class="col-md-8 col-lg-6">
       <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-4">
-          <h4 class="text-center mb-4 text-primary">Receptionist Details</h4>
+          <h4 class="text-center mb-4 text-primary">
+            <i class="bi bi-person-lines-fill me-2"></i>Receptionist Details
+          </h4>
 
           <!-- Name -->
           <div class="mb-3">
-            <label class="form-label">Name</label>
+            <label class="form-label">👤 Name</label>
             <input type="text" class="form-control" value="<%= receptionist.reception_name %>" readonly>
           </div>
 
           <!-- Contact -->
           <div class="mb-3">
-            <label class="form-label">Contact</label>
+            <label class="form-label">📞 Contact</label>
             <input type="text" class="form-control" value="<%= receptionist.reception_contact %>" readonly>
           </div>
 
           <!-- Email -->
           <div class="mb-3">
-            <label class="form-label">Email</label>
+            <label class="form-label">📧 Email</label>
             <input type="email" class="form-control" value="<%= receptionist.reception_email %>" readonly>
           </div>
 
           <!-- Status -->
           <div class="mb-3">
-            <label class="form-label">Status</label>
+            <label class="form-label">🟢 Status</label>
             <input type="text" class="form-control" value="<%= receptionist.status %>" readonly>
           </div>
 
           <!-- Edit Button -->
           <div class="text-center mt-4">
             <a href="/admin/reception/edit/<%= receptionist.reception_id %>" class="btn btn-outline-primary px-4">
-              <i class="bi bi-pencil-square me-1"></i> Edit
+              <i class="bi bi-pencil-square me-2"></i>Edit
             </a>
           </div>
 
