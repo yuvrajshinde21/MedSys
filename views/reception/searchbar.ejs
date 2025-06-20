@@ -120,7 +120,7 @@
       }
 
       searchResults.innerHTML = patients.map(p => `
-        <li class="list-group-item list-group-item-action" onclick="window.location='/reception/patients/${p.patient_id}'">
+        <li class="list-group-item list-group-item-action" onclick="window.location='/reception/view-patient/${p.patient_id}'">
           <strong>${p.patient_name}</strong> — ${p.patient_contact}
         </li>
       `).join("");

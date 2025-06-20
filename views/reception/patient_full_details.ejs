@@ -1,4 +1,4 @@
-
+<%- include("searchbar") %>
 <div class="container py-4 w-50 ms-0 me-auto">
   <h3 class="text-primary mb-4">👤 Patient Details: <%= patient.patient_name %></h3>
 
@@ -65,7 +65,9 @@
                 <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#roomModal">🛏 Assign Room</button>
               <% } else { %> N/A <% } %>
             </p>
+
             <p><strong>Room Type:</strong> <%= patient.room_type || 'N/A' %></p>
+
             <p><strong>Nurse:</strong>
               <% if (patient.nurse_name) { %>
                 <%= patient.nurse_name %>
@@ -74,11 +76,13 @@
                 <button class="btn btn-sm btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#nurseModal">🧑‍⚕️ Assign Nurse</button>
               <% } else { %> N/A <% } %>
             </p>
+
             <p><strong>ICU:</strong>
               <span class="badge bg-<%= patient.icu_required ? 'danger' : 'info' %>">
                 <%= patient.icu_required ? 'Required' : 'Not Required' %>
               </span>
             </p>
+
             <p><strong>Admitted:</strong> <%= new Date(patient.admitted_date).toLocaleDateString() %></p>
             <p><strong>Discharged:</strong>
               <%= patient.discharge_date ? new Date(patient.discharge_date).toLocaleDateString() : 'Not yet' %>
@@ -108,7 +112,6 @@
               <tr class="table-light"><th>🧾 Total Amount</th><td><strong>₹ <%= bill.total_amount.toFixed(2) %></strong></td></tr>
             </table>
             <p class="text-muted">🗓️ Billing Date: <%= new Date(bill.billing_date).toLocaleDateString() %></p>
-
           <% } else if (patient.admission_status === 'Discharged' || (!patient.admission_status && patient.appointment_status === 'Completed')) { %>
             <div class="text-end">
               <a href="/reception/patients/bill/<%= patient.patient_id %>" class="btn btn-success">💵 Generate Bill</a>
@@ -117,7 +120,6 @@
             <p class="text-muted">Billing not available until treatment is completed or patient is discharged.</p>
           <% } %>
         </div>
-
       </div>
     </div>
   </div>
@@ -174,5 +176,6 @@
   <div class="d-flex justify-content-end gap-2 mt-4">
     <a href="/reception/patients" class="btn btn-outline-secondary">🔙 Back to List</a>
     <a href="/reception/patients/edit/<%= patient.patient_id %>" class="btn btn-outline-warning">✏️ Edit</a>
+    <a href="/reception/patients/bill/<%= patient.patient_id %>" class="btn btn-outline-success">💵 View Bill</a>
   </div>
 </div>
