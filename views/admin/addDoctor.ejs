@@ -1,100 +1,94 @@
-<div class="card p-4 shadow-sm">
-    <h4 class="mb-4">Add New Doctor</h4>
-    <form action="/admin/doctor" method="POST" enctype="multipart/form-data" ">
-        <!-- Doctor Name -->
-        <div class="mb-3">
-            <label for="doctor_name" class="form-label">Doctor Name</label>
-            <input type="text" class="form-control" id="doctor_name" name="doctor_name">
-            <div id="doctorNameError" class="text-danger mt-1" style="font-size: 14px;"></div>
+<div class="container py-4">
+  <form action="/admin/doctor" method="POST" enctype="multipart/form-data"
+    class="p-4 border-0 rounded-4 shadow w-100 w-md-75 mx-auto"
+    style="background-color: #f0f8ff; max-width: 48rem;">
 
-        </div>
+    <h4 class="text-primary mb-4 text-center">Add New Doctor</h4>
 
-        <!-- Username -->
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username">
-            <div id="usernameError" class="text-danger mt-1" style="font-size: 14px;"></div>
+    <!-- Doctor Name -->
+    <div class="mb-3">
+      <label for="doctor_name" class="form-label">Doctor Name</label>
+      <input type="text" class="form-control" id="doctor_name" name="doctor_name" required>
+      <div id="doctorNameError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
 
-        </div>
+    <!-- Username -->
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" id="username" name="username" required>
+      <div id="usernameError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
 
-        <!-- Password -->
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <div class="input-group">
-                <input type="password" name="password" id="password" class="form-control" placeholder="Enter password">
-            </div>
-            <div id="passwordError" class="text-danger mt-1" style="font-size: 14px;"></div>
-        </div>
+    <!-- Password -->
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" required>
+      <div id="passwordError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
 
+    <!-- Specialization -->
+    <div class="mb-3">
+      <label for="doctor_specialization" class="form-label">Specialization</label>
+      <select class="form-select" id="doctor_specialization" name="doctor_specialization" required>
+        <option value="" selected disabled>Select Specialization</option>
+        <% specializations.forEach(function(specialization) { %>
+          <option value="<%= specialization.specialization_id %>">
+            <%= specialization.specialization_name %>
+          </option>
+        <% }) %>
+      </select>
+      <div id="specializationError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
 
+    <!-- Contact -->
+    <div class="mb-3">
+      <label for="doctor_contact" class="form-label">Contact Number</label>
+      <input type="text" class="form-control" id="doctor_contact" name="doctor_contact" required>
+      <div id="contactError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
 
-        <!-- Specialization -->
-        <!-- <div class="mb-3">
-            <label for="doctor_specialization" class="form-label">Specialization</label>
-            <input type="text" class="form-control" id="doctor_specialization" name="doctor_specialization">
-        </div> -->
-        <div class="mb-3">
-            <label for="doctor_specialization" class="form-label">Specialization</label>
-            <select class="form-select" id="doctor_specialization" name="doctor_specialization">
-                <option value="" selected disabled>Select Specialization</option>
-                <% specializations.forEach(function(specialization) { %>
-                    <option value="<%= specialization.specialization_id %>">
-                        <%= specialization.specialization_name %>
-                    </option>
-                    <% }) %>
-            </select>
-            <div id="specializationError" class="text-danger mt-1" style="font-size: 14px;"></div>
+    <!-- Email -->
+    <div class="mb-3">
+      <label for="doctor_email" class="form-label">Email Address</label>
+      <input type="email" class="form-control" id="doctor_email" name="doctor_email" required>
+      <div id="emailError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
 
-        </div>
+    <!-- Experience -->
+    <div class="mb-3">
+      <label for="doctor_experience" class="form-label">Years of Experience</label>
+      <input type="number" class="form-control" id="doctor_experience" name="doctor_experience" min="0" required>
+      <div id="experienceError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
 
-        <!-- Contact -->
-        <div class="mb-3">
-            <label for="doctor_contact" class="form-label">Contact Number</label>
-            <input type="text" class="form-control" id="doctor_contact" name="doctor_contact">
-            <div id="contactError" class="text-danger mt-1" style="font-size: 14px;"></div>
+    <!-- Image -->
+    <div class="mb-3">
+      <label for="doctor_image" class="form-label">Doctor Image</label>
+      <input class="form-control" type="file" id="doctor_image" name="doctor_image" accept="image/*">
+      <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
+      <div id="imageError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
 
-        </div>
+    <!-- Status -->
+    <div class="mb-3">
+      <label for="status" class="form-label">Status</label>
+      <select class="form-select" id="status" name="status" required>
+        <option value="active" selected>Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+      <div id="statusError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
 
-        <!-- Email -->
-        <div class="mb-3">
-            <label for="doctor_email" class="form-label">Email Address</label>
-            <input type="email" class="form-control" id="doctor_email" name="doctor_email">
-            <div id="emailError" class="text-danger mt-1" style="font-size: 14px;"></div>
+    <!-- Hidden Admin ID -->
+    <input type="hidden" name="admin_id" value="1">
 
-        </div>
-
-        <!-- Experience -->
-        <div class="mb-3">
-            <label for="doctor_experience" class="form-label">Years of Experience</label>
-            <input type="number" class="form-control" id="doctor_experience" name="doctor_experience" min="0">
-            <div id="experienceError" class="text-danger mt-1" style="font-size: 14px;"></div>
-
-        </div>
-
-        <!-- Doctor Image Upload -->
-        <div class="mb-3">
-            <label for="doctor_image" class="form-label">Doctor Image</label>
-            <input class="form-control" type="file" id="doctor_image" name="doctor_image" accept="image/*">
-            <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
-            <div id="imageError" class="text-danger mt-1" style="font-size: 14px;"></div>
-
-        </div>
-
-        <!-- Status -->
-        <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select class="form-select" id="status" name="status">
-                <option value="active" selected>Active</option>
-                <option value="inactive">Inactive</option>
-            </select>
-            <div id="statusError" class="text-danger mt-1" style="font-size: 14px;"></div>
-
-        </div>
-
-        <input type="hidden" name="admin_id" value="1">
-
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-accent">Register Doctor</button>
-    </form>
+    <!-- Submit Button -->
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-success px-4 py-2">
+        <i class="bi bi-person-plus me-1"></i> Register Doctor
+      </button>
+    </div>
+  </form>
 </div>
+
 <script src="/script/addDoctor.js"></script>
