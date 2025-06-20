@@ -4,14 +4,15 @@ const receptionController = require("../controllers/receptionController");
 const nurseController = require("../controllers/nurseController");
 const patientController = require("../controllers/patientController");
 const medicineController = require("../controllers/medicineController");
-const billingController = require("../controllers/billingController");
+// const billingController = require("../controllers/billingController");
 
 // ---------------------- Dashboard ----------------------
 router.get("/", receptionController.showReceptionDashboard); // GET /reception
 
 //========================search======================
 router.get("/search-patients", receptionController.searchPatients);
-
+//view patient
+router.get("/patients/:patientId", patientController.viewPatientDetails);
 //===========================================
 
 // List all rooms
@@ -73,8 +74,7 @@ router.get("/doctors/:doctorId/slots", patientController.getDoctorAvailableSlots
 
 // List all patients
 router.get("/patients", patientController.getAllPatients);    // GET /reception/patients
-//view patient
-router.get("/patients/:patientId", patientController.viewPatientDetails);
+
 //bill
 // router.get("/patients/bill/:patient_id", billingController.getBillPreview);
 
