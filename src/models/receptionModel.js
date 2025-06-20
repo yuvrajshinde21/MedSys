@@ -4,22 +4,22 @@ const promiseConn = conn.promise();
 
 //get receptionInfo
 exports.getReceptionistInfo = async (receptionistId) => {
-  const [rows] = await promiseConn.query(
-    "SELECT * FROM reception WHERE user_id = ?",
-    [receptionistId]
-  );
-  return rows[0];
+    const [rows] = await promiseConn.query(
+        "SELECT * FROM reception WHERE user_id = ?",
+        [receptionistId]
+    );
+    return rows[0];
 };
 //-----------search-----------------------------
 
 exports.searchPatientsByNameOrContact = async (query) => {
-  const [rows] = await promiseConn.query(`
+    const [rows] = await promiseConn.query(`
     SELECT patient_id, patient_name, patient_contact
     FROM patients
     WHERE patient_name LIKE ? OR patient_contact LIKE ?
     LIMIT 10
   `, [`%${query}%`, `%${query}%`]);
-  return rows;
+    return rows;
 };
 
 
@@ -33,26 +33,26 @@ exports.createRoom = asyncHandler(async (room) => {
         [room.room_no]
     );
     if (existingRoom.length > 0) {
-        return {message : "Room with this number already exists"};
+        return { message: "Room with this number already exists" };
     }
     const [result] = await promiseConn.query(
         "INSERT INTO rooms (room_no, room_type, room_status, charges_per_day) VALUES (?, ?, ?, ?)",
         [room.room_no, room.room_type, room.room_status, room.charges_per_day]
     );
-    return {insertId: result.insertId, message: "Room added successfully"};
+    return { insertId: result.insertId, message: "Room added successfully" };
 });
 
 // View all rooms:
 exports.getAllRooms = async () => {
-  const [rows] = await promiseConn.query("SELECT * FROM rooms");
-  return rows;
+    const [rows] = await promiseConn.query("SELECT * FROM rooms");
+    return rows;
 };
 
 // Get room by ID:=====================
 exports.getRoomTypes = async () => {
 
-  const [rows] = await promiseConn.query("SELECT DISTINCT room_type FROM rooms");
-  return rows.map(r => r.room_type);
+    const [rows] = await promiseConn.query("SELECT DISTINCT room_type FROM rooms");
+    return rows.map(r => r.room_type);
 
 };
 
@@ -66,92 +66,97 @@ exports.getRoomById = async (roomId) => {
 
 // Update room information:
 exports.updateRoom = async (roomId, roomType, roomStatus, chargesPerDay) => {
-  const [result] = await promiseConn.query(
-    "UPDATE rooms SET room_type = ?, room_status = ?, charges_per_day = ? WHERE room_no = ?",
-    [roomType, roomStatus, chargesPerDay, roomId]
-  );
-  return result.affectedRows > 0;
+    const [result] = await promiseConn.query(
+        "UPDATE rooms SET room_type = ?, room_status = ?, charges_per_day = ? WHERE room_no = ?",
+        [roomType, roomStatus, chargesPerDay, roomId]
+    );
+    return result.affectedRows > 0;
 };
 
 // Delete room:
 exports.deleteRoom = async (roomId) => {
-  const [result] = await promiseConn.query("DELETE FROM rooms WHERE room_no = ?", [roomId]);
+    const [result] = await promiseConn.query("DELETE FROM rooms WHERE room_no = ?", [roomId]);
 
-  return result.affectedRows > 0;
+    return result.affectedRows > 0;
 };
 
 //--------------------------generate Bill--------------------------------
 
 // Patient
 exports.getPatientById = async (id) => {
-  const [rows] = await promiseConn.query(
-    "SELECT * FROM patients WHERE patient_id = ?",
-    [id]
-  );
-  return rows[0];
+    const [rows] = await promiseConn.query(
+        "SELECT * FROM patients WHERE patient_id = ?",
+        [id]
+    );
+    return rows[0];
 };
 
 // Appointment
 exports.getLatestAppointmentByPatient = async (patientId) => {
-  const [rows] = await promiseConn.query(
-    `SELECT * FROM appointments 
+    const [rows] = await promiseConn.query(
+        `SELECT * FROM appointments 
      WHERE patient_id = ? ORDER BY appointment_date DESC LIMIT 1`,
-    [patientId]
-  );
-  return rows[0];
+        [patientId]
+    );
+    return rows[0];
 };
 
 // Doctor
 exports.getDoctorById = async (doctorId) => {
-  const [rows] = await promiseConn.query(
-    "SELECT * FROM doctor WHERE doctor_id = ?",
-    [doctorId]
-  );
-  return rows[0];
+    const [rows] = await promiseConn.query(
+        "SELECT * FROM doctor WHERE doctor_id = ?",
+        [doctorId]
+    );
+    return rows[0];
 };
 
 // Admission
 exports.getAdmissionByAppointmentId = async (appointmentId) => {
-  const [rows] = await promiseConn.query(
-    "SELECT * FROM admissions WHERE appointment_id = ? LIMIT 1",
-    [appointmentId]
-  );
-  return rows[0];
+    const [rows] = await promiseConn.query(
+        "SELECT * FROM admissions WHERE appointment_id = ? LIMIT 1",
+        [appointmentId]
+    );
+    return rows[0];
 };
 
 // Room
 exports.getRoomByNo = async (roomNo) => {
-  const [rows] = await promiseConn.query(
-    "SELECT * FROM rooms WHERE room_no = ?",
-    [roomNo]
-  );
-  return rows[0];
+    const [rows] = await promiseConn.query(
+        "SELECT * FROM rooms WHERE room_no = ?",
+        [roomNo]
+    );
+    return rows[0];
 };
 
 // Nurse
 exports.getNurseById = async (nurseId) => {
-  const [rows] = await promiseConn.query(
-    "SELECT * FROM nurses WHERE nurse_id = ?",
-    [nurseId]
-  );
-  return rows[0];
+    const [rows] = await promiseConn.query(
+        "SELECT * FROM nurses WHERE nurse_id = ?",
+        [nurseId]
+    );
+    return rows[0];
 };
 
 // Prescriptions
 exports.getPrescriptionsByPatientId = async (patientId) => {
-  const [rows] = await promiseConn.query(
-    `SELECT p.quantity, p.dosage, p.frequency, m.medicine_name, m.price
+    const [rows] = await promiseConn.query(
+        `SELECT p.quantity, p.dosage, p.frequency, m.medicine_name, m.price
      FROM prescriptions p
      JOIN medicines m ON p.medicine_id = m.medicine_id
      WHERE p.patient_id = ?`,
-    [patientId]
-  );
-  return rows;
+        [patientId]
+    );
+    //   Convert price to number
+    return rows.map(row => ({
+        ...row,
+        price: parseFloat(row.price)
+    }));
+
 };
 
 //get all admited patients
 exports.getAdmittedPatients = async () => {
-  const [rows] = await promiseConn.query(`
+    const [rows] = await promiseConn.query(`
   SELECT a.*, p.patient_name, p.patient_age, p.patient_gender, p.patient_contact,
          d.doctor_name,
          r.room_type, 
@@ -164,7 +169,7 @@ exports.getAdmittedPatients = async () => {
   WHERE a.status = 'Admitted'
 `);
 
-  return rows;
+    return rows;
 };
 
 //assign room
@@ -225,55 +230,50 @@ exports.assignRoom = async (admissionId, newRoomNo) => {
 
 //get available rooms
 exports.getAvailableRooms = async () => {
-  try {
-    const [rows] = await promiseConn.query(
-      `SELECT room_no, room_type, charges_per_day 
+    try {
+        const [rows] = await promiseConn.query(
+            `SELECT room_no, room_type, charges_per_day 
        FROM rooms 
        WHERE room_status = 'Available'`
-    );
-    return rows;
-  } catch (error) {
-    console.error("Error fetching available rooms:", error);
-    return [];
-  }
+        );
+        return rows;
+    } catch (error) {
+        console.error("Error fetching available rooms:", error);
+        return [];
+    }
 };
 //get available nurses
 exports.getAvailableNurses = async () => {
-  try {
-    const [rows] = await promiseConn.query(
-      `SELECT nurse_id, nurse_name, nurse_shift 
+    try {
+        const [rows] = await promiseConn.query(
+            `SELECT nurse_id, nurse_name, nurse_shift 
        FROM nurses `
-    );
-    return rows;
-  } catch (error) {
-    console.error("Error fetching available nurses:", error);
-    return [];
-  }
+        );
+        return rows;
+    } catch (error) {
+        console.error("Error fetching available nurses:", error);
+        return [];
+    }
 };
 
 
 //update room status
 exports.updateRoomStatus = async (roomNo, status) => {
-  const [result] = await promiseConn.query(
-    `UPDATE rooms SET room_status = ? WHERE room_no = ?`,
-    [status, roomNo]
-  );
-  return result.affectedRows > 0;
+    const [result] = await promiseConn.query(
+        `UPDATE rooms SET room_status = ? WHERE room_no = ?`,
+        [status, roomNo]
+    );
+    return result.affectedRows > 0;
 };
 //assign nurse to patient
 exports.assignNurseToPatient = async (admissionId, nurseId) => {
-  const [result] = await promiseConn.query(
-    `UPDATE admissions SET nurse_id = ? WHERE admission_id = ?`,
-    [nurseId, admissionId]
-  );
-  return result.affectedRows > 0;
+    const [result] = await promiseConn.query(
+        `UPDATE admissions SET nurse_id = ? WHERE admission_id = ?`,
+        [nurseId, admissionId]
+    );
+    return result.affectedRows > 0;
 };
 
-  
-  // Convert price to number
-//   return rows.map(row => ({
-//     ...row,
-//     price: parseFloat(row.price)
-//   }));
-// };
+
+
 
