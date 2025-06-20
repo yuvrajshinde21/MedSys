@@ -133,10 +133,10 @@ exports.getPrescriptionsByPatientId = async (patientId) => {
      WHERE p.patient_id = ?`,
     [patientId]
   );
-  
+
   // Convert price to number
-  return rows.map(row => ({
+  return rows.map((row) => ({
     ...row,
-    price: parseFloat(row.price)
+    price: parseFloat(row.price),
   }));
 };
