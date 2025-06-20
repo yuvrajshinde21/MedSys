@@ -79,7 +79,6 @@ router.post("/medicines/delete/:medicineId", medicineController.deleteMedicine);
 
 
 //Genearate bill
-router.get("/bill/:patientId", receptionController.generateBill); 
-
+router.get("/billing/:patientId", receptionController.generateBill); 
 
 module.exports = router;

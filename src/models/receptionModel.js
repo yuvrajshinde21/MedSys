@@ -13,19 +13,19 @@ exports.getReceptionistInfo = async (receptionistId) => {
 
 // Save room to database:
 exports.createRoom = asyncHandler(async (room) => {
-    // Check if room_no already exists
-    const [existingRoom] = await promiseConn.query(
-        "SELECT * FROM room WHERE room_no = ?",
-        [room.room_no]
-    );
-    if (existingRoom.length > 0) {
-        return {message : "Room with this number already exists"};
-    }
-    const [result] = await promiseConn.query(
-        "INSERT INTO room (room_no, room_type, room_status, charges_per_day) VALUES (?, ?, ?, ?)",
-        [room.room_no, room.room_type, room.room_status, room.charges_per_day]
-    );
-    return {insertId: result.insertId, message: "Room added successfully"};
+  // Check if room_no already exists
+  const [existingRoom] = await promiseConn.query(
+    "SELECT * FROM room WHERE room_no = ?",
+    [room.room_no]
+  );
+  if (existingRoom.length > 0) {
+    return { message: "Room with this number already exists" };
+  }
+  const [result] = await promiseConn.query(
+    "INSERT INTO room (room_no, room_type, room_status, charges_per_day) VALUES (?, ?, ?, ?)",
+    [room.room_no, room.room_type, room.room_status, room.charges_per_day]
+  );
+  return { insertId: result.insertId, message: "Room added successfully" };
 });
 
 // View all rooms:
@@ -37,13 +37,16 @@ exports.getAllRooms = async () => {
 // Get room by ID:=====================
 exports.getRoomTypes = async () => {
   const [rows] = await promiseConn.query("SELECT DISTINCT room_type FROM room");
-  return rows.map(r => r.room_type);
+  return rows.map((r) => r.room_type);
 };
 
 // Get room by id:
 exports.getRoomById = async (roomId) => {
-    const [rows] = await promiseConn.query("SELECT * FROM room WHERE room_no = ?", [roomId]);
-    return rows.length > 0 ? rows[0] : null;
+  const [rows] = await promiseConn.query(
+    "SELECT * FROM room WHERE room_no = ?",
+    [roomId]
+  );
+  return rows.length > 0 ? rows[0] : null;
 };
 
 // Update room information:
@@ -57,24 +60,29 @@ exports.updateRoom = async (roomId, roomType, roomStatus, chargesPerDay) => {
 
 // Delete room:
 exports.deleteRoom = async (roomId) => {
-  const [result] = await promiseConn.query("DELETE FROM room WHERE room_no = ?", [roomId]);
+  const [result] = await promiseConn.query(
+    "DELETE FROM room WHERE room_no = ?",
+    [roomId]
+  );
   return result.affectedRows > 0;
 };
 
 //--------------------------generate Bill--------------------------------
-const pool = require('../config/dbConfig');
 
 // Patient
 exports.getPatientById = async (id) => {
-  const [rows] = await conn.query("SELECT * FROM patients WHERE patient_id = ?", [id]);
+  const [rows] = await promiseConn.query(
+    "SELECT * FROM patients WHERE patient_id = ?",
+    [id]
+  );
   return rows[0];
 };
 
 // Appointment
 exports.getLatestAppointmentByPatient = async (patientId) => {
-  const [rows] = await conn.query(
+  const [rows] = await promiseConn.query(
     `SELECT * FROM appointments 
-     WHERE patient_id = ? ORDER BY appointment_date DESC LIMIT 1`, 
+     WHERE patient_id = ? ORDER BY appointment_date DESC LIMIT 1`,
     [patientId]
   );
   return rows[0];
@@ -82,14 +90,17 @@ exports.getLatestAppointmentByPatient = async (patientId) => {
 
 // Doctor
 exports.getDoctorById = async (doctorId) => {
-  const [rows] = await conn.query("SELECT * FROM doctor WHERE doctor_id = ?", [doctorId]);
+  const [rows] = await promiseConn.query(
+    "SELECT * FROM doctor WHERE doctor_id = ?",
+    [doctorId]
+  );
   return rows[0];
 };
 
 // Admission
 exports.getAdmissionByAppointmentId = async (appointmentId) => {
-  const [rows] = await conn.query(
-    "SELECT * FROM admissions WHERE appointment_id = ? LIMIT 1", 
+  const [rows] = await promiseConn.query(
+    "SELECT * FROM admissions WHERE appointment_id = ? LIMIT 1",
     [appointmentId]
   );
   return rows[0];
@@ -97,19 +108,25 @@ exports.getAdmissionByAppointmentId = async (appointmentId) => {
 
 // Room
 exports.getRoomByNo = async (roomNo) => {
-  const [rows] = await conn.query("SELECT * FROM rooms WHERE room_no = ?", [roomNo]);
+  const [rows] = await promiseConn.query(
+    "SELECT * FROM rooms WHERE room_no = ?",
+    [roomNo]
+  );
   return rows[0];
 };
 
 // Nurse
 exports.getNurseById = async (nurseId) => {
-  const [rows] = await conn.query("SELECT * FROM nurses WHERE nurse_id = ?", [nurseId]);
+  const [rows] = await promiseConn.query(
+    "SELECT * FROM nurses WHERE nurse_id = ?",
+    [nurseId]
+  );
   return rows[0];
 };
 
 // Prescriptions
 exports.getPrescriptionsByPatientId = async (patientId) => {
-  const [rows] = await conn.query(
+  const [rows] = await promiseConn.query(
     `SELECT p.quantity, p.dosage, p.frequency, m.medicine_name, m.price
      FROM prescriptions p
      JOIN medicines m ON p.medicine_id = m.medicine_id
