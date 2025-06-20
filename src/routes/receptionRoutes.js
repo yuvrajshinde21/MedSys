@@ -4,9 +4,15 @@ const receptionController = require("../controllers/receptionController");
 const nurseController = require("../controllers/nurseController");
 const patientController = require("../controllers/patientController");
 const medicineController = require("../controllers/medicineController");
+const billingController = require("../controllers/billingController");
 
 // ---------------------- Dashboard ----------------------
 router.get("/", receptionController.showReceptionDashboard); // GET /reception
+
+//========================search======================
+router.get("/search-patients", receptionController.searchPatients);
+
+//===========================================
 
 // List all rooms
 router.get("/rooms", receptionController.viewRooms);          // GET /reception/rooms
@@ -29,6 +35,13 @@ router.post("/rooms/delete/:roomId", receptionController.deleteRoom); // POST /r
 // Optionally allow GET for delete (not recommended for production, but useful for testing)
 router.get("/rooms/delete/:roomId", receptionController.deleteRoom); // GET /reception/rooms/delete/:roomId
 
+
+//show all admited
+router.get('/admitted-patients', receptionController.showAdmittedPatients);
+//assign room
+router.post('/assign-room/:id', receptionController.assignRoom);
+//asssign nurse
+router.post('/assign-nurse/:id', receptionController.assignNurse);
 // ---------------------- Nurses ----------------------
 // get all nurses
 router.get("/nurses", nurseController.viewNurses);        // GET /reception/nurses
@@ -46,7 +59,6 @@ router.get("/nurse/edit/:nurseId", nurseController.getNurseById);// GET /recepti
 router.post("/nurses/:nurseId/update", nurseController.updateNurse);
 
 
-// Optionally allow GET for delete (not recommended for production, but useful for testing)
 router.get("/nurse/delete/:nurseId", nurseController.deleteNurse); // GET /reception/nurse/delete/:nurseId
 
 // ---------------------- Patients ----------------------
@@ -61,6 +73,15 @@ router.get("/doctors/:doctorId/slots", patientController.getDoctorAvailableSlots
 
 // List all patients
 router.get("/patients", patientController.getAllPatients);    // GET /reception/patients
+//view patient
+router.get("/patients/:patientId", patientController.viewPatientDetails);
+//bill
+// router.get("/patients/bill/:patient_id", billingController.getBillPreview);
+
+//edit patient
+router.route("/patients/edit/:patient_id").get(patientController.renderEditPatientForm).post(patientController.updatePatientDetails);
+
+
 
 
 // ---------------------- Medicine ----------------------
@@ -79,9 +100,13 @@ router.post("/medicines/delete/:medicineId", medicineController.deleteMedicine);
 
 
 //Genearate bill
-router.get("/billing/:patientId", receptionController.generateBill); 
-
+// router.get("/billing/:patientId", receptionController.generateBill); 
 
 // Show bill generation form
 router.get('/print-bill/:patientId', receptionController.renderPrintBill);
+
+router.get("/patients/bill/:patientId", receptionController.generateBill);
+
+
+
 module.exports = router;

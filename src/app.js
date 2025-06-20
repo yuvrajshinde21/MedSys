@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cookieparser = require("cookie-parser");
+const session = require('express-session');
+const flash = require('connect-flash');
 const errorHandler = require("../src/middleware/errorhandler")
 const authMiddleware = require("../src/middleware/authMiddleware")
 const isDoctor = require("../src/middleware/isDoctor")
@@ -22,6 +24,21 @@ app.use(express.static("public"))
 app.use(express.json());
 app.use(cookieparser());
 
+
+app.use(session({
+  secret: 'secretkey',
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(flash());
+
+// Middleware to pass flash messages to all views
+app.use((req, res, next) => {
+  res.locals.successMessage = req.flash('successMessage');
+  res.locals.errorMessage = req.flash('errorMessage');
+  next();
+});
+
 //routes
 app.use("/", homeRoutes);
 app.use("/auth", authRoutes);
@@ -41,3 +58,4 @@ module.exports = app;
 // 	/auth/login, /auth/register
 // 	/admin/add, /doctor/list, /reception/add
 // 	/patient/admit, /patient/discharge, /bill/generate
+
