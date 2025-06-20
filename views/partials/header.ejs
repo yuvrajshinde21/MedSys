@@ -1,100 +1,152 @@
-<!-- Add this in <head> or a CSS file -->
+<!-- Internal CSS -->
 <style>
-    .navbar-brand img {
-        border-radius: 50%;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+  .navbar-brand img {
+    border-radius: 50%;
+    height: 2.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .navbar-brand img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.7);
+  }
+
+  .nav-link {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 0.6rem;
+  }
+
+  .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+  }
+
+  .navbar-nav {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 0.75rem;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
+    padding: 0.25rem 0.5rem;
+  }
+
+  .navbar-wrapper {
+    width: 100%;
+  }
+
+  .navbar .container {
+    height: 4rem;
+  }
+
+  #simpleToast {
+    z-index: 1055;
+    min-width: 15rem;
+    font-size: 0.95rem;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
     }
 
-    .navbar-brand img:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .navbar-brand img {
+      height: 2rem;
+    }
+
+    .navbar .container {
+      height: 3.5rem;
     }
 
     .nav-link {
-        transition: background-color 0.3s ease, color 0.3s ease;
-        border-radius: 10px;
+      font-size: 0.9rem;
+      padding: 0.25rem 0.75rem;
+      color: black;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .navbar .container {
+      flex-direction: column;
+      align-items: flex-start;
     }
 
-    .nav-link:hover {
-        background-color: rgba(26, 25, 25, 0.2);
-        color: #1b1a1a;
-    }
-
-    /* ✅ Boxed menu style */
     .navbar-nav {
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        padding: 4px 8px;
+      width: 100%;
+      margin-top: 0.5rem;
+      color: black;
     }
+  }
 </style>
 
-
-<!-- Navbar wrapped inside a styled box -->
+<!-- Navbar -->
 <div class="navbar-wrapper fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary py-0">
-        <div class="container d-flex align-items-center" style="height: 64px;">
-            <!-- Logo + Brand -->
-            <a class="navbar-brand d-flex align-items-center" href="/" style="height: 100%;">
-                <img src="/images/hospital-logo.png" alt="MedSys+ Logo" height="40"
-                    class="me-2 d-inline-block align-middle">
-                <span class="fw-bold fs-4 text-white mb-0 align-middle">MedSys+</span>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary py-0">
+    <div class="container d-flex align-items-center">
+      <!-- Logo + Brand -->
+      <a class="navbar-brand d-flex align-items-center" href="/">
+        <img src="/images/hospital-logo.png" alt="MedSys+ Logo" class="me-2 d-inline-block align-middle">
+        <span class="fw-bold fs-4 text-white mb-0 align-middle">MedSys+</span>
+      </a>
+
+      <!-- Toggle for mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Nav links -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-center h-100">
+          <li class="nav-item d-flex align-items-center">
+            <a class="nav-link text-white px-3 d-flex align-items-center" href="/">
+              <i class="fas fa-home me-1"></i> Home
             </a>
-
-            <!-- Toggle for mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Nav links -->
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav align-items-center h-100">
-                    <li class="nav-item h-100 d-flex align-items-center">
-                        <a class="nav-link text-white px-3 d-flex align-items-center h-100" href="/">
-                            <i class="fas fa-home me-1"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item h-100 d-flex align-items-center">
-                        <a class="nav-link text-white px-3 d-flex align-items-center h-100" href="/auth/login">
-                            <i class="fas fa-sign-in-alt me-1"></i> Login
-                        </a>
-                    </li>
-                    <li class="nav-item h-100 d-flex align-items-center">
-                        <a class="nav-link text-white px-3 d-flex align-items-center h-100" href="/auth/logout">
-                            <i class="fas fa-sign-out-alt me-1"></i> Logout
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+          </li>
+          <li class="nav-item d-flex align-items-center">
+            <a class="nav-link text-white px-3 d-flex align-items-center" href="/auth/login">
+              <i class="fas fa-sign-in-alt me-1"></i> Login
+            </a>
+          </li>
+          <li class="nav-item d-flex align-items-center">
+            <a class="nav-link text-white px-3 d-flex align-items-center" href="/auth/logout">
+              <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </div>
-<% const error=Array.isArray(errorMessage) && errorMessage.length> 0 ? errorMessage[0].trim() : '';
-    const success = Array.isArray(successMessage) && successMessage.length > 0 ? successMessage[0].trim() : '';
-    %>
 
-    <% if (error) { %>
-        <div id="simpleToast" class="position-fixed bottom-0 end-0 p-3 bg-danger text-white rounded shadow"
-            style="z-index:1055; min-width: 250px;">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <%= error %>
-                </div>
-                <button type="button" class="btn-close btn-close-white ms-3"
-                    onclick="document.getElementById('simpleToast').remove()"></button>
-            </div>
-        </div>
-        <% } else if (success) { %>
-            <div id="simpleToast" class="position-fixed bottom-0 end-0 p-3 bg-success text-white rounded shadow"
-                style="z-index:1055; min-width: 250px;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <%= success %>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white ms-3"
-                        onclick="document.getElementById('simpleToast').remove()"></button>
-                </div>
-            </div>
-            <% } %>
-            <script src="/script/errorMessage.js"></script>
+<!-- Toast Messages -->
+<%
+  const error = Array.isArray(errorMessage) && errorMessage.length > 0 ? errorMessage[0].trim() : '';
+  const success = Array.isArray(successMessage) && successMessage.length > 0 ? successMessage[0].trim() : '';
+%>
+
+<% if (error) { %>
+  <div id="simpleToast" class="position-fixed bottom-0 end-0 p-3 bg-danger text-white rounded shadow">
+    <div class="d-flex justify-content-between align-items-center">
+      <div><%= error %></div>
+      <button type="button" class="btn-close btn-close-white ms-3"
+        onclick="document.getElementById('simpleToast').remove()"></button>
+    </div>
+  </div>
+<% } else if (success) { %>
+  <div id="simpleToast" class="position-fixed bottom-0 end-0 p-3 bg-success text-white rounded shadow">
+    <div class="d-flex justify-content-between align-items-center">
+      <div><%= success %></div>
+      <button type="button" class="btn-close btn-close-white ms-3"
+        onclick="document.getElementById('simpleToast').remove()"></button>
+    </div>
+  </div>
+<% } %>
+
+<script src="/script/errorMessage.js"></script>

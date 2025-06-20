@@ -11,13 +11,13 @@
     padding: 0.5rem 1.2rem 0.5rem 2.2rem;
     border: 1px solid #ced4da;
     font-size: 0.95rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease-in-out;
+    background-color: #fff;
     background-image: url("https://cdn-icons-png.flaticon.com/512/622/622669.png");
     background-size: 18px;
     background-repeat: no-repeat;
     background-position: 10px center;
-    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease-in-out;
   }
 
   #patientSearch:focus {
@@ -71,33 +71,39 @@
 </style>
 
 <!-- Search Bar HTML -->
-<form class="d-flex position-relative me-3" id="searchWrapper">
-  <input class="form-control" id="patientSearch" type="search"
-    placeholder="Search patients by Name or Contact..." autocomplete="off" />
+<form class="d-flex position-relative me-3 w-100" id="searchWrapper" role="search">
+  <input
+    class="form-control"
+    id="patientSearch"
+    type="search"
+    placeholder="🔍 Search patients by Name or Contact..."
+    aria-label="Search patients"
+    autocomplete="off"
+  />
   <ul id="searchResults" class="list-group"></ul>
 </form>
 
-<!-- Script -->
+<!-- Search Script -->
 <script>
   const searchInput = document.getElementById("patientSearch");
   const searchResults = document.getElementById("searchResults");
   const searchWrapper = document.getElementById("searchWrapper");
 
-  // Disallow starting space
+  // Prevent search from starting with a space
   searchInput.addEventListener("keydown", (e) => {
     if (e.key === " " && searchInput.selectionStart === 0) {
       e.preventDefault();
     }
   });
 
-  // Fetch and show results
+  // Fetch search results
   searchInput.addEventListener("input", async () => {
     if (searchInput.value.startsWith(" ")) {
       searchInput.value = searchInput.value.trimStart();
     }
 
     const query = searchInput.value.trim();
-    if (query.length === 0) {
+    if (!query) {
       searchResults.innerHTML = "";
       searchResults.style.display = "none";
       return;
@@ -107,8 +113,9 @@
       const res = await fetch(`/reception/search-patients?q=${encodeURIComponent(query)}`);
       const patients = await res.json();
 
-      if (patients.length === 0) {
-        searchResults.style.display = "none";
+      if (!patients.length) {
+        searchResults.innerHTML = `<li class="list-group-item text-muted">No matches found</li>`;
+        searchResults.style.display = "block";
         return;
       }
 
@@ -125,7 +132,7 @@
     }
   });
 
-  // Clear on outside click
+  // Hide results on outside click
   document.addEventListener("click", (e) => {
     if (!searchWrapper.contains(e.target)) {
       searchInput.value = "";

@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>MedSys+ | Final Bill</title>
+  <link rel="icon" href="/images/hospital-logo.png" type="image/png">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -32,11 +33,9 @@
       align-items: flex-start;
     }
 
-    .header-left {
-      font-size: 14px;
-    }
-
-    .header-left h2 {
+    .header h2 {
+      font-size: 24px;
+      color: #007b83;
       margin-bottom: 8px;
     }
 
@@ -45,13 +44,14 @@
     }
 
     .bill-title {
-      background-color: #007b83;
+      background: linear-gradient(to right, #007b83, #00a1a7);
       color: white;
       text-align: center;
       padding: 10px;
       margin: 20px 0;
       font-size: 20px;
       font-weight: bold;
+      border-radius: 4px;
     }
 
     table {
@@ -60,7 +60,8 @@
       font-size: 14px;
     }
 
-    th, td {
+    th,
+    td {
       border: 1px solid #888;
       padding: 6px 10px;
       text-align: left;
@@ -77,6 +78,11 @@
     .amount-label {
       text-align: right;
       font-weight: bold;
+    }
+
+    .summary-table tr:last-child td {
+      font-size: 16px;
+      background-color: #f7f7f7;
     }
 
     .signature-section {
@@ -108,6 +114,7 @@
 
 <body>
 
+  <!-- Print Button -->
   <div class="print-btn no-print">
     <button onclick="window.print()">🖨️ Print</button>
   </div>
@@ -116,36 +123,36 @@
   <div class="header">
     <div class="header-left">
       <h2>MedSys+</h2>
-      <p>Address: 123 Health Street, City</p>
-      <p>Phone: +91-9876543210</p>
-      <p>Email: info@medsys.com</p>
-      <p>GSTIN: 27ABCDE1234F2Z5</p>
+      <p>📍 123 Health Street, City</p>
+      <p>📞 +91-9876543210</p>
+      <p>✉️ info@medsys.com</p>
+      <p>🧾 GSTIN: 27ABCDE1234F2Z5</p>
     </div>
     <div class="header-right">
-      <img src="/images/hospital-logo.png" alt="Logo">
+      <img src="/images/hospital-logo.png" alt="Hospital Logo">
     </div>
   </div>
 
   <!-- Title -->
-  <div class="bill-title">Hospital Bill Book</div>
+  <div class="bill-title">🏥 Final Hospital Bill Summary</div>
 
   <!-- Patient Info Table -->
   <table>
     <tr>
-      <td><strong>Patient Name:</strong> <%= patient.patient_name %></td>
-      <td><strong>Bill No:</strong> #<%= appointment.appointment_id %></td>
+      <td><strong>👤 Patient Name:</strong> <%= patient.patient_name %></td>
+      <td><strong>🧾 Bill No:</strong> #<%= appointment.appointment_id %></td>
     </tr>
     <tr>
-      <td><strong>Address:</strong> —</td>
-      <td><strong>Admit Date:</strong> <%= admission?.admitted_date ? new Date(admission.admitted_date).toLocaleDateString() : "-" %></td>
+      <td><strong>🏠 Address:</strong> —</td>
+      <td><strong>📅 Admit Date:</strong> <%= admission?.admitted_date ? new Date(admission.admitted_date).toLocaleDateString() : "-" %></td>
     </tr>
     <tr>
-      <td><strong>Phone No:</strong> <%= patient.patient_contact %></td>
-      <td><strong>Admit Till Date:</strong> <%= admission?.discharge_date ? new Date(admission.discharge_date).toLocaleDateString() : "-" %></td>
+      <td><strong>📞 Phone:</strong> <%= patient.patient_contact %></td>
+      <td><strong>📅 Discharge Date:</strong> <%= admission?.discharge_date ? new Date(admission.discharge_date).toLocaleDateString() : "-" %></td>
     </tr>
     <tr>
-      <td><strong>Email:</strong> —</td>
-      <td><strong>GSTIN:</strong> —</td>
+      <td><strong>✉️ Email:</strong> —</td>
+      <td><strong>🧾 GSTIN:</strong> —</td>
     </tr>
   </table>
 
@@ -168,27 +175,27 @@
         <td>Room Rent</td>
         <td>Day</td>
         <td><%= roomDays %></td>
-        <td><%= room.price.toFixed(2) %></td>
+        <td>₹<%= room.price.toFixed(2) %></td>
         <td>12%</td>
-        <td><%= (room.price * roomDays).toFixed(2) %></td>
+        <td>₹<%= (room.price * roomDays).toFixed(2) %></td>
       </tr>
       <tr>
         <td>2</td>
         <td>Doctor Charges</td>
         <td>Visit</td>
         <td>1</td>
-        <td>500.00</td>
+        <td>₹500.00</td>
         <td>12%</td>
-        <td>500.00</td>
+        <td>₹500.00</td>
       </tr>
       <tr>
         <td>3</td>
         <td>Nurse Charges</td>
         <td>Shift</td>
         <td>1</td>
-        <td><%= nurse.charge.toFixed(2) %></td>
+        <td>₹<%= nurse.charge.toFixed(2) %></td>
         <td>12%</td>
-        <td><%= nurse.charge.toFixed(2) %></td>
+        <td>₹<%= nurse.charge.toFixed(2) %></td>
       </tr>
       <% prescriptions.forEach((p, i) => { %>
         <tr>
@@ -196,9 +203,9 @@
           <td><%= p.medicine_name %></td>
           <td>Unit</td>
           <td><%= p.quantity %></td>
-          <td><%= p.price.toFixed(2) %></td>
+          <td>₹<%= p.price.toFixed(2) %></td>
           <td>5%</td>
-          <td><%= (p.price * p.quantity).toFixed(2) %></td>
+          <td>₹<%= (p.price * p.quantity).toFixed(2) %></td>
         </tr>
       <% }) %>
     </tbody>
@@ -218,29 +225,28 @@
         roomTotal + 500 + nurse.charge + prescriptions.reduce((sum, p) => sum + p.price * p.quantity, 0) - 100
       ).toFixed(2) %></strong></td>
     </tr>
-    
   </table>
 
   <!-- Declaration -->
   <div style="margin-top: 20px;">
-    <strong>Declaration:</strong> We declare that this bill shows the actual price of the goods/services described and that all particulars are true.
+    <strong>📜 Declaration:</strong> We declare that this bill shows the actual price of the goods/services described and that all particulars are true.
   </div>
 
   <!-- Signatures -->
   <div class="signature-section">
     <div class="signature-box">
       <hr>
-      Reception Signature
+      <strong>👩‍💼 Reception Signature</strong>
     </div>
     <div class="signature-box">
       <hr>
-      Patient Signature
+      <strong>🧍 Patient Signature</strong>
     </div>
   </div>
 
   <!-- Thank You -->
   <div class="thank-you">
-   Thank you for letting us care for you. Wishing you good health always.!!!
+    ❤️ Thank you for choosing MedSys+. We wish you a speedy recovery and continued good health!
   </div>
 
 </body>

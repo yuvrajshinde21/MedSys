@@ -1,97 +1,91 @@
+<%- include("searchbar") %>
+
 <div class="container-fluid py-4">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-11">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-11">
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="text-primary">Patient Records</h2>
-                    <a href="/reception/patients/create" class="btn btn-outline-primary">➕ Add Patient</a>
-                </div>
-
-                <div class="table-responsive rounded-4 shadow-sm border bg-white p-3">
-                    <table class="table table-bordered table-hover align-middle text-center">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Age</th>
-                                <th>Gender</th>
-                                <th>Contact</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (patients.length> 0) { %>
-                                <% patients.forEach((p,i)=> {
-                                    let status = "Scheduled";
-                                    if (p.admission_status === "Admitted") status = "Admitted";
-                                    else if (p.admission_status === "Discharged") status = "Discharged";
-                                    else if (p.appointment_status === "Completed") status = "Completed";
-                                    else if (p.appointment_status === "Cancelled") status = "Cancelled";
-                                    %>
-                                    <tr>
-                                        <td>
-                                            <%=i+1  %>
-                                        </td>
-                                        <td>
-                                            <%= p.patient_name %>
-                                        </td>
-                                        <td>
-                                            <%= p.patient_age %>
-                                        </td>
-                                        <td>
-                                            <%= p.patient_gender %>
-                                        </td>
-                                        <td>
-                                            <%= p.patient_contact %>
-                                        </td>
-
-                                        <td>
-                                            <span class="badge 
-                        <%= status === 'Admitted' ? 'bg-success' : 
-                            status === 'Discharged' ? 'bg-secondary' : 
-                            status === 'Completed' ? 'bg-info' : 
-                            status === 'Cancelled' ? 'bg-danger' : 
-                            'bg-warning' %>">
-                                                <%= status %>
-                                            </span>
-                                        </td>
-
-                                        <td>
-                                            <div class="d-flex justify-content-center gap-2 flex-wrap">
-                                                <a href="/reception/patients/<%= p.patient_id %>"
-                                                    class="btn btn-sm btn-outline-primary">
-                                                    👁️ View Info
-                                                </a>
-
-                                                <% if (status==='Completed' || status==='Discharged' ) { %>
-                                                    <a href="/reception/patients/bill/<%= p.patient_id %>"
-                                                        class="btn btn-sm btn-success">
-                                                        💰 Bill
-                                                    </a>
-                                                    <% } else { %>
-                                                        <button class="btn btn-sm btn-secondary" disabled
-                                                            title="Bill not available for <%= status %> status">
-                                                            💰 Bill
-                                                        </button>
-                                                        <% } %>
-                                            </div>
-                                        </td>
-
-
-                                    </tr>
-                                    <% }) %>
-                                        <% } else { %>
-                                            <tr>
-                                                <td colspan="7" class="text-muted">No patients found.</td>
-                                            </tr>
-                                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
+        <!-- Header Row -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="text-primary mb-0">👥 Patient Records</h2>
+          <a href="/reception/patients/create" class="btn btn-outline-primary">
+            <i class="bi bi-person-plus-fill me-1"></i> Add Patient
+          </a>
         </div>
+
+        <!-- Table -->
+        <div class="table-responsive shadow-sm border bg-white p-3 rounded-4">
+          <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-primary">
+              <tr>
+                <th>#</th>
+                <th>👤 Name</th>
+                <th>🎂 Age</th>
+                <th>⚧️ Gender</th>
+                <th>📞 Contact</th>
+                <th>📌 Status</th>
+                <th>⚙️ Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% if (patients.length > 0) { %>
+                <% patients.forEach((p, i) => {
+                     let status = "Scheduled";
+                     if (p.admission_status === "Admitted") status = "Admitted";
+                     else if (p.admission_status === "Discharged") status = "Discharged";
+                     else if (p.appointment_status === "Completed") status = "Completed";
+                     else if (p.appointment_status === "Cancelled") status = "Cancelled";
+                %>
+                <tr>
+                  <td><%= i + 1 %></td>
+                  <td><%= p.patient_name %></td>
+                  <td><%= p.patient_age %></td>
+                  <td><%= p.patient_gender %></td>
+                  <td><%= p.patient_contact %></td>
+
+                  <td>
+                    <span class="badge 
+                      <%= status === 'Admitted' ? 'bg-success' :
+                          status === 'Discharged' ? 'bg-secondary' :
+                          status === 'Completed' ? 'bg-info' :
+                          status === 'Cancelled' ? 'bg-danger' :
+                          'bg-warning' %>">
+                      <%= status %>
+                    </span>
+                  </td>
+
+                  <td>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                      <!-- View -->
+                      <a href="/reception/patients/<%= p.patient_id %>" class="btn btn-sm btn-outline-primary" title="View Info">
+                        <i class="bi bi-eye-fill"></i>
+                      </a>
+
+                      <!-- Bill -->
+                      <% if (status === 'Completed' || status === 'Discharged') { %>
+                        <a href="/reception/patients/bill/<%= p.patient_id %>" class="btn btn-sm btn-success" title="View Bill">
+                          <i class="bi bi-cash-coin"></i>
+                        </a>
+                      <% } else { %>
+                        <button class="btn btn-sm btn-secondary" disabled title="Bill not available for <%= status %>">
+                          <i class="bi bi-cash-coin"></i>
+                        </button>
+                      <% } %>
+                    </div>
+                  </td>
+                </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="7" class="text-muted text-center py-3">No patients found.</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
     </div>
+  </div>
 </div>

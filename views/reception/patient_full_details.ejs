@@ -1,233 +1,237 @@
-<div class="container py-4 w-50 ms-0 me-auto">
-    <h3 class="text-primary mb-4">👤 Patient Details: <%= patient.patient_name %>
-    </h3>
+<%- include("searchbar") %>
+    <div class="container py-4 w-50 ms-0 me-auto">
+        <h3 class="text-primary mb-4">👤 Patient Details: <%= patient.patient_name %>
+        </h3>
 
-    <!-- Tabs -->
-    <ul class="nav nav-tabs mb-3" id="patientTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="basic-tab" data-bs-toggle="tab" href="#basic" role="tab">Basic Info</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="appointment-tab" data-bs-toggle="tab" href="#appointment" role="tab">Appointment</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="admission-tab" data-bs-toggle="tab" href="#admission" role="tab">Admission</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="bill-tab" data-bs-toggle="tab" href="#bill" role="tab">Bill</a>
-        </li>
-    </ul>
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mb-3" id="patientTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="basic-tab" data-bs-toggle="tab" href="#basic" role="tab">Basic Info</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="appointment-tab" data-bs-toggle="tab" href="#appointment"
+                    role="tab">Appointment</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="admission-tab" data-bs-toggle="tab" href="#admission" role="tab">Admission</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="bill-tab" data-bs-toggle="tab" href="#bill" role="tab">Bill</a>
+            </li>
+        </ul>
 
-    <!-- Tab content -->
-    <div class="tab-content" id="patientTabContent">
-        <!-- Basic Info -->
-        <div class="tab-pane fade show active" id="basic" role="tabpanel">
-            <div class="card shadow-sm mb-3">
-                <div class="card-body">
-                    <p><strong>Patient ID:</strong>
-                        <%= patient.patient_id %>
-                    </p>
-                    <p><strong>Age:</strong>
-                        <%= patient.patient_age %>
-                    </p>
-                    <p><strong>Gender:</strong>
-                        <%= patient.patient_gender %>
-                    </p>
-                    <p><strong>Contact:</strong>
-                        <%= patient.patient_contact %>
-                    </p>
+        <!-- Tab content -->
+        <div class="tab-content" id="patientTabContent">
+            <!-- Basic Info -->
+            <div class="tab-pane fade show active" id="basic" role="tabpanel">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <p><strong>Patient ID:</strong>
+                            <%= patient.patient_id %>
+                        </p>
+                        <p><strong>Age:</strong>
+                            <%= patient.patient_age %>
+                        </p>
+                        <p><strong>Gender:</strong>
+                            <%= patient.patient_gender %>
+                        </p>
+                        <p><strong>Contact:</strong>
+                            <%= patient.patient_contact %>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Appointment Info -->
-        <div class="tab-pane fade" id="appointment" role="tabpanel">
-            <div class="card shadow-sm mb-3">
-                <div class="card-body">
-                    <% if (patient.appointment_id) { %>
-                        <p><strong>Doctor:</strong> Dr. <%= patient.doctor_name %>
-                        </p>
-                        <p><strong>Date:</strong>
-                            <%= new Date(patient.appointment_date).toLocaleString() %>
-                        </p>
-                        <p><strong>Issue:</strong>
-                            <%= patient.patient_issue %>
-                        </p>
-                        <p><strong>Status:</strong>
-                            <span
-                                class="badge bg-<%= patient.appointment_status === 'Scheduled' ? 'warning' : 'success' %>">
-                                <%= patient.appointment_status %>
-                            </span>
-                        </p>
-                        <% } else { %>
-                            <p class="text-muted">No appointment found.</p>
-                            <% } %>
+            <!-- Appointment Info -->
+            <div class="tab-pane fade" id="appointment" role="tabpanel">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <% if (patient.appointment_id) { %>
+                            <p><strong>Doctor:</strong> Dr. <%= patient.doctor_name %>
+                            </p>
+                            <p><strong>Date:</strong>
+                                <%= new Date(patient.appointment_date).toLocaleString() %>
+                            </p>
+                            <p><strong>Issue:</strong>
+                                <%= patient.patient_issue %>
+                            </p>
+                            <p><strong>Status:</strong>
+                                <span
+                                    class="badge bg-<%= patient.appointment_status === 'Scheduled' ? 'warning' : 'success' %>">
+                                    <%= patient.appointment_status %>
+                                </span>
+                            </p>
+                            <% } else { %>
+                                <p class="text-muted">No appointment found.</p>
+                                <% } %>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Admission Info -->
-        <div class="tab-pane fade" id="admission" role="tabpanel">
-            <div class="card shadow-sm mb-3">
-                <div class="card-body">
-                    <% if (patient.admission_status) { %>
-                        <p><strong>Room No:</strong>
-                            <% if (patient.room_no) { %>
-                                <%= patient.room_no %> (<%= patient.room_type %>)
+            <!-- Admission Info -->
+            <div class="tab-pane fade" id="admission" role="tabpanel">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <% if (patient.admission_status) { %>
+                            <p><strong>Room No:</strong>
+                                <% if (patient.room_no) { %>
+                                    <%= patient.room_no %> (<%= patient.room_type %>)
+                                            <% } else if (patient.admission_status==='Admitted' ) { %>
+                                                <span class="text-warning">Not Assigned</span>
+                                                <button class="btn btn-sm btn-outline-primary ms-2"
+                                                    data-bs-toggle="modal" data-bs-target="#roomModal">
+                                                    🛏 Assign Room
+                                                </button>
+                                                <% } else { %>
+                                                    N/A
+                                                    <% } %>
+                            </p>
+
+                            <p><strong>Room Type:</strong>
+                                <%= patient.room_type || 'N/A' %>
+                            </p>
+                            <p><strong>Nurse:</strong>
+                                <% if (patient.nurse_name) { %>
+                                    <%= patient.nurse_name %>
                                         <% } else if (patient.admission_status==='Admitted' ) { %>
                                             <span class="text-warning">Not Assigned</span>
-                                            <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal"
-                                                data-bs-target="#roomModal">
-                                                🛏 Assign Room
+                                            <button class="btn btn-sm btn-outline-secondary ms-2" data-bs-toggle="modal"
+                                                data-bs-target="#nurseModal">
+                                                🧑‍⚕️ Assign Nurse
                                             </button>
                                             <% } else { %>
                                                 N/A
                                                 <% } %>
-                        </p>
+                            </p>
 
-                        <p><strong>Room Type:</strong>
-                            <%= patient.room_type || 'N/A' %>
-                        </p>
-                        <p><strong>Nurse:</strong>
-                            <% if (patient.nurse_name) { %>
-                                <%= patient.nurse_name %>
-                                    <% } else if (patient.admission_status==='Admitted' ) { %>
-                                        <span class="text-warning">Not Assigned</span>
-                                        <button class="btn btn-sm btn-outline-secondary ms-2" data-bs-toggle="modal"
-                                            data-bs-target="#nurseModal">
-                                            🧑‍⚕️ Assign Nurse
-                                        </button>
-                                        <% } else { %>
-                                            N/A
-                                            <% } %>
-                        </p>
-
-                        <p><strong>ICU:</strong>
-                            <span class="badge bg-<%= patient.icu_required ? 'danger' : 'info' %>">
-                                <%= patient.icu_required ? 'Required' : 'Not Required' %>
-                            </span>
-                        </p>
-                        <p><strong>Admitted:</strong>
-                            <%= new Date(patient.admitted_date).toLocaleDateString() %>
-                        </p>
-                        <p><strong>Discharged:</strong>
-                            <%= patient.discharge_date ? new Date(patient.discharge_date).toLocaleDateString()
-                                : 'Not yet' %>
-                        </p>
-                        <p><strong>Status:</strong>
-                            <span
-                                class="badge bg-<%= patient.admission_status === 'Admitted' ? 'success' : 'secondary' %>">
-                                <%= patient.admission_status %>
-                            </span>
+                            <p><strong>ICU:</strong>
+                                <span class="badge bg-<%= patient.icu_required ? 'danger' : 'info' %>">
+                                    <%= patient.icu_required ? 'Required' : 'Not Required' %>
+                                </span>
+                            </p>
+                            <p><strong>Admitted:</strong>
+                                <%= new Date(patient.admitted_date).toLocaleDateString() %>
+                            </p>
+                            <p><strong>Discharged:</strong>
+                                <%= patient.discharge_date ? new Date(patient.discharge_date).toLocaleDateString()
+                                    : 'Not yet' %>
+                            </p>
+                            <p><strong>Status:</strong>
+                                <span
+                                    class="badge bg-<%= patient.admission_status === 'Admitted' ? 'success' : 'secondary' %>">
+                                    <%= patient.admission_status %>
+                                </span>
+                            </p>
+                            <% } else { %>
+                                <p class="text-muted">Not admitted.</p>
+                                <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bill Info -->
+        <div class="tab-pane fade" id="bill" role="tabpanel">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <% if (typeof bill !=='undefined' ) { %>
+                        <table class="table table-borderless">
+                            <tr>
+                                <th>🛏️ Room Charges</th>
+                                <td>₹ <%= bill.room_charges.toFixed(2) %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>👨‍⚕️ Treatment Charges</th>
+                                <td>₹ <%= bill.treatment_charges.toFixed(2) %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>🧑‍⚕️ Nurse Charges</th>
+                                <td>₹ <%= bill.nurse_charges.toFixed(2) %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>💊 Medicine Charges</th>
+                                <td>₹ <%= bill.medicine_charges.toFixed(2) %>
+                                </td>
+                            </tr>
+                            <tr class="table-light">
+                                <th>🧾 Total Amount</th>
+                                <td><strong>₹ <%= bill.total_amount.toFixed(2) %></strong></td>
+                            </tr>
+                        </table>
+                        <p class="text-muted">🗓️ Billing Date: <%= new Date(bill.billing_date).toLocaleDateString() %>
                         </p>
                         <% } else { %>
-                            <p class="text-muted">Not admitted.</p>
+                            <p class="text-muted">No bill found for this patient.</p>
+                            <a href="/reception/patients/bill/<%= patient.patient_id %>"
+                                class="btn btn-outline-success">
+                                💵 Generate Bill
+                            </a>
                             <% } %>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Bill Info -->
-    <div class="tab-pane fade" id="bill" role="tabpanel">
-        <div class="card shadow-sm mb-3">
-            <div class="card-body">
-                <% if (typeof bill !=='undefined' ) { %>
-                    <table class="table table-borderless">
-                        <tr>
-                            <th>🛏️ Room Charges</th>
-                            <td>₹ <%= bill.room_charges.toFixed(2) %>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>👨‍⚕️ Treatment Charges</th>
-                            <td>₹ <%= bill.treatment_charges.toFixed(2) %>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>🧑‍⚕️ Nurse Charges</th>
-                            <td>₹ <%= bill.nurse_charges.toFixed(2) %>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>💊 Medicine Charges</th>
-                            <td>₹ <%= bill.medicine_charges.toFixed(2) %>
-                            </td>
-                        </tr>
-                        <tr class="table-light">
-                            <th>🧾 Total Amount</th>
-                            <td><strong>₹ <%= bill.total_amount.toFixed(2) %></strong></td>
-                        </tr>
-                    </table>
-                    <p class="text-muted">🗓️ Billing Date: <%= new Date(bill.billing_date).toLocaleDateString() %>
-                    </p>
-                    <% } else { %>
-                        <p class="text-muted">No bill found for this patient.</p>
-                        <a href="/reception/patients/bill/<%= patient.patient_id %>" class="btn btn-outline-success">
-                            💵 Generate Bill
-                        </a>
-                        <% } %>
+
+        <!-- Room Modal -->
+        <div class="modal fade" id="roomModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="/reception/assign-room/<%= patient.admission_id %>" method="POST" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">🛏 Assign Room to <%= patient.patient_name %>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <select name="room_no" class="form-select" required>
+                            <option value="">-- Select Room --</option>
+                            <% availableRooms.forEach(room=> { %>
+                                <option value="<%= room.room_no %>">
+                                    Room <%= room.room_no %> (<%= room.room_type %>, ₹<%= room.charges_per_day %>/day)
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">✅ Assign</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
 
-    <!-- Room Modal -->
-    <div class="modal fade" id="roomModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="/reception/assign-room/<%= patient.admission_id %>" method="POST" class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">🛏 Assign Room to <%= patient.patient_name %>
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <select name="room_no" class="form-select" required>
-                        <option value="">-- Select Room --</option>
-                        <% availableRooms.forEach(room=> { %>
-                            <option value="<%= room.room_no %>">
-                                Room <%= room.room_no %> (<%= room.room_type %>, ₹<%= room.charges_per_day %>/day)
-                            </option>
-                            <% }) %>
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">✅ Assign</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </form>
+        <!-- Nurse Modal -->
+        <div class="modal fade" id="nurseModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="/reception/assign-nurse/<%= patient.admission_id %>" method="POST" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">🧑‍⚕️ Assign Nurse to <%= patient.patient_name %>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <select name="nurse_id" class="form-select" required>
+                            <option value="">-- Select Nurse --</option>
+                            <% availableNurses.forEach(nurse=> { %>
+                                <option value="<%= nurse.nurse_id %>">
+                                    <%= nurse.nurse_name %> (Shift: <%= nurse.nurse_shift %>)
+                                </option>
+                                <% }) %>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">✅ Assign</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="/reception/patients" class="btn btn-outline-secondary">🔙 Back to List</a>
+            <a href="/reception/patients/edit/<%= patient.patient_id %>" class="btn btn-outline-warning">✏️ Edit</a>
+            <a href="/reception/patients/bill/<%= patient.patient_id %>" class="btn btn-outline-success">💵 View
+                Bill</a>
         </div>
     </div>
-
-    <!-- Nurse Modal -->
-    <div class="modal fade" id="nurseModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="/reception/assign-nurse/<%= patient.admission_id %>" method="POST" class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">🧑‍⚕️ Assign Nurse to <%= patient.patient_name %>
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <select name="nurse_id" class="form-select" required>
-                        <option value="">-- Select Nurse --</option>
-                        <% availableNurses.forEach(nurse=> { %>
-                            <option value="<%= nurse.nurse_id %>">
-                                <%= nurse.nurse_name %> (Shift: <%= nurse.nurse_shift %>)
-                            </option>
-                            <% }) %>
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">✅ Assign</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="d-flex justify-content-end gap-2 mt-4">
-        <a href="/reception/patients" class="btn btn-outline-secondary">🔙 Back to List</a>
-        <a href="/reception/patients/edit/<%= patient.patient_id %>" class="btn btn-outline-warning">✏️ Edit</a>
-        <a href="/reception/patients/bill/<%= patient.patient_id %>" class="btn btn-outline-success">💵 View Bill</a>
-    </div>
-</div>

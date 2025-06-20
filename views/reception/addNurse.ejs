@@ -1,28 +1,28 @@
 <div class="container py-4">
   <div class="row justify-content-center">
     <div class="col-lg-8">
-      <div class="card shadow-sm border-0 rounded-4">
+      <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
         <div class="card-body p-4">
           <h4 class="mb-4 text-center text-primary">Add Nurse</h4>
 
           <form action="/reception/nurses" method="POST">
             <!-- Nurse Name -->
             <div class="mb-3">
-              <label for="nurse_name" class="form-label">Nurse Name</label>
+              <label for="nurse_name" class="form-label fw-semibold">Nurse Name</label>
               <input type="text" class="form-control" id="nurse_name" name="nurse_name" required>
-              <div id="nurseNameError" class="text-danger mt-1" style="font-size: 14px;"></div>
+              <div id="nurseNameError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
             </div>
 
             <!-- Contact Number -->
             <div class="mb-3">
-              <label for="nurse_contact" class="form-label">Contact Number</label>
+              <label for="nurse_contact" class="form-label fw-semibold">Contact Number</label>
               <input type="text" class="form-control" id="nurse_contact" name="nurse_contact" required>
-             <div id="contactError" class="text-danger mt-1" style="font-size: 14px;"></div>
+              <div id="contactError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
             </div>
 
             <!-- Shift -->
             <div class="mb-3">
-              <label for="nurse_shift" class="form-label">Shift</label>
+              <label for="nurse_shift" class="form-label fw-semibold">Shift</label>
               <select class="form-select" id="nurse_shift" name="nurse_shift" required>
                 <option value="">-- Select Shift --</option>
                 <option value="Morning">Morning</option>
@@ -38,10 +38,11 @@
               </button>
             </div>
           </form>
-          
+
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <script src="/script/addNurse.js"></script>

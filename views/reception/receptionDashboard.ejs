@@ -2,156 +2,156 @@
 <html lang="en">
 
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reception Dashboard</title>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reception Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-    <style>
-        body {
-            padding-top: 56px;
-            overflow-y: scroll;
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-        }
+  <style>
+    :root {
+      --sidebar-width: 16rem;
+      --sidebar-bg: #e7f0ff;
+      --sidebar-hover: #d0e3ff;
+      --sidebar-text: #0d6efd;
+      --sidebar-active-bg: #cce0ff;
+      --nav-font-size: 1.1rem;
+    }
 
-        .sidebar {
-            height: 100vh;
-            position: fixed;
-            top: 56px;
-            left: 0;
-            width: 250px;
-            background-color: whitesmoke;
-            color: black;
-            overflow-y: auto;
-        }
+    body {
+      padding-top: 3.5rem;
+      overflow-y: scroll;
+      margin: 0;
+      font-family: system-ui, sans-serif;
+    }
 
-        .sidebar a {
-            color: black;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1.2rem;
-        }
+    .sidebar {
+      height: 100vh;
+      position: fixed;
+      top: 3.5rem;
+      left: 0;
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      overflow-y: auto;
+      padding: 1rem;
+      transition: all 0.3s ease-in-out;
+    }
 
-        /* .sidebar .nav-link:hover {
-      background-color: #495057;
-    } */
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-    </style>
+    .sidebar a {
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: var(--nav-font-size);
+      display: block;
+      padding: 0.5em 0.75em;
+      border-radius: 0.5em;
+      transition: background-color 0.2s ease;
+    }
+
+    .sidebar a:hover {
+      background-color: var(--sidebar-hover);
+    }
+
+    .dropdown-item-wrapper {
+      position: relative;
+    }
+
+    .dropdown-item-wrapper:hover .submenu {
+      display: block;
+    }
+
+    .submenu {
+      display: none;
+      padding-left: 1.5em;
+      margin-top: 0.25em;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      padding: 2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        top: 0;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 1.5rem 1rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-    <!-- Navbar -->
-    <%- include('../partials/header') %>
+  <!-- Navbar -->
+  <%- include('../partials/header') %>
 
+  <!-- Sidebar -->
+  <div class="sidebar d-flex flex-column">
+    <ul class="nav flex-column">
+      <li class="nav-item dropdown-item-wrapper">
+        <a class="nav-link" href="#">🤕 Patients</a>
+        <ul class="submenu list-unstyled">
+          <li><a href="/reception/patients/create" class="nav-link">➕ Add Patient</a></li>
+          <li><a href="/reception/patients" class="nav-link">👁️ View Patients</a></li>
+          <li><a href="#" class="nav-link">💵 Bill</a></li>
+        </ul>
+      </li>
 
-        <!-- Sidebar -->
-        <div class="sidebar d-flex flex-column p-3">
-            <ul class="nav nav-pills flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#patientsMenu" role="button"
-                        aria-expanded="false">
-                        🤕 Patients
-                    </a>
-                    <div class="collapse" id="patientsMenu">
-                        <ul class="btn-toggle-nav list-unstyled ps-3">
-                            <li><a href="/reception/patients/create" class="nav-link">➕ Add</a></li>
-                            <li><a href="/reception/patients" class="nav-link">👁️ View</a></li>
-                            <li><a href="#" class="nav-link">💵 Bill</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#roomMenu" role="button" aria-expanded="false">
-                        🛏️ Room
-                    </a>
-                    <div class="collapse" id="roomMenu">
-                        <ul class="btn-toggle-nav list-unstyled ps-3">
-                            <li>
-                                <a href="/reception/rooms/new" class="nav-link">
-                                    ➕ Add
-                                </a>
-                            </li>
-                            <li><a href="/reception/rooms" class="nav-link">👁️ View</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#nurseMenu" role="button" aria-expanded="false">
-                        👩🏻‍⚕️ Nurse
-                    </a>
-                    <div class="collapse" id="nurseMenu">
-                        <ul class="btn-toggle-nav list-unstyled ps-3">
-                            <li><a href="/reception/nurses/new" class="nav-link">➕ Add</a></li>
-                            <li><a href="/reception/nurses" class="nav-link">👁️ View</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#medicineMenu" role="button"
-                        aria-expanded="false">
-                        🩹 Medicine
-                    </a>
-                    <div class="collapse" id="medicineMenu">
-                        <ul class="btn-toggle-nav list-unstyled ps-3">
-                            <li><a href="/reception/medicines/new" class="nav-link">➕ Add</a></li>
-                            <li><a href="/reception/medicines" class="nav-link">👁️ View</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/reception/admitted-patients">
-                        🩹 admitted-patients
-                    </a>
-                </li>
+      <li class="nav-item dropdown-item-wrapper">
+        <a class="nav-link" href="#">🛏️ Room</a>
+        <ul class="submenu list-unstyled">
+          <li><a href="/reception/rooms/new" class="nav-link">➕ Add Room</a></li>
+          <li><a href="/reception/rooms" class="nav-link">👁️ View Room</a></li>
+        </ul>
+      </li>
 
-            </ul>
-        </div>
+      <li class="nav-item dropdown-item-wrapper">
+        <a class="nav-link" href="#">👩🏻‍⚕️ Nurse</a>
+        <ul class="submenu list-unstyled">
+          <li><a href="/reception/nurses/new" class="nav-link">➕ Add Nurse</a></li>
+          <li><a href="/reception/nurses" class="nav-link">👁️ View Nurses</a></li>
+        </ul>
+      </li>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <%- include("searchbar") %>
+      <li class="nav-item dropdown-item-wrapper">
+        <a class="nav-link" href="#">🩹 Medicine</a>
+        <ul class="submenu list-unstyled">
+          <li><a href="/reception/medicines/new" class="nav-link">➕ Add Medicine</a></li>
+          <li><a href="/reception/medicines" class="nav-link">👁️ View Medicines</a></li>
+        </ul>
+      </li>
 
-                <% if(typeof main_content !=="undefined" ) { %>
-                    <%- include(main_content) %>
-                        <% } %>
-        </div>
+      <li class="nav-item">
+        <a class="nav-link" href="/reception/admitted-patients">🏥 Admitted Patients</a>
+      </li>
+    </ul>
+  </div>
 
-        <!-- <% if (typeof errorMessage !=='undefined' && errorMessage) { %>
-            <div id="simpleToast" class="position-fixed bottom-0 end-0 p-3 bg-danger text-white rounded shadow"
-                style="z-index:1055; min-width: 250px;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <%= errorMessage %>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white ms-3"
-                        onclick="document.getElementById('simpleToast').remove()"></button>
-                </div>
-            </div>
-            <% } else if (typeof successMessage !=='undefined' && successMessage) { %>
-                <div id="simpleToast" class="position-fixed bottom-0 end-0 p-3 bg-success text-white rounded shadow"
-                    style="z-index:1055; min-width: 250px;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <%= successMessage %>
-                        </div>
-                        <button type="button" class="btn-close btn-close-white ms-3"
-                            onclick="document.getElementById('simpleToast').remove()"></button>
-                    </div>
-                </div>
-                <% } %> -->
+  <!-- Main Content -->
+  <div class="main-content">
+    <% if (typeof main_content !== "undefined") { %>
+      <%- include(main_content) %>
+    <% } %>
+  </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="/script/errorMessage.js"></script>
+  <!-- Footer -->
+  <%- include('../partials/footer') %>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/script/errorMessage.js"></script>
 </body>
 
 </html>

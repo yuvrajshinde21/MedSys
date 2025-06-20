@@ -1,28 +1,44 @@
-<div class="container mt-4 w-50">
-  <h4 class="text-primary mb-3">✏️ Edit Patient</h4>
-  <form method="POST" action="/reception/patients/edit/<%= patient.patient_id %>">
-    <div class="mb-3">
-      <label class="form-label">Name</label>
-      <input type="text" name="patient_name" value="<%= patient.patient_name %>" class="form-control" required>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Age</label>
-      <input type="number" name="patient_age" value="<%= patient.patient_age %>" class="form-control" required>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Gender</label>
-      <select name="patient_gender" class="form-select" required>
-        <option value="Male" <%= patient.patient_gender === 'Male' ? 'selected' : '' %>>Male</option>
-        <option value="Female" <%= patient.patient_gender === 'Female' ? 'selected' : '' %>>Female</option>
-        <option value="Other" <%= patient.patient_gender === 'Other' ? 'selected' : '' %>>Other</option>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Contact</label>
-      <input type="text" name="patient_contact" value="<%= patient.patient_contact %>" class="form-control" required>
-    </div>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
+        <div class="card-body p-4">
+          <h4 class="text-primary mb-4 text-center">✏️ Edit Patient</h4>
 
-    <button type="submit" class="btn btn-success">💾 Save</button>
-    <a href="/reception/patients" class="btn btn-secondary ms-2">🔙 Cancel</a>
-  </form>
+          <form method="POST" action="/reception/patients/edit/<%= patient.patient_id %>">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Name</label>
+              <input type="text" name="patient_name" value="<%= patient.patient_name %>" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Age</label>
+              <input type="number" name="patient_age" value="<%= patient.patient_age %>" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Gender</label>
+              <select name="patient_gender" class="form-select" required>
+                <option value="Male" <%= patient.patient_gender === 'Male' ? 'selected' : '' %>>Male</option>
+                <option value="Female" <%= patient.patient_gender === 'Female' ? 'selected' : '' %>>Female</option>
+                <option value="Other" <%= patient.patient_gender === 'Other' ? 'selected' : '' %>>Other</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Contact</label>
+              <input type="text" name="patient_contact" value="<%= patient.patient_contact %>" class="form-control" required>
+            </div>
+
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-success px-4">
+                💾 Save
+              </button>
+              <a href="/reception/patients" class="btn btn-secondary ms-2 px-4">🔙 Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,28 +1,28 @@
 <div class="container py-4">
   <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card shadow-sm border-0 rounded-4">
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
         <div class="card-body p-4">
           <h4 class="mb-4 text-center text-primary">Add Medicine</h4>
 
           <form action="/reception/medicines" method="POST">
             <!-- Medicine Name -->
             <div class="mb-3">
-              <label for="medicine_name" class="form-label">Medicine Name</label>
+              <label for="medicine_name" class="form-label fw-semibold">Medicine Name</label>
               <input type="text" class="form-control" id="medicine_name" name="medicine_name" required>
-              <div id="medicineNameError" class="text-danger mt-1" style="font-size: 14px;"></div>
+              <div id="medicineNameError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
             </div>
 
             <!-- Price -->
             <div class="mb-3">
-              <label for="price" class="form-label">Price (₹)</label>
+              <label for="price" class="form-label fw-semibold">Price (₹)</label>
               <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
-              <div id="priceError" class="text-danger mt-1" style="font-size: 14px;"></div>
+              <div id="priceError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
             </div>
 
             <!-- Submit -->
             <div class="text-center mt-4">
-              <button type="submit" class="btn btn-success px-4">
+              <button type="submit" class="btn btn-success px-4 py-2">
                 <i class="bi bi-save me-1"></i> Save Medicine
               </button>
             </div>
@@ -33,6 +33,3 @@
     </div>
   </div>
 </div>
-
-<!-- Optional: Add client-side validation or UI logic -->
-<script src="/script/addMedicine.js"></script>
