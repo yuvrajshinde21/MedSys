@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MedSys+ | Final Bill</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #fff;
+    }
+
+    .print-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .print-btn button {
+      padding: 8px 16px;
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .header-left {
+      font-size: 14px;
+    }
+
+    .header-left h2 {
+      margin-bottom: 8px;
+    }
+
+    .header-right img {
+      width: 100px;
+    }
+
+    .bill-title {
+      background-color: #007b83;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin: 20px 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid #888;
+      padding: 6px 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    .summary-table td {
+      text-align: right;
+    }
+
+    .amount-label {
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .signature-section {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 50px;
+      font-size: 13px;
+    }
+
+    .signature-box {
+      width: 40%;
+      text-align: center;
+    }
+
+    .thank-you {
+      text-align: center;
+      margin-top: 30px;
+      font-style: italic;
+      color: #333;
+    }
+
+    @media print {
+      .print-btn {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="print-btn no-print">
+    <button onclick="window.print()">🖨️ Print</button>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h2>MedSys+</h2>
+      <p>Address: 123 Health Street, City</p>
+      <p>Phone: +91-9876543210</p>
+      <p>Email: info@medsys.com</p>
+      <p>GSTIN: 27ABCDE1234F2Z5</p>
+    </div>
+    <div class="header-right">
+      <img src="/images/hospital-logo.png" alt="Logo">
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="bill-title">Hospital Bill Book</div>
+
+  <!-- Patient Info Table -->
+  <table>
+    <tr>
+      <td><strong>Patient Name:</strong> <%= patient.patient_name %></td>
+      <td><strong>Bill No:</strong> #<%= appointment.appointment_id %></td>
+    </tr>
+    <tr>
+      <td><strong>Address:</strong> —</td>
+      <td><strong>Admit Date:</strong> <%= admission?.admitted_date ? new Date(admission.admitted_date).toLocaleDateString() : "-" %></td>
+    </tr>
+    <tr>
+      <td><strong>Phone No:</strong> <%= patient.patient_contact %></td>
+      <td><strong>Admit Till Date:</strong> <%= admission?.discharge_date ? new Date(admission.discharge_date).toLocaleDateString() : "-" %></td>
+    </tr>
+    <tr>
+      <td><strong>Email:</strong> —</td>
+      <td><strong>GSTIN:</strong> —</td>
+    </tr>
+  </table>
+
+  <!-- Billing Table -->
+  <table style="margin-top: 20px;">
+    <thead>
+      <tr>
+        <th>Sl. No.</th>
+        <th>Description</th>
+        <th>Unit</th>
+        <th>Quantity</th>
+        <th>Price / Unit</th>
+        <th>GST (%)</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Room Rent</td>
+        <td>Day</td>
+        <td><%= roomDays %></td>
+        <td><%= room.price.toFixed(2) %></td>
+        <td>12%</td>
+        <td><%= (room.price * roomDays).toFixed(2) %></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Doctor Charges</td>
+        <td>Visit</td>
+        <td>1</td>
+        <td>500.00</td>
+        <td>12%</td>
+        <td>500.00</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Nurse Charges</td>
+        <td>Shift</td>
+        <td>1</td>
+        <td><%= nurse.charge.toFixed(2) %></td>
+        <td>12%</td>
+        <td><%= nurse.charge.toFixed(2) %></td>
+      </tr>
+      <% prescriptions.forEach((p, i) => { %>
+        <tr>
+          <td><%= i + 4 %></td>
+          <td><%= p.medicine_name %></td>
+          <td>Unit</td>
+          <td><%= p.quantity %></td>
+          <td><%= p.price.toFixed(2) %></td>
+          <td>5%</td>
+          <td><%= (p.price * p.quantity).toFixed(2) %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <!-- Summary -->
+  <table class="summary-table" style="margin-top: 20px;">
+    <tr>
+      <td class="amount-label" colspan="6">Sub Total:</td>
+      <td>₹<%= (
+        roomTotal + 500 + nurse.charge + prescriptions.reduce((sum, p) => sum + p.price * p.quantity, 0)
+      ).toFixed(2) %></td>
+    </tr>
+    <tr>
+      <td class="amount-label" colspan="6"><strong>Final Amount:</strong></td>
+      <td><strong>₹<%= (
+        roomTotal + 500 + nurse.charge + prescriptions.reduce((sum, p) => sum + p.price * p.quantity, 0) - 100
+      ).toFixed(2) %></strong></td>
+    </tr>
+    
+  </table>
+
+  <!-- Declaration -->
+  <div style="margin-top: 20px;">
+    <strong>Declaration:</strong> We declare that this bill shows the actual price of the goods/services described and that all particulars are true.
+  </div>
+
+  <!-- Signatures -->
+  <div class="signature-section">
+    <div class="signature-box">
+      <hr>
+      Reception Signature
+    </div>
+    <div class="signature-box">
+      <hr>
+      Patient Signature
+    </div>
+  </div>
+
+  <!-- Thank You -->
+  <div class="thank-you">
+   Thank you for letting us care for you. Wishing you good health always.!!!
+  </div>
+
+</body>
+
+</html>
