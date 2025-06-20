@@ -243,3 +243,14 @@ exports.getAppoimentIdFromAdmission =async (admissionId) => {
     );
     return rows;
 }
+
+//discharge
+exports.markAsDischarged = async (admissionId) => {
+    const [result] = await promiseConn.query(
+        `UPDATE admissions 
+         SET status = 'Discharged', discharge_date = NOW() 
+         WHERE admission_id = ? AND status = 'Admitted'`,
+        [admissionId]
+    );
+    return result.affectedRows > 0;
+};

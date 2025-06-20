@@ -1,0 +1,28 @@
+<div class="container mt-4 w-50">
+  <h4 class="text-primary mb-3">✏️ Edit Patient</h4>
+  <form method="POST" action="/reception/patients/edit/<%= patient.patient_id %>">
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input type="text" name="patient_name" value="<%= patient.patient_name %>" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Age</label>
+      <input type="number" name="patient_age" value="<%= patient.patient_age %>" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Gender</label>
+      <select name="patient_gender" class="form-select" required>
+        <option value="Male" <%= patient.patient_gender === 'Male' ? 'selected' : '' %>>Male</option>
+        <option value="Female" <%= patient.patient_gender === 'Female' ? 'selected' : '' %>>Female</option>
+        <option value="Other" <%= patient.patient_gender === 'Other' ? 'selected' : '' %>>Other</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Contact</label>
+      <input type="text" name="patient_contact" value="<%= patient.patient_contact %>" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-success">💾 Save</button>
+    <a href="/reception/patients" class="btn btn-secondary ms-2">🔙 Cancel</a>
+  </form>
+</div>

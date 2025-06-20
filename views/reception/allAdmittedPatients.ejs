@@ -1,0 +1,175 @@
+<div class="container py-4">
+    <h3 class="mb-4 text-success">🏥 Currently Admitted Patients</h3>
+
+    <% if (admittedPatients && admittedPatients.length> 0) { %>
+        <div class="row row-cols-1 row-cols-lg-2 g-4">
+            <% admittedPatients.forEach(p=> { %>
+                <div class="col">
+                    <div class="card shadow border-0">
+                        <div
+                            class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 text-primary">Patient: <%= p.patient_name %>
+                            </h5>
+                            <span class="badge bg-success">Admitted</span>
+                        </div>
+
+                        <div class="card-body">
+                            <!-- Patient & Doctor Info -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="row mb-1">
+                                        <div class="col-5 fw-semibold">Age:</div>
+                                        <div class="col-7">
+                                            <%= p.patient_age %>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-5 fw-semibold">Gender:</div>
+                                        <div class="col-7">
+                                            <%= p.patient_gender %>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-5 fw-semibold">Contact:</div>
+                                        <div class="col-7">
+                                            <%= p.patient_contact %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="row mb-1">
+                                        <div class="col-5 fw-semibold">Doctor:</div>
+                                        <div class="col-7">
+                                            <%= p.doctor_name || 'N/A' %>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-5 fw-semibold">Admit Date:</div>
+                                        <div class="col-7">
+                                            <%= new Date(p.admitted_date).toLocaleDateString() %>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-5 fw-semibold">Admit Time:</div>
+                                        <div class="col-7">
+                                            <%= new Date(p.admitted_date).toLocaleTimeString([], { hour: '2-digit' ,
+                                                minute: '2-digit' }) %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- Room & Nurse -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="row mb-1">
+                                        <div class="col-5 fw-semibold">Room:</div>
+                                        <div class="col-7">
+                                            <% if (p.room_no) { %>
+                                                <%= p.room_no %> (<%= p.room_type %>)
+                                                        <% } else { %>
+                                                            <span class="text-warning">Not Assigned</span>
+                                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row mb-1">
+                                        <div class="col-5 fw-semibold">Nurse:</div>
+                                        <div class="col-7">
+                                            <% if (p.nurse_name) { %>
+                                                <%= p.nurse_name %> (Shift: <%= p.nurse_shift %>)
+                                                        <% } else { %>
+                                                            <span class="text-warning">Not Assigned</span>
+                                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-5 fw-semibold">ICU Required:</div>
+                                <div class="col-7">
+                                    <%= p.icu_required ? 'Yes' : 'No' %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-light d-flex justify-content-end gap-2">
+                            <!-- Buttons -->
+                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#roomModal-<%= p.admission_id %>">
+                                🛏 Assign Room
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#nurseModal-<%= p.admission_id %>">
+                                🧑‍⚕️ Assign Nurse
+                            </button>
+                            <a href="/doctor/discharge/<%= p.admission_id %>" class="btn btn-danger btn-sm">❌
+                                Discharge</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Assign Room Modal -->
+                <div class="modal fade" id="roomModal-<%= p.admission_id %>" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form action="/reception/assign-room/<%= p.admission_id %>" method="POST" class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">🛏 Assign Room to <%= p.patient_name %>
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <select name="room_no" class="form-select" required>
+                                    <option value="">-- Select Room --</option>
+                                    <% availableRooms.forEach(room=> { %>
+                                        <option value="<%= room.room_no %>">
+                                            Room <%= room.room_no %> (<%= room.room_type %>, ₹<%= room.charges_per_day
+                                                        %>/day)
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">✅ Assign</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Assign Nurse Modal -->
+                <div class="modal fade" id="nurseModal-<%= p.admission_id %>" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form action="/reception/assign-nurse/<%= p.admission_id %>" method="POST" class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">🧑‍⚕️ Assign Nurse to <%= p.patient_name %>
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <select name="nurse_id" class="form-select" required>
+                                    <option value="">-- Select Nurse --</option>
+                                    <% availableNurses.forEach(nurse=> { %>
+                                        <option value="<%= nurse.nurse_id %>">
+                                            <%= nurse.nurse_name %> (Shift: <%= nurse.nurse_shift %>)
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">✅ Assign</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <% }); %>
+        </div>
+        <% } else { %>
+            <div class="alert alert-info">No admitted patients found.</div>
+            <% } %>
+</div>

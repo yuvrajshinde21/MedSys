@@ -1,0 +1,83 @@
+<div class="container py-4 w-50">
+  <div class="card shadow-sm">
+    <div class="card-header bg-light">
+      <h4 class="text-success mb-0">💵 Bill Summary for <%= patient_name %></h4>
+    </div>
+
+    <div class="card-body">
+      <table class="table">
+        <tbody>
+          <!-- Room Charges -->
+          <tr>
+  <th scope="row">🛏️ Room Charges</th>
+  <td>
+    ₹ <%= roomCharges.toFixed(2) %><br>
+    <% if (admission) { %>
+      <small class="text-muted">
+        <%= admission.room_type %> room (₹<%= admission.charges_per_day %>/day) × <%= stayDays %> days
+      </small>
+    <% } else { %>
+      <small class="text-muted text-danger">No admission record</small>
+    <% } %>
+  </td>
+</tr>
+
+
+          <!-- Nurse Charges -->
+          <tr>
+            <th>🧑‍⚕️ Nurse Charges</th>
+            <td>
+              ₹ <%= nurseCharges.toFixed(2) %><br>
+              <% if (nurseDetail) { %>
+                <small class="text-muted">
+                  Assigned Nurse: <%= nurseDetail.nurse_name %> (₹500/day × <%= stayDays %> days)
+                </small>
+              <% } else { %>
+                <small class="text-muted">No nurse assigned</small>
+              <% } %>
+            </td>
+          </tr>
+
+          <!-- Treatment Charges -->
+          <tr>
+            <th>👨‍⚕️ Treatment Charges</th>
+            <td>
+              ₹ <%= treatmentCharges.toFixed(2) %><br>
+              <small class="text-muted">Flat consultation/procedure fee</small>
+            </td>
+          </tr>
+
+          <!-- Medicine Charges -->
+          <tr>
+            <th>💊 Medicine Charges</th>
+            <td>
+              ₹ <%= medicineCharges.toFixed(2) %>
+              <% if (medicineBreakdown.length > 0) { %>
+                <ul class="mb-0 small text-muted mt-1">
+                  <% medicineBreakdown.forEach(med => { %>
+                    <li><%= med.medicine_name %> (₹<%= med.price %> × <%= med.quantity %>) = ₹<%= (med.price * med.quantity).toFixed(2) %></li>
+                  <% }) %>
+                </ul>
+              <% } else { %>
+                <br><small class="text-muted">No prescriptions found</small>
+              <% } %>
+            </td>
+          </tr>
+
+          <!-- Total -->
+          <tr class="table-light">
+            <th>🧾 Total Amount</th>
+            <td><strong>₹ <%= totalAmount.toFixed(2) %></strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="text-muted">🗓️ Billing Date: <%= new Date(billing_date).toLocaleDateString() %></p>
+    </div>
+
+    <div class="card-footer d-flex justify-content-end">
+      <a href="/reception/patients" class="btn btn-outline-secondary me-2">🔙 Back</a>
+      <a href="/reception/bill/generate/<%= patientId %>" class="btn btn-success">💾 Save Bill</a>
+    </div>
+  </div>
+</div>
