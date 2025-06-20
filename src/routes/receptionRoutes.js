@@ -12,7 +12,7 @@ router.get("/", receptionController.showReceptionDashboard); // GET /reception
 //========================search======================
 router.get("/search-patients", receptionController.searchPatients);
 //view patient
-router.get("/patients/:patientId", patientController.viewPatientDetails);
+router.get("/view-patient/:patientId", patientController.viewSpecificPatientDetailsById);
 //===========================================
 
 // List all rooms
@@ -62,9 +62,9 @@ router.post("/nurses/:nurseId/update", nurseController.updateNurse);
 
 router.get("/nurse/delete/:nurseId", nurseController.deleteNurse); // GET /reception/nurse/delete/:nurseId
 
-// ---------------------- Patients ----------------------
+// ---------------------- Patients --viewPatientDetails--------------------
 //patient
-router.get("/patients/create", patientController.loadAppointmentForm);
+router.get("/patients/add", patientController.loadAppointmentForm);
 router.post("/patients/create", patientController.createPatientAppointment);
 //get doctor list by spelization id
 router.get("/doctors/:id", patientController.getDoctorsBySpecialization);

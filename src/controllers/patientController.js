@@ -8,16 +8,15 @@ const receptionModel = require("../models/receptionModel");
 
 //render patient form 
 exports.loadAppointmentForm = asyncHandler(async (req, res) => {
+  console.log("🔵 loadAppointmentForm called");
 
-    // const rooms = await patientModel.getAvailableRooms();
-    // const nurses = await patientModel.getAllNurses();
-    const specializations = await patientModel.getAllSpecializations();
-    res.render("reception/receptionDashboard.ejs", {
-        main_content: "addPatient",
-        title: "Add Patient",
-        specializations: specializations
-    });
+  const specializations = await patientModel.getAllSpecializations();
 
+  res.render("reception/receptionDashboard.ejs", {
+    title: "Add Patient",
+    main_content: "addPatient", // ✅ Remove "reception/"
+    specializations
+  });
 });
 
 exports.getDoctorsBySpecialization = async (req, res) => {
@@ -131,7 +130,7 @@ exports.getDoctorAvailableSlots = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
-// //get patient full detals
+//get patient full detals
 // exports.viewPatientDetails = asyncHandler(async (req, res) => {
 //   const patientId = req.params.patientId;
 
@@ -145,7 +144,7 @@ exports.getDoctorAvailableSlots = async (req, res) => {
 // });
 
 //get patient full detals
-exports.viewPatientDetails = asyncHandler(async (req, res) => {
+exports.viewSpecificPatientDetailsById = asyncHandler(async (req, res) => {
     const patientId = req.params.patientId;
 
     const patientDetails = await patientModel.getFullPatientDetails(patientId);
