@@ -1,90 +1,227 @@
 <%- include('../partials/header') %>
 
-<div class="container py-4">
-  <div class="card shadow rounded-4 border-0">
-    <div class="card-body">
+  <style>
 
-      <!-- Header -->
-      <div class="text-center mb-4">
-        <h2 class="fw-bold text-primary">MedSys+</h2>
-        <p class="mb-0">Contact: +91-9876543210</p>
-        <h4 class="mt-3">Patient Bill</h4>
-      </div>
+    .bill-header {
+      position: relative;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
 
-      <!-- Patient & Doctor Info -->
-      <div class="row">
-        <div class="col-md-6">
-          <h6>Patient Details</h6>
-          <p><strong>Name:</strong> <%= patient.patient_name %></p>
-          <p><strong>Age:</strong> <%= patient.patient_age %></p>
-          <p><strong>Gender:</strong> <%= patient.patient_gender %></p>
-          <p><strong>Contact:</strong> <%= patient.patient_contact %></p>
+    .bill-header::before {
+      content: "";
+      /* Background image for the hospital logo */
+      /* Adjust the path as necessary */
+      background: url('/images/hospital-logo.png') no-repeat center;
+      background-size: contain;
+      opacity: 0.16;
+      /* subtle */
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bill-header h2,
+    .bill-header p {
+      position: relative;
+      z-index: 1;
+    }
+
+    .bill-header h1 {
+      font-size: 4rem;
+      color: #0d6efd;
+      font-weight: 900;
+      margin-bottom: 0.3rem;
+    }
+
+    .bill-header h2 {
+      font-size: 2rem;
+      color: #0d6efd;
+      font-weight: 900;
+    }
+    .bill-header p.quote {
+      font-size: 1rem;
+      font-style: italic;
+      color: #6c757d;
+      margin-bottom: 1rem;
+    }
+
+    .bill-section {
+      background-color: #fdfdfd;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #dee2e6;
+    }
+
+    .table th,
+    .table td {
+      vertical-align: middle;
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-bottom: 1px solid #ced4da;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    @media print {
+      .btn {
+        display: none;
+      }
+
+      body {
+        background: white !important;
+      }
+
+      .card {
+        box-shadow: none !important;
+        border: none !important;
+      }
+    }
+  </style>
+
+
+  <div class="container py-4">
+
+    <div class="card shadow rounded-4 border-0">
+      <div class="card-body">
+
+        <!-- Header -->
+        <div class="text-center mb-4 bill-header">
+          <h1 class="fw-bold">MedSys+</h1>
+          <p class="quote">"Caring for life. Healing with heart."</p>
+          <p class="mb-0">Contact: +91-9876543210</p>
+          <h2 class="mt-3">Patient Bill</h2>
         </div>
-        <div class="col-md-6">
-          <h6>Doctor Details</h6>
-          <p><strong>Name:</strong> <%= doctor.doctor_name %></p>
-          <p><strong>Specialization:</strong> <%= doctor.specialization %></p>
-          <p><strong>Appointment Date:</strong> <%= appointment.appointment_date.toLocaleString() %></p>
-          <p><strong>Issue:</strong> <%= appointment.patient_issue %></p>
+
+        <!-- Patient Info -->
+        <div class="bill-section">
+          <div class="section-title">Patient Details</div>
+          <div class="row">
+            <div class="col-md-3"><strong>Name:</strong>
+              <%= patient.patient_name %>
+            </div>
+            <div class="col-md-3"><strong>Age:</strong>
+              <%= patient.patient_age %>
+            </div>
+            <div class="col-md-3"><strong>Gender:</strong>
+              <%= patient.patient_gender %>
+            </div>
+            <div class="col-md-3"><strong>Contact:</strong>
+              <%= patient.patient_contact %>
+            </div>
+            <div class="col-md-12 mt-2"><strong>Issue:</strong>
+              <%= appointment.patient_issue %>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <hr>
+        <!-- Doctor Info -->
+        <div class="bill-section">
+          <div class="section-title">Doctor Details</div>
+          <div class="row">
+            <div class="col-md-4"><strong>Name:</strong>
+              <%= doctor.doctor_name %>
+            </div>
+            <!-- <div class="col-md-4"><strong>Specialization:</strong>
+              <%= doctor.specialization %>
+            </div> -->
+            <div class="col-md-4"><strong>Appointment Date:</strong>
+              <%= new Date(appointment.appointment_date).toLocaleString() %>
+            </div>
 
-      <!-- Charges Table -->
-      <div class="table-responsive">
-        <table class="table table-bordered align-middle">
-          <thead class="table-primary">
-            <tr>
-              <th>Item</th>
-              <th>Details</th>
-              <th>Price (₹)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Room Charges</td>
-              <td><%= room.room_type %> Room - No: <%= room.room_no %></td>
-              <td><%= room.price.toFixed(2) %></td>
-            </tr>
-            <tr>
-              <td>Nurse Charges</td>
-              <td><%= nurse.nurse_name %> - <%= nurse.shift %> Shift</td>
-              <td><%= nurse.charge.toFixed(2) %></td>
-            </tr>
+          </div>
+        </div>
 
-            <% prescriptions.forEach((p, i) => { %>
+        <!-- Charges Table -->
+        <div class="table-responsive bill-section">
+          <table class="table table-bordered align-middle">
+            <thead class="table-primary">
               <tr>
-                <td>Medicine <%= i + 1 %></td>
-                <td><%= p.medicine_name %> (Qty: <%= p.quantity %>, Dosage: <%= p.dosage %>)</td>
-                <td><%= (p.price * p.quantity).toFixed(2) %></td>
+                <th>Item</th>
+                <th>Details</th>
+                <th>Price (₹)</th>
               </tr>
-            <% }) %>
+            </thead>
+            <tbody>
+              <!-- Room Charges -->
+              <tr>
+                <td>Room Charges</td>
+                <td>
+                  <%= room.room_type %> Room - No: <%= room.room_no %>
+                      (<%= roomDays %> day<%= roomDays> 1 ? 's' : '' %>)
+                </td>
+                <td>
+                  <%= roomTotal.toFixed(2) %>
+                </td>
+              </tr>
 
-            <!-- Total -->
-            <tr class="table-success">
-              <th colspan="2" class="text-end">Total Amount</th>
-              <th>
-                ₹<%= (
-                    room.price + nurse.charge +
-                    prescriptions.reduce((sum, p) => sum + p.price * p.quantity, 0)
-                  ).toFixed(2)
-                %>
-              </th>
-            </tr>
-          </tbody>
-        </table>
+              <!-- Doctor Charges -->
+              <tr>
+                <td>Doctor Charges</td>
+                <td>
+                  <%= doctor.doctor_name %> Consultation
+                </td>
+                <td>₹500.00</td>
+              </tr>
+
+              <!-- Nurse Charges -->
+              <tr>
+                <td>Nurse Charges</td>
+                <td>
+                  <%= nurse.nurse_name %> - <%= nurse.shift %> Shift
+                </td>
+                <td>
+                  <%= nurse.charge.toFixed(2) %>
+                </td>
+              </tr>
+
+              <!-- Medicines -->
+              <% prescriptions.forEach((p, i)=> { %>
+                <tr>
+                  <td>Medicine <%= i + 1 %>
+                  </td>
+                  <td>
+                    <%= p.medicine_name %> (Qty: <%= p.quantity %>, Dosage: <%= p.dosage %>)
+                  </td>
+                  <td>
+                    <%= (p.price * p.quantity).toFixed(2) %>
+                  </td>
+                </tr>
+                <% }) %>
+
+                  <!-- Total Amount -->
+                  <tr class="table-success fw-bold">
+                    <th colspan="2" class="text-end">Total Amount</th>
+                    <th>
+                      ₹<%= ( roomTotal + 500 + nurse.charge + prescriptions.reduce((sum, p)=> sum + p.price *
+                        p.quantity, 0)
+                        ).toFixed(2) %>
+                    </th>
+                  </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Print Button -->
+        <div class="text-end mt-3">
+
+          <a href="/reception/print-bill/<%= patient.patient_id %>" target="_blank" class="btn btn-primary">
+            <i class="bi bi-printer"></i> Print Bill
+          </a>
+        </div>
+
       </div>
-
-      <!-- Button -->
-      <div class="text-end mt-3">
-        <button class="btn btn-primary" onclick="window.print()">
-          <i class="bi bi-printer"></i> Print Bill
-        </button>
-      </div>
-
     </div>
   </div>
-</div>
 
-<%- include('../partials/footer') %>
+
+  <%- include('../partials/footer') %>
+
