@@ -1,6 +1,7 @@
 <%- include('../partials/header') %>
 
   <style>
+
     .bill-header {
       position: relative;
       padding: 2rem 1rem;
@@ -42,7 +43,6 @@
       color: #0d6efd;
       font-weight: 900;
     }
-
     .bill-header p.quote {
       font-size: 1rem;
       font-style: italic;
@@ -72,28 +72,6 @@
     }
 
     @media print {
-      body * {
-        visibility: hidden;
-      }
-
-      #print-area,
-      #print-area * {
-        visibility: visible;
-      }
-
-      #print-area {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-      }
-
-      .btn {
-        display: none !important;
-      }
-    }
-
-    @media print {
       .btn {
         display: none;
       }
@@ -109,7 +87,9 @@
     }
   </style>
 
-  <div id="print-area" class="container py-4">
+
+  <div class="container py-4">
+
     <div class="card shadow rounded-4 border-0">
       <div class="card-body">
 
@@ -232,6 +212,7 @@
 
         <!-- Print Button -->
         <div class="text-end mt-3">
+
           <a href="/reception/print-bill/<%= patient.patient_id %>" target="_blank" class="btn btn-primary">
             <i class="bi bi-printer"></i> Print Bill
           </a>
@@ -241,4 +222,6 @@
     </div>
   </div>
 
+
   <%- include('../partials/footer') %>
+
