@@ -1,57 +1,67 @@
-<div class="container mt-4">
-    <div class="card shadow rounded-4">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Add Receptionist</h5>
-        </div>
-        <div class="card-body">
-            <form action="/admin/reception" method="POST" enctype="multipart/form-data" novalidate>
-                <div class="mb-3">
-                    <label for="reception_name" class="form-label">Receptionist Name</label>
-                    <input type="text" class="form-control" id="reception_name" name="reception_name" required>
-                <div id="receptionNameError" class="text-danger mt-1" style="font-size: 14px;"></div>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
-                    <div id="receptionUserNameError" class="text-danger mt-1" style="font-size: 14px;"></div>
-                </div>
+<div class="container py-4">
+  <form action="/admin/reception" method="POST" enctype="multipart/form-data" novalidate
+    class="p-4 border-0 rounded-4 shadow w-100 w-md-75 mx-auto"
+    style="background-color: #f0f8ff; max-width: 48rem;">
 
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                    <div id="receptionPasswordError" class="text-danger mt-1" style="font-size: 14px;"></div>
-                </div>
+    <h4 class="text-primary mb-4 text-center">Add Receptionist</h4>
 
-                <div class="mb-3">
-                    <label for="reception_contact" class="form-label">Contact Number</label>
-                    <input type="tel" class="form-control" id="reception_contact" name="reception_contact" required>
-                    <div id="receptionContactError" class="text-danger mt-1" style="font-size: 14px;"></div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="reception_email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="reception_email" name="reception_email">
-                    <div id="receptionEmailError" class="text-danger mt-1" style="font-size: 14px;"></div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select class="form-select" id="status" name="status" required>
-                        <option value="" selected disabled>Select Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="reception_image" class="form-label">Receptionist Image</label>
-                    <input class="form-control" type="file" id="reception_image" name="reception_image"
-                        accept="image/*">
-                    <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
-                </div>
-
-                <button type="submit" id="receptionSubmitButton" class="btn btn-success">Add Receptionist</button>
-            </form>
-        </div>
+    <!-- Name -->
+    <div class="mb-3">
+      <label for="reception_name" class="form-label">Receptionist Name</label>
+      <input type="text" class="form-control" id="reception_name" name="reception_name" required>
+      <div id="receptionNameError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
     </div>
+
+    <!-- Username -->
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" id="username" name="username" required>
+      <div id="receptionUserNameError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+      <div id="receptionPasswordError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
+
+    <!-- Contact -->
+    <div class="mb-3">
+      <label for="reception_contact" class="form-label">Contact Number</label>
+      <input type="tel" class="form-control" id="reception_contact" name="reception_contact" required>
+      <div id="receptionContactError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+      <label for="reception_email" class="form-label">Email Address</label>
+      <input type="email" class="form-control" id="reception_email" name="reception_email">
+      <div id="receptionEmailError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+    </div>
+
+    <!-- Status -->
+    <div class="mb-3">
+      <label for="status" class="form-label">Status</label>
+      <select class="form-select" id="status" name="status" required>
+        <option value="" selected disabled>Select Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
+
+    <!-- Image -->
+    <div class="mb-3">
+      <label for="reception_image" class="form-label">Receptionist Image</label>
+      <input class="form-control" type="file" id="reception_image" name="reception_image" accept="image/*">
+      <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="text-center mt-4">
+      <button type="submit" id="receptionSubmitButton" class="btn btn-success px-4 py-2">
+        <i class="bi bi-person-plus me-1"></i> Add Receptionist
+      </button>
+    </div>
+  </form>
 </div>

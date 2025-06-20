@@ -1,87 +1,61 @@
-<div class="container-fluid py-4">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-11">
+<div class="container py-4">
+  <div class="w-100 w-md-75 mx-auto" style="max-width: 64rem;">
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h2 class="text-primary">Patient Records</h2>
-          <a href="/reception/patients/new" class="btn btn-outline-primary">
-            ➕ Add Patient
-          </a>
-        </div>
-
-        <div class="table-responsive rounded-4 shadow-sm border bg-white p-3">
-          <table class="table table-bordered table-hover align-middle text-center">
-            <thead class="table-primary">
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Gender</th>
-                <th>Contact</th>
-                <th>Issue</th>
-                <th>Admitted</th>
-                <th>Discharged</th>
-                <th>Room</th>
-                <th>Nurse</th>
-                <th>Doctor</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if (patients.length> 0) { %>
-                <% patients.forEach(patient=> { %>
-                  <tr>
-                    <td>
-                      <%= patient.patient_id %>
-                    </td>
-                    <td>
-                      <%= patient.patient_name %>
-                    </td>
-                    <td>
-                      <%= patient.patient_age %>
-                    </td>
-                    <td>
-                      <%= patient.patient_gender %>
-                    </td>
-                    <td>
-                      <%= patient.patient_contact %>
-                    </td>
-                    <td>
-                      <%= patient.patient_issue %>
-                    </td>
-                    <td>
-                      <%= patient.admitted_date ? patient.admitted_date.toISOString().split('T')[0] : '' %>
-                    </td>
-                    <td>
-                      <%= patient.discharge_date ? patient.discharge_date.toISOString().split('T')[0] : '' %>
-                    </td>
-                    <td>
-                      <%= patient.room_no %>
-                    </td>
-                    <td>
-                      <%= patient.nurse_id %>
-                    </td>
-                    <td>
-                      <%= patient.doctor_id %>
-                    </td>
-                    <td>
-                      <span class="badge bg-<%= patient.status === 'Admitted' ? 'success' : 'secondary' %>">
-                        <%= patient.status %>
-                      </span>
-                    </td>
-                  </tr>
-                  <% }) %>
-                    <% } else { %>
-                      <tr>
-                        <td colspan="12" class="text-muted">No patients found.</td>
-                      </tr>
-                      <% } %>
-            </tbody>
-          </table>
-        </div>
-
-      </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="text-primary m-0"><i class="bi bi-clipboard2-heart-fill me-2"></i>Patient Records</h4>
+      <a href="/reception/patients/new" class="btn btn-outline-primary">
+        <i class="bi bi-person-plus-fill me-1"></i> Add Patient
+      </a>
     </div>
+
+    <div class="table-responsive rounded-4 shadow-sm border bg-white p-3">
+      <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-primary">
+          <tr>
+            <th><i class="bi bi-hash me-1"></i>ID</th>
+            <th><i class="bi bi-person-fill me-1"></i>Name</th>
+            <th><i class="bi bi-calendar2-week me-1"></i>Age</th>
+            <th><i class="bi bi-gender-ambiguous me-1"></i>Gender</th>
+            <th><i class="bi bi-telephone-fill me-1"></i>Contact</th>
+            <th><i class="bi bi-journal-medical me-1"></i>Issue</th>
+            <th><i class="bi bi-door-open-fill me-1"></i>Admitted</th>
+            <th><i class="bi bi-box-arrow-left me-1"></i>Discharged</th>
+            <th><i class="bi bi-house-door-fill me-1"></i>Room</th>
+            <th><i class="bi bi-person-badge-fill me-1"></i>Nurse</th>
+            <th><i class="bi bi-person-vcard-fill me-1"></i>Doctor</th>
+            <th><i class="bi bi-heart-pulse-fill me-1"></i>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (patients.length > 0) { %>
+            <% patients.forEach(patient => { %>
+              <tr>
+                <td><%= patient.patient_id %></td>
+                <td class="text-capitalize"><%= patient.patient_name %></td>
+                <td><%= patient.patient_age %></td>
+                <td class="text-capitalize"><%= patient.patient_gender %></td>
+                <td><%= patient.patient_contact %></td>
+                <td><%= patient.patient_issue %></td>
+                <td><%= patient.admitted_date ? patient.admitted_date.toISOString().split('T')[0] : '' %></td>
+                <td><%= patient.discharge_date ? patient.discharge_date.toISOString().split('T')[0] : '' %></td>
+                <td><%= patient.room_no %></td>
+                <td><%= patient.nurse_id %></td>
+                <td><%= patient.doctor_id %></td>
+                <td>
+                  <span class="badge bg-<%= patient.status === 'Admitted' ? 'success' : 'secondary' %>">
+                    <%= patient.status %>
+                  </span>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="12" class="text-muted">No patients found.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </div>
