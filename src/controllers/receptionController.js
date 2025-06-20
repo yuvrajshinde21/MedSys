@@ -29,20 +29,6 @@ exports.searchPatients = async (req, res) => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //  ============================= Room Controller  =============================
 //render AddRoom.ejs form:
 exports.renderAddRoom = (req, res) => {
