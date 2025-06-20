@@ -5,7 +5,7 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h2 class="text-primary">Patient Records</h2>
-                    <a href="/reception/patients/new" class="btn btn-outline-primary">➕ Add Patient</a>
+                    <a href="/reception/patients/create" class="btn btn-outline-primary">➕ Add Patient</a>
                 </div>
 
                 <div class="table-responsive rounded-4 shadow-sm border bg-white p-3">
@@ -23,7 +23,7 @@
                         </thead>
                         <tbody>
                             <% if (patients.length> 0) { %>
-                                <% patients.forEach(p=> {
+                                <% patients.forEach((p,i)=> {
                                     let status = "Scheduled";
                                     if (p.admission_status === "Admitted") status = "Admitted";
                                     else if (p.admission_status === "Discharged") status = "Discharged";
@@ -32,7 +32,7 @@
                                     %>
                                     <tr>
                                         <td>
-                                            <%= p.patient_id %>
+                                            <%=i+1  %>
                                         </td>
                                         <td>
                                             <%= p.patient_name %>
@@ -66,7 +66,7 @@
                                                 </a>
 
                                                 <% if (status==='Completed' || status==='Discharged' ) { %>
-                                                    <a href="/reception/billing/<%= p.patient_id %>"
+                                                    <a href="/reception/patients/bill/<%= p.patient_id %>"
                                                         class="btn btn-sm btn-success">
                                                         💰 Bill
                                                     </a>

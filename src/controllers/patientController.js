@@ -1,13 +1,13 @@
 const moment = require("moment");
 
 const patientModel = require("../models/patientModel");
-const asynchandler = require("express-async-handler");
-
+const asyncHandler = require("express-async-handler");
+const receptionModel = require("../models/receptionModel");
 // Add patient controller
 
 
 //render patient form 
-exports.loadAppointmentForm = asynchandler(async (req, res) => {
+exports.loadAppointmentForm = asyncHandler(async (req, res) => {
 
     // const rooms = await patientModel.getAvailableRooms();
     // const nurses = await patientModel.getAllNurses();
@@ -75,14 +75,14 @@ exports.createPatientAppointment = async (req, res) => {
 };
 
 
-exports.getAllPatients = asynchandler(async (req, res) => {
+exports.getAllPatients = asyncHandler(async (req, res) => {
     const patients = await patientModel.fetchBasicPatients();
-     res.render("reception/receptionDashboard.ejs", {
+    res.render("reception/receptionDashboard.ejs", {
         main_content: "viewPatients",
         title: "View Patients",
         patients,
     });
-  
+
 });
 
 // Get available slots for a doctor on a specific date
@@ -105,7 +105,7 @@ exports.getDoctorAvailableSlots = async (req, res) => {
         );
 
         if (bookedTimes.length >= 10) {
-            return res.json([]); // Max slots filled
+            return res.json([]);
         }
 
         const available = [];
@@ -114,7 +114,6 @@ exports.getDoctorAvailableSlots = async (req, res) => {
         while (slot.isBefore(end)) {
             const time = slot.format("HH:mm");
 
-            // ✅ Skip if this is today and slot time is in the past
             if (moment(date).isSame(moment(), 'day') && slot.isBefore(now)) {
                 slot.add(30, "minutes");
                 continue;
@@ -132,3 +131,95 @@ exports.getDoctorAvailableSlots = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+// //get patient full detals
+// exports.viewPatientDetails = asyncHandler(async (req, res) => {
+//   const patientId = req.params.patientId;
+
+//   const patientDetails = await patientModel.getFullPatientDetails(patientId);
+
+//   res.render("reception/receptionDashboard", {
+//     main_content: "patient_full_details",
+//     title: "Patient Details",
+//     patient: patientDetails
+//   });
+// });
+
+//get patient full detals
+exports.viewPatientDetails = asyncHandler(async (req, res) => {
+    const patientId = req.params.patientId;
+
+    const patientDetails = await patientModel.getFullPatientDetails(patientId);
+    const bill = await patientModel.getBillByPatientId(patientId);
+    const availableRooms = await receptionModel.getAvailableRooms();
+    const availableNurses = await receptionModel.getAvailableNurses();
+    res.render("reception/receptionDashboard", {
+        main_content: "patient_full_details",
+        title: "Patient Details",
+        patient: patientDetails,
+        bill,
+    availableRooms,
+    availableNurses
+    });
+});
+
+
+// Show Edit Form
+exports.renderEditPatientForm = async (req, res) => {
+    const patientId = req.params.patient_id;
+
+    try {
+        const patient = await patientModel.getPatientById(patientId);
+        if (!patient) {
+            return res.status(404).send("Patient not found");
+        }
+
+        res.render("reception/receptionDashboard", {
+            main_content: "edit_patient",
+            patient
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading edit form");
+    }
+};
+
+// Show Edit Form
+exports.renderEditPatientForm = async (req, res) => {
+    const patientId = req.params.patient_id;
+
+    try {
+        const patient = await patientModel.getPatientById(patientId);
+        if (!patient) {
+            return res.status(404).send("Patient not found");
+        }
+
+        res.render("reception/receptionDashboard", {
+            main_content: "edit_patient",
+            patient
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading edit form");
+    }
+};
+
+// Handle Update
+exports.updatePatientDetails = async (req, res) => {
+    const patientId = req.params.patient_id;
+    const { patient_name, patient_age, patient_gender, patient_contact } = req.body;
+
+    try {
+        await patientModel.updatePatient(patientId, {
+            patient_name,
+            patient_age,
+            patient_gender,
+            patient_contact,
+        });
+
+        res.redirect("/reception/patients"); // or detailed view
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error updating patient");
+    }
+};
+//========================================

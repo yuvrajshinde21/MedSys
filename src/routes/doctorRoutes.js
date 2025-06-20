@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const doctorController = require("../controllers/doctorController");
+const asyncHandler = require('express-async-handler');
+
 
 //get scheduled appoiments
 router.route("/appointments/scheduled").get(doctorController.getScheduledAppointments);
@@ -12,6 +14,10 @@ router.route('/appointments/prescribe/:appointmentId').get(doctorController.show
 router.route("/admitted-patients").get(doctorController.getAdmittedPatientsOfDoctor);
 //show priscption and create [resption]
 router.route("/admitted-patients/prescribe/:admissionId").get(doctorController.showAdmittedPatientPrescriptionForm).post( doctorController.createAdmittedPrescription);
+//discharge patient
+
+// Route to discharge a patient
+router.get('/admitted-patients/discharge/:id', asyncHandler(doctorController.dischargePatient));
 
 
 // POST /doctor/prescriptions/add

@@ -1,29 +1,6 @@
 const conn = require("../config/dbConfig");
 const promiseConn = conn.promise();
 
-// Save patient to database
-// exports.savePatient = async (patient) => {
-//   const [result] = await promiseConn.query(
-//     `INSERT INTO patient 
-//     (patient_name, patient_age, patient_gender, patient_contact, patient_issue, admitted_date, discharge_date, room_no, nurse_id, doctor_id, status)
-//     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-//     [
-//       patient.patient_name,
-//       patient.patient_age,
-//       patient.patient_gender,
-//       patient.patient_contact,
-//       patient.patient_issue,
-//       patient.admitted_date,
-//       patient.discharge_date,==
-//       patient.room_no,==
-//       patient.nurse_id,==
-//       patient.doctor_id,
-//       patient.status,==
-//     ]
-//   );
-//   return result.insertId;
-// };
-
 // View all patients
 exports.fetchBasicPatients = async () => {
   const [rows] = await promiseConn.query(`
@@ -33,8 +10,6 @@ exports.fetchBasicPatients = async () => {
       p.patient_age,
       p.patient_gender,
       p.patient_contact,
-
-      -- Most recent appointment status
       (
         SELECT status 
         FROM appointments 
@@ -42,8 +17,6 @@ exports.fetchBasicPatients = async () => {
         ORDER BY appointment_date DESC 
         LIMIT 1
       ) AS appointment_status,
-
-      -- Most recent admission status
       (
         SELECT status 
         FROM admissions 
@@ -58,11 +31,6 @@ exports.fetchBasicPatients = async () => {
 
   return rows;
 };
-
-
-
-
-
 
 // //===============================================================================================================
 
@@ -82,47 +50,143 @@ exports.fetchBasicPatients = async () => {
 
 // get spelizations
 exports.getAllSpecializations = async () => {
-    const [rows] = await promiseConn.query("SELECT * FROM specializations");
-    return rows;
-}
+  const [rows] = await promiseConn.query("SELECT * FROM specializations");
+  return rows;
+};
 
-//get doctors by specialization 
+//get doctors by specialization
 exports.getDoctorsBySpecialization = async (specializationId) => {
-    const [rows] = await promiseConn.query(
-        "SELECT doctor_id, doctor_name FROM doctor WHERE doctor_specialization = ? AND is_deleted = 0",
-        [specializationId]
-    );
-    return rows;
+  const [rows] = await promiseConn.query(
+    "SELECT doctor_id, doctor_name FROM doctor WHERE doctor_specialization = ? AND is_deleted = 0",
+    [specializationId]
+  );
+  return rows;
 };
 
 //insert patient===
 exports.createPatient = async (name, age, gender, contact) => {
-    return await promiseConn.query(
-        `INSERT INTO patients 
+  return await promiseConn.query(
+    `INSERT INTO patients 
         (patient_name, patient_age, patient_gender, patient_contact)
         VALUES (?, ?, ?, ?)`,
-        [name, age, gender, contact]
-    );
+    [name, age, gender, contact]
+  );
 };
 //create appointment
-exports.createAppointment = async (patient_id, doctor_id, appointment_datetime, issue) => {
-    return await promiseConn.query(
-        `INSERT INTO appointments 
+exports.createAppointment = async (
+  patient_id,
+  doctor_id,
+  appointment_datetime,
+  issue
+) => {
+  return await promiseConn.query(
+    `INSERT INTO appointments 
         (patient_id, doctor_id, appointment_date, patient_issue,status)
         VALUES (?, ?, ?, ?,'Scheduled')`,
-        [patient_id, doctor_id, appointment_datetime,issue]
-    );
+    [patient_id, doctor_id, appointment_datetime, issue]
+  );
 };
 //===
 
-
 //get booked slots by doctor id
 exports.getBookedSlots = async (doctorId, appointmentDate) => {
-    const [rows] = await promiseConn.query(
-        `SELECT appointment_date FROM appointments 
+  const [rows] = await promiseConn.query(
+    `SELECT appointment_date FROM appointments 
          WHERE doctor_id = ? AND DATE(appointment_date) = ? 
          AND status = 'Scheduled'`,
-        [doctorId, appointmentDate]
-    );
-    return rows;
+    [doctorId, appointmentDate]
+  );
+  return rows;
+};
+exports.getFullPatientDetails = async (patientId) => {
+  // 1. Patient basic info
+  const [patientRows] = await promiseConn.query(
+    `
+    SELECT patient_id, patient_name, patient_age, patient_gender, patient_contact
+    FROM patients
+    WHERE patient_id = ?
+  `,
+    [patientId]
+  );
+
+  const patient = patientRows[0];
+
+  if (!patient) return null;
+
+  // 2. Latest appointment
+  const [appointmentRows] = await promiseConn.query(
+    `
+    SELECT 
+      a.appointment_id,
+      a.appointment_date,
+      a.status AS appointment_status,
+      a.patient_issue,
+      d.doctor_name
+    FROM appointments a
+    LEFT JOIN doctor d ON a.doctor_id = d.doctor_id
+    WHERE a.patient_id = ?
+    ORDER BY a.appointment_date DESC
+    LIMIT 1
+  `,
+    [patientId]
+  );
+
+  const latestAppointment = appointmentRows[0] || {};
+
+  // 3. Latest admission
+  const [admissionRows] = await promiseConn.query(
+    `
+    SELECT 
+      ad.admission_id,
+      ad.room_no,
+      r.room_type,
+      ad.status AS admission_status,
+      ad.admitted_date,
+      ad.discharge_date,
+      ad.icu_required,
+      n.nurse_name
+    FROM admissions ad
+    LEFT JOIN rooms r ON ad.room_no = r.room_no
+    LEFT JOIN nurses n ON ad.nurse_id = n.nurse_id
+    WHERE ad.patient_id = ?
+    ORDER BY ad.admitted_date DESC
+    LIMIT 1
+  `,
+    [patientId]
+  );
+
+  const latestAdmission = admissionRows[0] || {};
+
+  // 4. Merge all data
+  return {
+    ...patient,
+    ...latestAppointment,
+    ...latestAdmission,
+  };
+};
+
+//get bill by patient id
+exports.getBillByPatientId = async (patientId) => {
+  const [rows] = await promiseConn.query(
+    `SELECT * FROM bill WHERE patient_id = ? ORDER BY billing_date DESC LIMIT 1`,
+    [patientId]
+  );
+  return rows[0]; // or undefined
+};
+
+//get patient by id
+exports.getPatientById = async (id) => {
+  const [rows] = await promiseConn.query(
+    "SELECT * FROM patients WHERE patient_id = ?",
+    [id]
+  );
+  return rows[0];
+};
+//update patient
+exports.updatePatient = async (id, data) => {
+  const { patient_name, patient_age, patient_gender, patient_contact } = data;
+  await promiseConn.query(
+    "UPDATE patients SET patient_name = ?, patient_age = ?, patient_gender = ?, patient_contact = ? WHERE patient_id = ?",
+    [patient_name, patient_age, patient_gender, patient_contact, id]
+  );
 };

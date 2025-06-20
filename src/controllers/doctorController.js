@@ -155,3 +155,17 @@ exports.createAdmittedPrescription = asynchandler(async (req, res) => {
     res.redirect("/doctor/admitted-patients"); 
 
 });
+
+//discharge
+
+exports.dischargePatient = async (req, res) => {
+    const admissionId = req.params.id;
+
+    const success = await doctorModel.markAsDischarged(admissionId);
+    if (success) {
+        req.flash('successMessage', 'Patient discharged successfully.');
+    } else {
+        req.flash('errorMessage', 'Discharge failed. Try again.');
+    }
+    res.redirect('/doctor/admitted-patients'); 
+};

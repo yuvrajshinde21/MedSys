@@ -1,23 +1,48 @@
 //Room_ Controller
 let receptionModel = require("../models/receptionModel");
-const asynchandler = require("express-async-handler");
+const asyncHandler = require("express-async-handler");
 
 exports.showReceptionDashboard = async (req, res) => {
-  //get receptionist info
-  const receptionistId = req.user.user_id;
-  const receptionistInfo = await receptionModel.getReceptionistInfo(
-    receptionistId
-  );
-  res.render(
-    "reception/receptionDashboard.ejs"
-    // {
-    // main_content: "receptionistInfo",
-    // receptionist: receptionistInfo,
-    // title: "Reception Dashboard",
-    // message: "Welcome to the Reception Dashboard"
-    // }
-  );
+    //get receptionist info 
+    const receptionistId = req.user.user_id;
+    const receptionistInfo = await receptionModel.getReceptionistInfo(receptionistId);
+    res.render("reception/receptionDashboard.ejs"
+        // ,{
+        // main_content: "receptionistInfo",
+        // receptionist: receptionistInfo,
+        // title: "Reception Dashboard",
+        // message: "Welcome to the Reception Dashboard"
+        // }
+    );
+
 };
+//----------search=============================
+exports.searchPatients = async (req, res) => {
+  const query = req.query.q;
+  try {
+    const results = await receptionModel.searchPatientsByNameOrContact(query);
+    res.json(results); // send array of patients
+  } catch (err) {
+    console.error("Search error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //  ============================= Room Controller  =============================
 //render AddRoom.ejs form:
 exports.renderAddRoom = (req, res) => {
@@ -29,16 +54,28 @@ exports.renderAddRoom = (req, res) => {
 };
 
 //create room controller:
-exports.createRoom = asynchandler(async (req, res) => {
-  const room_no = req.body.room_no.trim();
-  const room_type = req.body.room_type.trim();
-  const room_status = req.body.room_status.trim();
-  const charges_per_day = req.body.charges_per_day.trim();
+exports.createRoom = asyncHandler(async (req, res) => {
+    const room_no = req.body.room_no.trim();
+    const room_type = req.body.room_type.trim();
+    const room_status = req.body.room_status.trim();
+    const charges_per_day = req.body.charges_per_day.trim();
 
-  if (!room_no || !room_type || !room_status || !charges_per_day) {
-    return res.render("reception/receptionDashboard", {
-      main_content: "AddRoom",
-      message: "All fields are required.",
+    if (!room_no || !room_type || !room_status || !charges_per_day) {
+        return res.render("reception/receptionDashboard", {
+            main_content: "AddRoom",
+            message: "All fields are required."
+        });
+    }
+    const data = await receptionModel.createRoom({  //try to click on createRomm says there are two definationa by vscode
+        room_no,
+        room_type,
+        room_status,
+        charges_per_day
+    });
+    res.render("reception/receptionDashboard", {
+        main_content: "AddRoom",
+        message: data.message
+
     });
   }
   const data = await receptionModel.createRoom({
@@ -246,3 +283,54 @@ exports.renderPrintBill = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+
+//get all admited patients
+
+exports.showAdmittedPatients = asyncHandler(async (req, res) => {
+    const admittedPatients = await receptionModel.getAdmittedPatients();
+    const availableRooms = await receptionModel.getAvailableRooms();
+    const availableNurses = await receptionModel.getAvailableNurses();
+
+    res.render("reception/receptionDashboard", {
+        main_content: "allAdmittedPatients",
+        admittedPatients,
+        availableRooms,
+        availableNurses
+    });
+});
+
+// asign room
+exports.assignRoom = asyncHandler(async (req, res) => {
+    const admissionId = req.params.id;
+    const { room_no } = req.body;
+
+    const success = await receptionModel.assignRoom(admissionId, room_no);
+
+    if (success) {
+        req.flash("successMessage", "Room assigned successfully.");
+    } else {
+        req.flash("errorMessage", "Room is no longer available. Please choose another.");
+    }
+
+    res.redirect("/reception/admitted-patients");
+});
+
+
+//assign nurse
+exports.assignNurse = asyncHandler(async (req, res) => {
+  const admissionId = req.params.id;
+  const { nurse_id } = req.body;
+
+  try {
+    await receptionModel.assignNurseToPatient(admissionId, nurse_id);
+
+    req.flash("successMessage", "Nurse assigned successfully.");
+    res.redirect("/reception/admitted-patients");
+  } catch (error) {
+    console.error("Assign Nurse Error:", error);
+    req.flash("errorMessage", "Failed to assign nurse. Please try again.");
+    res.redirect("/reception/admitted-patients");
+  }
+});
+
