@@ -187,11 +187,62 @@ exports.generateBill = async (req, res) => {
       room,
       roomDays,
       roomTotal,
+      admission,
       nurse,
       prescriptions,
     });
   } catch (err) {
     console.error("Error generating bill:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+//
+exports.renderPrintBill = async (req, res) => {
+  try {
+    const patientId = req.params.patientId;
+    console.log("Patient ID:", patientId);
+    const patient = await receptionModel.getPatientById(patientId);
+    const appointment = await receptionModel.getLatestAppointmentByPatient(patientId);
+    const doctor = await receptionModel.getDoctorById(appointment.doctor_id);
+    const admission = await receptionModel.getAdmissionByAppointmentId(appointment.appointment_id);
+
+    let room = { room_no: "-", room_type: "N/A", price: 0 };
+    let nurse = { nurse_name: "N/A", shift: "-", charge: 0 };
+    let roomDays = 0;
+    let roomTotal = 0;
+
+    if (admission) {
+      if (admission.room_no) {
+        room = await receptionModel.getRoomByNo(admission.room_no);
+
+        const admittedDate = new Date(admission.admitted_date);
+        const dischargeDate = admission.discharge_date ? new Date(admission.discharge_date) : new Date();
+        const diffTime = Math.abs(dischargeDate - admittedDate);
+        roomDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+        roomTotal = roomDays * room.price;
+      }
+
+      if (admission.nurse_id) {
+        nurse = await receptionModel.getNurseById(admission.nurse_id);
+      }
+    }
+
+    const prescriptions = await receptionModel.getPrescriptionsByPatientId(patientId);
+
+    res.render("reception/printBill", {
+      patient,
+      doctor,
+      appointment,
+      room,
+      roomDays,
+      roomTotal,
+      admission,
+      nurse,
+      prescriptions,
+    });
+  } catch (err) {
+    console.error("Error rendering print bill:", err);
     res.status(500).send("Internal Server Error");
   }
 };
