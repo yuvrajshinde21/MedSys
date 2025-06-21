@@ -1,0 +1,136 @@
+<!-- Search Bar CSS -->
+<style>
+  #searchWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  #patientSearch {
+    border-radius: 25px 25px 0 0;
+    padding: 0.5rem 1.2rem 0.5rem 2.2rem;
+    border: 1px solid #ced4da;
+    font-size: 0.95rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease-in-out;
+    background-image: url("https://cdn-icons-png.flaticon.com/512/622/622669.png");
+    background-size: 18px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-color: #fff;
+  }
+
+  #patientSearch:focus {
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+    outline: none;
+  }
+
+  #searchResults {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    background: white;
+    border: 1px solid #ced4da;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    max-height: 260px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  #searchResults::-webkit-scrollbar {
+    display: none;
+  }
+
+  #searchResults {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  #searchResults li {
+    cursor: pointer;
+    padding: 0.6rem 1rem;
+    font-size: 0.92rem;
+    transition: background-color 0.2s ease;
+    text-transform: capitalize;
+  }
+
+  #searchResults li:hover {
+    background-color: #f8f9fa;
+  }
+
+  @media (max-width: 576px) {
+    #searchWrapper {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+</style>
+
+<!-- Search Bar HTML -->
+<form class="d-flex position-relative me-3" id="searchWrapper">
+  <input class="form-control" id="patientSearch" type="search"
+    placeholder="Search patients by Name or Contact..." autocomplete="off" />
+  <ul id="searchResults" class="list-group"></ul>
+</form>
+
+<!-- Script -->
+<script>
+  const searchInput = document.getElementById("patientSearch");
+  const searchResults = document.getElementById("searchResults");
+  const searchWrapper = document.getElementById("searchWrapper");
+
+  // Disallow starting space
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === " " && searchInput.selectionStart === 0) {
+      e.preventDefault();
+    }
+  });
+
+  // Fetch and show results
+  searchInput.addEventListener("input", async () => {
+    if (searchInput.value.startsWith(" ")) {
+      searchInput.value = searchInput.value.trimStart();
+    }
+
+    const query = searchInput.value.trim();
+    if (query.length === 0) {
+      searchResults.innerHTML = "";
+      searchResults.style.display = "none";
+      return;
+    }
+
+    try {
+      const res = await fetch(`/reception/search-patients?q=${encodeURIComponent(query)}`);
+      const patients = await res.json();
+
+      if (patients.length === 0) {
+        searchResults.style.display = "none";
+        return;
+      }
+
+      searchResults.innerHTML = patients.map(p => `
+        <li class="list-group-item list-group-item-action" onclick="window.location='/reception/patients/${p.patient_id}'">
+          <strong>${p.patient_name}</strong> — ${p.patient_contact}
+        </li>
+      `).join("");
+
+      searchResults.style.display = "block";
+    } catch (err) {
+      console.error("Search error:", err);
+      searchResults.style.display = "none";
+    }
+  });
+
+  // Clear on outside click
+  document.addEventListener("click", (e) => {
+    if (!searchWrapper.contains(e.target)) {
+      searchInput.value = "";
+      searchResults.innerHTML = "";
+      searchResults.style.display = "none";
+    }
+  });
+</script>

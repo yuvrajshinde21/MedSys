@@ -75,8 +75,6 @@ router.get("/doctors/:doctorId/slots", patientController.getDoctorAvailableSlots
 // List all patients
 router.get("/patients", patientController.getAllPatients);    // GET /reception/patients
 
-//bill
-// router.get("/patients/bill/:patient_id", billingController.getBillPreview);
 
 //edit patient
 router.route("/patients/edit/:patient_id").get(patientController.renderEditPatientForm).post(patientController.updatePatientDetails);
@@ -99,14 +97,14 @@ router.get("/medicines", medicineController.viewMedicines); // GET /reception/me
 router.post("/medicines/delete/:medicineId", medicineController.deleteMedicine); // POST /reception/medicines/delete/:medicineId
 
 
-//Genearate bill
-// router.get("/billing/:patientId", receptionController.generateBill); 
+//======================= bill=============================
 
 // Show bill generation form
 router.get('/print-bill/:patientId', receptionController.renderPrintBill);
 
 router.get("/patients/bill/:patientId", receptionController.generateBill);
 
+//
 
 
 module.exports = router;

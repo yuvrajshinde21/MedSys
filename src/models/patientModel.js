@@ -1,9 +1,60 @@
 const conn = require("../config/dbConfig");
 const promiseConn = conn.promise();
 
-// View all patients
-exports.fetchBasicPatients = async () => {
-  const [rows] = await promiseConn.query(`
+// // View all patients
+// exports.fetchBasicPatients = async () => {
+//   const [rows] = await promiseConn.query(`
+//     SELECT 
+//       p.patient_id,
+//       p.patient_name,
+//       p.patient_age,
+//       p.patient_gender,
+//       p.patient_contact,
+//       (
+//         SELECT status 
+//         FROM appointments 
+//         WHERE appointments.patient_id = p.patient_id 
+//         ORDER BY appointment_date DESC 
+//         LIMIT 1
+//       ) AS appointment_status,
+//       (
+//         SELECT status 
+//         FROM admissions 
+//         WHERE admissions.patient_id = p.patient_id 
+//         ORDER BY admitted_date DESC 
+//         LIMIT 1
+//       ) AS admission_status
+
+//     FROM patients p
+//     ORDER BY p.patient_id DESC
+//   `);
+
+//   return rows;
+// };
+//=================================
+exports.fetchBasicPatients = async ({ status, page, limit, search }) => {
+  const offset = (page - 1) * limit;
+  const params = [];
+  let whereClause = `WHERE 1`; // Always true, so we can add conditions with AND
+  let havingClause = '';
+
+  // Search condition
+  if (search) {
+    whereClause += ` AND (p.patient_name LIKE ? OR p.patient_contact LIKE ?)`;
+    params.push(`%${search}%`, `%${search}%`);
+  }
+
+  // Status filter logic (in HAVING)
+  if (status !== 'All') {
+    if (['Admitted', 'Discharged'].includes(status)) {
+      havingClause = `HAVING admission_status = '${status}'`;
+    } else {
+      havingClause = `HAVING appointment_status = '${status}' AND (admission_status IS NULL OR admission_status NOT IN ('Admitted', 'Discharged'))`;
+    }
+  }
+
+  // Fetch filtered + paginated data
+  const [patients] = await promiseConn.query(`
     SELECT 
       p.patient_id,
       p.patient_name,
@@ -24,13 +75,42 @@ exports.fetchBasicPatients = async () => {
         ORDER BY admitted_date DESC 
         LIMIT 1
       ) AS admission_status
-
     FROM patients p
+    ${whereClause}
+    ${havingClause}
     ORDER BY p.patient_id DESC
-  `);
+    LIMIT ? OFFSET ?
+  `, [...params, limit, offset]);
 
-  return rows;
+  // Total count
+  const [countResult] = await promiseConn.query(`
+    SELECT COUNT(*) AS total
+    FROM (
+      SELECT 
+        p.patient_id,
+        (
+          SELECT status 
+          FROM appointments 
+          WHERE appointments.patient_id = p.patient_id 
+          ORDER BY appointment_date DESC 
+          LIMIT 1
+        ) AS appointment_status,
+        (
+          SELECT status 
+          FROM admissions 
+          WHERE admissions.patient_id = p.patient_id 
+          ORDER BY admitted_date DESC 
+          LIMIT 1
+        ) AS admission_status
+      FROM patients p
+      ${whereClause}
+      ${havingClause}
+    ) AS filtered
+  `, params);
+
+  return { patients, totalCount: countResult[0].total };
 };
+
 
 // //===============================================================================================================
 

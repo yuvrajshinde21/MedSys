@@ -8,15 +8,15 @@ const receptionModel = require("../models/receptionModel");
 
 //render patient form 
 exports.loadAppointmentForm = asyncHandler(async (req, res) => {
-  console.log("🔵 loadAppointmentForm called");
+    console.log("🔵 loadAppointmentForm called");
 
-  const specializations = await patientModel.getAllSpecializations();
+    const specializations = await patientModel.getAllSpecializations();
 
-  res.render("reception/receptionDashboard.ejs", {
-    title: "Add Patient",
-    main_content: "addPatient", // ✅ Remove "reception/"
-    specializations
-  });
+    res.render("reception/receptionDashboard.ejs", {
+        title: "Add Patient",
+        main_content: "addPatient", // ✅ Remove "reception/"
+        specializations
+    });
 });
 
 exports.getDoctorsBySpecialization = async (req, res) => {
@@ -66,23 +66,48 @@ exports.createPatientAppointment = async (req, res) => {
             patient_issue
         );
 
-        res.redirect("/reception");
+        req.flash("success_msg", "Patient registered and appointment booked successfully!");
+        res.redirect("/reception/patients");
     } catch (err) {
-        console.error("Error creating patient appointment:", err);
-        res.status(500).send("Internal server error");
+        req.flash("error_msg", "Something went wrong while booking the appointment.");
+        res.redirect("/reception/patients/create"); // or wherever your form is
+
     }
 };
-
-
+//==================================
 exports.getAllPatients = asyncHandler(async (req, res) => {
-    const patients = await patientModel.fetchBasicPatients();
+    const status = req.query.status || 'All';
+    const page = parseInt(req.query.page) || 1;
+    const limit = 8;
+    const search = req.query.search || ''; 
+
+    const { patients, totalCount } = await patientModel.fetchBasicPatients({ status, page, limit, search });
+
+    const totalPages = Math.ceil(totalCount / limit);
+
     res.render("reception/receptionDashboard.ejs", {
         main_content: "viewPatients",
         title: "View Patients",
         patients,
+        currentPage: page,
+        totalPages,
+        selectedStatus: status,
+        searchQuery: search // <-- pass to EJS
     });
-
 });
+
+
+//------------------------
+// exports.getAllPatients = asyncHandler(async (req, res) => {
+//     const patients = await patientModel.fetchBasicPatients();
+//     res.render("reception/receptionDashboard.ejs", {
+//         main_content: "viewPatients",
+//         title: "View Patients",
+//         patients,
+//     });
+
+// });
+//===================================
 
 // Get available slots for a doctor on a specific date
 // This function retrieves the available time slots for a doctor on a given date.
@@ -151,14 +176,14 @@ exports.viewSpecificPatientDetailsById = asyncHandler(async (req, res) => {
     const bill = await patientModel.getBillByPatientId(patientId);
     const availableRooms = await receptionModel.getAvailableRooms();
     const availableNurses = await receptionModel.getAvailableNurses();
-    console.log(patientDetails )
+    console.log(patientDetails)
     res.render("reception/receptionDashboard", {
         main_content: "patient_full_details",
         title: "Patient Details",
         patient: patientDetails,
         bill,
-    availableRooms,
-    availableNurses
+        availableRooms,
+        availableNurses
     });
 });
 

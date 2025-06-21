@@ -1,80 +1,98 @@
-<div class="container py-4">
+<div class="container py-2">
   <form action="/reception/patients/create" method="POST"
-    class="p-4 border-0 rounded-4 shadow w-100 w-md-75 mx-auto"
-    style="background-color: #f0f8ff; max-width: 48rem;">
+    class="py-2 px-3 rounded-4 shadow-lg mx-auto bg-white"
+    style="max-width: 800px;">
 
-    <h4 class="text-primary mb-4 text-center">Book Appointment</h4>
+    <h3 class="text-primary fw-bold text-center mb-3">
+      📝 Book Appointment
+    </h3>
 
-    <div class="mb-3">
-      <label class="form-label">Patient Name</label>
-      <input type="text" name="patient_name" class="form-control" required>
+    <div class="row g-4">
+      <!-- Column 1: Patient Info -->
+      <div class="col-md-6">
+        <h5 class="text-secondary mb-3 border-bottom pb-1">👤 Patient Info</h5>
+
+        <div class="mb-3">
+          <label for="patient_name" class="form-label">Full Name</label>
+          <input type="text" name="patient_name" id="patient_name" class="form-control"
+            placeholder="Enter full name" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="patient_age" class="form-label">Age</label>
+          <input type="number" name="patient_age" id="patient_age" class="form-control"
+            placeholder="e.g. 45" min="0" max="120" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="patient_gender" class="form-label">Gender</label>
+          <select name="patient_gender" id="patient_gender" class="form-select" required>
+            <option selected disabled>Select Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="patient_contact" class="form-label">Contact Number</label>
+          <input type="text" name="patient_contact" id="patient_contact" class="form-control"
+            placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
+          <div class="form-text">We'll use this for appointment confirmation.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="patient_issue" class="form-label">Health Issue</label>
+          <input type="text" name="patient_issue" id="patient_issue" class="form-control"
+            placeholder="Describe the issue briefly..." required>
+        </div>
+      </div>
+
+      <!-- Column 2: Appointment Info -->
+      <div class="col-md-6">
+        <h5 class="text-secondary mb-3 border-bottom pb-1">🩺 Appointment Details</h5>
+
+        <div class="mb-3">
+          <label for="specialization" class="form-label">Specialization</label>
+          <select name="specialization_id" id="specialization" class="form-select" required>
+            <option selected disabled>Select Specialization</option>
+            <% specializations.forEach(s => { %>
+              <option value="<%= s.specialization_id %>"><%= s.specialization_name %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="doctor" class="form-label">Doctor</label>
+          <select name="doctor_id" id="doctor" class="form-select" required>
+            <option selected disabled>Select Doctor</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="appointment_date" class="form-label">Appointment Date</label>
+          <input type="date" name="appointment_date" id="appointment_date" class="form-control"
+            min="<%= new Date().toISOString().split('T')[0] %>" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="available_slots" class="form-label">Available Time Slot</label>
+          <select name="appointment_time" id="available_slots" class="form-select" required>
+            <!-- <option selected disabled>Select Time</option> -->
+          </select>
+        </div>
+      </div>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">Age</label>
-      <input type="number" name="patient_age" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Gender</label>
-      <select name="patient_gender" class="form-control" required>
-        <option>Male</option>
-        <option>Female</option>
-        <option>Other</option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Contact</label>
-      <input type="text" name="patient_contact" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Issue</label>
-      <textarea name="patient_issue" class="form-control" required></textarea>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Specialization</label>
-      <select name="specialization_id" id="specialization" class="form-control" required>
-        <option selected disabled>Select Specialization</option>
-        <% specializations.forEach(s => { %>
-          <option value="<%= s.specialization_id %>">
-            <%= s.specialization_name %>
-          </option>
-        <% }) %>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Doctor</label>
-      <select name="doctor_id" id="doctor" class="form-control" required>
-        <option selected disabled>Select Doctor</option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Date</label>
-      <input type="date" name="appointment_date" id="appointment_date" class="form-control" required
-        min="<%= new Date().toISOString().split('T')[0] %>">
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Time Slot</label>
-      <select name="appointment_time" id="available_slots" class="form-control" required>
-        <option selected disabled>Select Time</option>
-      </select>
-    </div>
-
-    <div class="text-center mt-4">
-      <button type="submit" class="btn btn-success px-4 py-2">
-        <i class="bi bi-calendar-check me-1"></i> Book Appointment
+    <div class="text-center mt-2">
+      <button type="submit" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">
+        <i class="bi bi-calendar-check me-2"></i>Confirm Booking
       </button>
     </div>
   </form>
 </div>
 
-<!-- Script to Load Doctors and Slots -->
+
 <script>
   document.getElementById("specialization").addEventListener("change", async function () {
     const res = await fetch(`/reception/doctors/${this.value}`);

@@ -1,158 +1,148 @@
-<div class="container py-4">
-  <h3 class="mb-4 text-success">🏥 Currently Admitted Patients</h3>
+<div class="container py-1">
+  <h3 class="mb-4 text-success">
+    🏥 Currently Admitted Patients
+  </h3>
 
-  <% if (admittedPatients && admittedPatients.length > 0) { %>
-    <div class="row row-cols-1 row-cols-lg-2 g-4">
-      <% admittedPatients.forEach(p => { %>
+  <div id="patientCards" class="row row-cols-1 row-cols-lg-2 g-4"></div>
+
+  <nav class="mt-4 d-flex justify-content-center">
+    <ul class="pagination" id="paginationJs"></ul>
+  </nav>
+</div>
+
+<style>
+  .text-break {
+    word-break: break-word;
+  }
+
+  .fw-semibold {
+    white-space: nowrap;
+  }
+
+  .card-body .row {
+    align-items: flex-start;
+  }
+
+  .icu-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+</style>
+
+<!-- Inject patient data -->
+<script>
+  const allPatients = <%- JSON.stringify(admittedPatients || []) %>;
+</script>
+
+<script>
+  const patientsPerPage = 6;
+  let currentPage = 1;
+
+  function renderPatients(page) {
+    const start = (page - 1) * patientsPerPage;
+    const end = start + patientsPerPage;
+    const currentPatients = allPatients.slice(start, end);
+
+    const container = document.getElementById("patientCards");
+    container.innerHTML = "";
+
+    if (currentPatients.length === 0) {
+      container.innerHTML = `<div class="alert alert-info">No patients found.</div>`;
+      return;
+    }
+
+    currentPatients.forEach(p => {
+      const status = p.admission_status === "Admitted" ? "Admitted"
+                    : p.admission_status === "Discharged" ? "Discharged"
+                    : p.appointment_status === "Completed" ? "Completed"
+                    : p.appointment_status === "Cancelled" ? "Cancelled"
+                    : "Scheduled";
+
+      const statusClass = {
+        Admitted: "bg-success",
+        Discharged: "bg-secondary",
+        Completed: "bg-info",
+        Cancelled: "bg-danger",
+        Scheduled: "bg-warning"
+      }[status];
+
+      const admitDate = p.admitted_date ? new Date(p.admitted_date) : null;
+      const dateStr = admitDate ? admitDate.toLocaleDateString() : "N/A";
+      const timeStr = admitDate ? admitDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "N/A";
+
+      const roomInfo = p.room_no ? `${p.room_no} (${p.room_type})` : `<span class="text-warning">Not Assigned</span>`;
+      const nurseInfo = p.nurse_name ? `${p.nurse_name} (Shift: ${p.nurse_shift})` : `<span class="text-warning">Not Assigned</span>`;
+      const icu = p.icu_required ? 'Yes' : 'No';
+
+      const card = `
         <div class="col">
           <div class="card shadow border-0 rounded-4" style="background-color: #f0f8ff;">
-            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
-              <h5 class="mb-0 text-primary">Patient: <%= p.patient_name %></h5>
-              <span class="badge bg-success">Admitted</span>
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+              <h5 class="mb-0 text-primary">Patient: ${p.patient_name}</h5>
+              <span class="badge ${statusClass}">${status}</span>
             </div>
-
             <div class="card-body">
-              <!-- Patient & Doctor Info -->
               <div class="row">
                 <div class="col-md-6">
-                  <div class="row mb-1">
-                    <div class="col-5 fw-semibold">Age:</div>
-                    <div class="col-7"><%= p.patient_age %></div>
-                  </div>
-                  <div class="row mb-1">
-                    <div class="col-5 fw-semibold">Gender:</div>
-                    <div class="col-7"><%= p.patient_gender %></div>
-                  </div>
-                  <div class="row mb-1">
-                    <div class="col-5 fw-semibold">Contact:</div>
-                    <div class="col-7"><%= p.patient_contact %></div>
-                  </div>
+                  <div class="row mb-1"><div class="col-5 fw-semibold">Age:</div><div class="col-7">${p.patient_age}</div></div>
+                  <div class="row mb-1"><div class="col-5 fw-semibold">Gender:</div><div class="col-7">${p.patient_gender}</div></div>
+                  <div class="row mb-1"><div class="col-5 fw-semibold">Contact:</div><div class="col-7">${p.patient_contact}</div></div>
                 </div>
-
                 <div class="col-md-6">
-                  <div class="row mb-1">
-                    <div class="col-5 fw-semibold">Doctor:</div>
-                    <div class="col-7"><%= p.doctor_name || 'N/A' %></div>
-                  </div>
-                  <div class="row mb-1">
-                    <div class="col-5 fw-semibold">Admit Date:</div>
-                    <div class="col-7"><%= new Date(p.admitted_date).toLocaleDateString() %></div>
-                  </div>
-                  <div class="row mb-1">
-                    <div class="col-5 fw-semibold">Admit Time:</div>
-                    <div class="col-7">
-                      <%= new Date(p.admitted_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
-                    </div>
-                  </div>
+                  <div class="row mb-1"><div class="col-5 fw-semibold">Doctor:</div><div class="col-7">${p.doctor_name || 'N/A'}</div></div>
+                  <div class="row mb-1"><div class="col-5 fw-semibold">Admit Date:</div><div class="col-7">${dateStr}</div></div>
+                  <div class="row mb-1"><div class="col-5 fw-semibold">Admit Time:</div><div class="col-7">${timeStr}</div></div>
                 </div>
               </div>
-
               <hr>
-
-              <!-- Room & Nurse Info -->
               <div class="row">
-                <div class="col-md-6">
-                  <div class="row mb-1">
-                    <div class="col-5 fw-semibold">Room:</div>
-                    <div class="col-7">
-                      <% if (p.room_no) { %>
-                        <%= p.room_no %> (<%= p.room_type %>)
-                      <% } else { %>
-                        <span class="text-warning">Not Assigned</span>
-                      <% } %>
-                    </div>
-                  </div>
+                <div class="col-md-6 d-flex flex-wrap mb-1">
+                  <div class="fw-semibold me-2">Room:</div>
+                  <div>${roomInfo}</div>
                 </div>
-                <div class="col-md-6">
-                  <div class="row mb-1">
-                    <div class="col-5 fw-semibold">Nurse:</div>
-                    <div class="col-7">
-                      <% if (p.nurse_name) { %>
-                        <%= p.nurse_name %> (Shift: <%= p.nurse_shift %>)
-                      <% } else { %>
-                        <span class="text-warning">Not Assigned</span>
-                      <% } %>
-                    </div>
-                  </div>
+                <div class="col-md-6 d-flex flex-wrap mb-1">
+                  <div class="fw-semibold me-2">Nurse:</div>
+                  <div class="text-break">${nurseInfo}</div>
                 </div>
               </div>
-
               <div class="row mt-2">
-                <div class="col-5 fw-semibold">ICU Required:</div>
-                <div class="col-7"><%= p.icu_required ? 'Yes' : 'No' %></div>
+                <div class="col icu-row">
+                  <span class="fw-semibold">ICU Required:</span>
+                  <span>${icu}</span>
+                </div>
               </div>
             </div>
-
-            <div class="card-footer bg-light d-flex justify-content-end gap-2">
-              <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
-                data-bs-target="#roomModal-<%= p.admission_id %>">
-                🛏 Assign Room
-              </button>
-              <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
-                data-bs-target="#nurseModal-<%= p.admission_id %>">
-                🧑‍⚕️ Assign Nurse
-              </button>
-              <a href="/doctor/discharge/<%= p.admission_id %>" class="btn btn-danger btn-sm">
-                ❌ Discharge
-              </a>
-            </div>
           </div>
-        </div>
+        </div>`;
+      container.insertAdjacentHTML('beforeend', card);
+    });
+  }
 
-        <!-- Room Assignment Modal -->
-        <div class="modal fade" id="roomModal-<%= p.admission_id %>" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog">
-            <form action="/reception/assign-room/<%= p.admission_id %>" method="POST" class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">🛏 Assign Room to <%= p.patient_name %></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-              </div>
-              <div class="modal-body">
-                <select name="room_no" class="form-select" required>
-                  <option value="">-- Select Room --</option>
-                  <% availableRooms.forEach(room => { %>
-                    <option value="<%= room.room_no %>">
-                      Room <%= room.room_no %> (<%= room.room_type %>, ₹<%= room.charges_per_day %>/day)
-                    </option>
-                  <% }) %>
-                </select>
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-success">✅ Assign</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              </div>
-            </form>
-          </div>
-        </div>
+  function renderPagination() {
+    const totalPages = Math.ceil(allPatients.length / patientsPerPage);
+    const pagination = document.getElementById("paginationJs");
+    pagination.innerHTML = "";
 
-        <!-- Nurse Assignment Modal -->
-        <div class="modal fade" id="nurseModal-<%= p.admission_id %>" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog">
-            <form action="/reception/assign-nurse/<%= p.admission_id %>" method="POST" class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">🧑‍⚕️ Assign Nurse to <%= p.patient_name %></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-              </div>
-              <div class="modal-body">
-                <select name="nurse_id" class="form-select" required>
-                  <option value="">-- Select Nurse --</option>
-                  <% availableNurses.forEach(nurse => { %>
-                    <option value="<%= nurse.nurse_id %>">
-                      <%= nurse.nurse_name %> (Shift: <%= nurse.nurse_shift %>)
-                    </option>
-                  <% }) %>
-                </select>
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-success">✅ Assign</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      <% }); %>
-    </div>
-  <% } else { %>
-    <div class="alert alert-info">No admitted patients found.</div>
-  <% } %>
-</div>
+    for (let i = 1; i <= totalPages; i++) {
+      const li = document.createElement("li");
+      li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+      li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+      pagination.appendChild(li);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderPatients(currentPage);
+    renderPagination();
+
+    document.getElementById("paginationJs").addEventListener("click", (e) => {
+      if (e.target.tagName === "A") {
+        e.preventDefault();
+        currentPage = parseInt(e.target.dataset.page);
+        renderPatients(currentPage);
+        renderPagination();
+      }
+    });
+  });
+</script>
