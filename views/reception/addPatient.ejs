@@ -1,124 +1,329 @@
 <div class="container py-2">
-  <form action="/reception/patients/create" method="POST"
-    class="py-2 px-3 rounded-4 shadow-lg mx-auto bg-white"
-    style="max-width: 800px;">
+    <form id="appointmentForm" action="/reception/patients/create" method="POST"
+        class="py-2 px-3 rounded-4 shadow-lg mx-auto bg-white" style="max-width: 800px;" novalidate>
 
-    <h3 class="text-primary fw-bold text-center mb-3">
-      📝 Book Appointment
-    </h3>
+        <h3 class="text-primary fw-bold text-center mb-3">
+            📝 Book Appointment
+        </h3>
 
-    <div class="row g-4">
-      <!-- Column 1: Patient Info -->
-      <div class="col-md-6">
-        <h5 class="text-secondary mb-3 border-bottom pb-1">👤 Patient Info</h5>
+        <div class="row g-4">
+            <!-- Column 1: Patient Info -->
+            <div class="col-md-6">
+                <h5 class="text-secondary mb-3 border-bottom pb-1">👤 Patient Info</h5>
 
-        <div class="mb-3">
-          <label for="patient_name" class="form-label">Full Name</label>
-          <input type="text" name="patient_name" id="patient_name" class="form-control"
-            placeholder="Enter full name" required>
-        </div>
+                <div class="mb-3">
+                    <label for="patient_name" class="form-label">Full Name</label>
+                    <input type="text" name="patient_name" id="patient_name" class="form-control"
+                        placeholder="Enter full name" required>
+                </div>
 
-        <div class="mb-3">
-          <label for="patient_age" class="form-label">Age</label>
-          <input type="number" name="patient_age" id="patient_age" class="form-control"
-            placeholder="e.g. 45" min="0" max="120" required>
-        </div>
+                <div class="mb-3">
+                    <label for="patient_age" class="form-label">Age</label>
+                    <input type="number" name="patient_age" id="patient_age" class="form-control" placeholder="e.g. 45"
+                        min="0" max="120" required>
+                </div>
 
-        <div class="mb-3">
-          <label for="patient_gender" class="form-label">Gender</label>
-          <select name="patient_gender" id="patient_gender" class="form-select" required>
-            <option selected disabled>Select Gender</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-          </select>
-        </div>
+                <div class="mb-3">
+                    <label for="patient_gender" class="form-label">Gender</label>
+                    <select name="patient_gender" id="patient_gender" class="form-select" required>
+                        <option selected disabled>Select Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+                </div>
 
-        <div class="mb-3">
-          <label for="patient_contact" class="form-label">Contact Number</label>
-          <input type="text" name="patient_contact" id="patient_contact" class="form-control"
-            placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
-          <div class="form-text">We'll use this for appointment confirmation.</div>
-        </div>
+                <div class="mb-3">
+                    <label for="patient_contact" class="form-label">Contact Number</label>
+                    <input type="text" name="patient_contact" id="patient_contact" class="form-control"
+                        placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
+                    <div class="form-text">We'll use this for appointment confirmation.</div>
+                </div>
 
-        <div class="mb-3">
-          <label for="patient_issue" class="form-label">Health Issue</label>
-          <input type="text" name="patient_issue" id="patient_issue" class="form-control"
-            placeholder="Describe the issue briefly..." required>
-        </div>
-      </div>
+                <div class="mb-3">
+                    <label for="patient_issue" class="form-label">Health Issue</label>
+                    <input type="text" name="patient_issue" id="patient_issue" class="form-control"
+                        placeholder="Describe the issue briefly..." required>
+                </div>
+            </div>
 
-      <!-- Column 2: Appointment Info -->
-      <div class="col-md-6">
-        <h5 class="text-secondary mb-3 border-bottom pb-1">🩺 Appointment Details</h5>
+            <!-- Column 2: Appointment Info -->
+            <div class="col-md-6">
+                <h5 class="text-secondary mb-3 border-bottom pb-1">🩺 Appointment Details</h5>
 
-        <div class="mb-3">
-          <label for="specialization" class="form-label">Specialization</label>
-          <select name="specialization_id" id="specialization" class="form-select" required>
-            <option selected disabled>Select Specialization</option>
-            <% specializations.forEach(s => { %>
-              <option value="<%= s.specialization_id %>"><%= s.specialization_name %></option>
-            <% }) %>
-          </select>
-        </div>
+                <!-- Specialization -->
+                <div class="mb-3">
+                    <label for="specialization" class="form-label">Specialization</label>
+                    <select name="specialization_id" id="specialization" class="form-select" required>
+                        <option selected disabled>Select Specialization</option>
+                        <% specializations.forEach(s=> { %>
+                            <option value="<%= s.specialization_id %>">
+                                <%= s.specialization_name %>
+                            </option>
+                            <% }) %>
+                    </select>
+                    <div class="form-text">Select the area of treatment required (e.g., Cardiology, Neurology).</div>
+                </div>
 
-        <div class="mb-3">
-          <label for="doctor" class="form-label">Doctor</label>
-          <select name="doctor_id" id="doctor" class="form-select" required>
-            <option selected disabled>Select Doctor</option>
-          </select>
-        </div>
+                <!-- Doctor -->
+                <div class="mb-3">
+                    <label for="doctor" class="form-label">Doctor</label>
+                    <select name="doctor_id" id="doctor" class="form-select" required>
+                        <option selected disabled>Select Doctor</option>
+                    </select>
+                    <div class="form-text">Choose a doctor available under the selected specialization.</div>
+                </div>
 
-        <div class="mb-3">
-          <label for="appointment_date" class="form-label">Appointment Date</label>
-          <input type="date" name="appointment_date" id="appointment_date" class="form-control"
-            min="<%= new Date().toISOString().split('T')[0] %>" required>
-        </div>
+                <!-- Appointment Date -->
+                <div class="mb-3">
+                    <label for="appointment_date" class="form-label">Appointment Date</label>
+                    <input type="date" name="appointment_date" id="appointment_date" class="form-control"
+                        min="<%= new Date().toISOString().split('T')[0] %>" required>
+                    <div class="form-text">Pick a future date to schedule your appointment.</div>
+                </div>
 
-        <div class="mb-3">
-          <label for="available_slots" class="form-label">Available Time Slot</label>
-          <select name="appointment_time" id="available_slots" class="form-select" required>
-            <!-- <option selected disabled>Select Time</option> -->
-          </select>
-        </div>
-      </div>
-    </div>
+                <!-- Available Slots -->
+                <div class="mb-3">
+                    <label for="available_slots" class="form-label">Available Time Slot</label>
+                    <select name="appointment_time" id="available_slots" class="form-select" required>
+                        <!-- Slots will load dynamically -->
+                    </select>
+                    <div class="form-text">Select a suitable time slot based on doctor availability.</div>
+                </div>
 
-    <div class="text-center mt-2">
-      <button type="submit" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">
-        <i class="bi bi-calendar-check me-2"></i>Confirm Booking
-      </button>
-    </div>
-  </form>
+            </div>
+
+            <div class="text-center mt-2">
+                <button type="submit" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">
+                    <i class="bi bi-calendar-check me-2"></i>Confirm Booking
+                </button>
+            </div>
+    </form>
 </div>
 
-
 <script>
-  document.getElementById("specialization").addEventListener("change", async function () {
-    const res = await fetch(`/reception/doctors/${this.value}`);
-    const doctors = await res.json();
-    const doctorSelect = document.getElementById("doctor");
-    doctorSelect.innerHTML = '<option selected disabled>Select Doctor</option>';
-    doctors.forEach(d => {
-      doctorSelect.innerHTML += `<option value="${d.doctor_id}">${d.doctor_name}</option>`;
-    });
-  });
+    const form = document.getElementById("appointmentForm");
 
-  document.getElementById("appointment_date").addEventListener("change", fetchSlots);
-  document.getElementById("doctor").addEventListener("change", fetchSlots);
+    function showError(input, message) {
+        const parent = input.parentElement;
+        input.classList.add("is-invalid");
 
-  async function fetchSlots() {
-    const doctorId = document.getElementById("doctor").value;
-    const date = document.getElementById("appointment_date").value;
-    if (!doctorId || !date) return;
-    const res = await fetch(`/reception/doctors/${doctorId}/slots?date=${date}`);
-    const slots = await res.json();
-    const slotSelect = document.getElementById("available_slots");
-    slotSelect.innerHTML = slots.length === 0
-      ? '<option disabled>No slots available</option>'
-      : '<option selected disabled>Select Time</option>';
-    slots.forEach(t => {
-      slotSelect.innerHTML += `<option value="${t}">${t}</option>`;
+        let error = parent.querySelector(".invalid-feedback");
+        if (!error) {
+            error = document.createElement("div");
+            error.className = "invalid-feedback";
+            parent.appendChild(error);
+        }
+        error.textContent = message;
+    }
+
+    function clearError(input) {
+        input.classList.remove("is-invalid");
+        const error = input.parentElement.querySelector(".invalid-feedback");
+        if (error) error.remove();
+    }
+
+    function validateName() {
+        const input = document.getElementById("patient_name");
+        const name = input.value.trim();
+
+        // Regex: only letters (upper/lower), dots, and spaces allowed
+        const nameRegex = /^[a-zA-Z\s.]{2,}$/;
+
+        if (!nameRegex.test(name)) {
+            showError(input, "Name can only contain letters, spaces, and dots.");
+            return false;
+        } else if (name.length < 2) {
+            showError(input, "Name must be at least 2 characters.");
+            return false;
+        }
+
+        clearError(input);
+        return true;
+    }
+    function validateSpecialization() {
+        const input = document.getElementById("specialization");
+        if (!input.value || input.selectedIndex === 0) {
+            showError(input, "Please select a specialization.");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+    function validateDoctor() {
+        const input = document.getElementById("doctor");
+        if (!input.value || input.selectedIndex === 0) {
+            showError(input, "Please select a doctor.");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+    function validateGender() {
+        const input = document.getElementById("patient_gender");
+        if (!input.value || input.selectedIndex === 0) {
+            showError(input, "Please select gender.");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+
+
+    function validateAge() {
+        const input = document.getElementById("patient_age");
+        const age = Number(input.value);
+        if (!age || age < 0 || age > 120) {
+            showError(input, "Enter a valid age (0-120).");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+
+    function validateContact() {
+        const input = document.getElementById("patient_contact");
+        const regex = /^[0-9]{10}$/;
+        if (!regex.test(input.value)) {
+            showError(input, "Enter a valid 10-digit number.");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+
+    function validateGender() {
+        const input = document.getElementById("patient_gender");
+        if (!input.value) {
+            showError(input, "Please select gender.");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+
+    function validateIssue() {
+        const input = document.getElementById("patient_issue");
+        if (input.value.trim().length < 5) {
+            showError(input, "Please describe the issue (min 5 characters).");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+
+    function validateSpecialization() {
+        const input = document.getElementById("specialization");
+        if (!input.value) {
+            showError(input, "Select a specialization.");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+
+    function validateDoctor() {
+        const input = document.getElementById("doctor");
+        if (!input.value) {
+            showError(input, "Select a doctor.");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+
+    function validateDate() {
+        const input = document.getElementById("appointment_date");
+        if (!input.value) {
+            showError(input, "Please select a date.");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+
+    function validateSlot() {
+        const input = document.getElementById("available_slots");
+        if (!input.value) {
+            showError(input, "Select an available time slot.");
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+
+    // Real-time validation listeners
+    document.getElementById("patient_name").addEventListener("input", validateName);
+    document.getElementById("patient_age").addEventListener("input", validateAge);
+    document.getElementById("patient_contact").addEventListener("input", validateContact);
+    document.getElementById("patient_gender").addEventListener("change", validateGender);
+    document.getElementById("patient_issue").addEventListener("input", validateIssue);
+    document.getElementById("specialization").addEventListener("change", validateSpecialization);
+    document.getElementById("doctor").addEventListener("change", validateDoctor);
+    document.getElementById("appointment_date").addEventListener("change", validateDate);
+    document.getElementById("available_slots").addEventListener("change", validateSlot);
+    document.getElementById("specialization").addEventListener("change", validateSpecialization);
+    document.getElementById("doctor").addEventListener("change", validateDoctor);
+    document.getElementById("patient_gender").addEventListener("change", validateGender);
+
+    form.addEventListener("submit", function (e) {
+        const isValid =
+            validateName() &&
+            validateAge() &&
+            validateContact() &&
+            validateGender() &&
+            validateIssue() &&
+            validateSpecialization() &&
+            validateDoctor() &&
+            validateDate() &&
+            validateSlot();
+
+        if (!isValid) {
+            e.preventDefault(); // Stop form submission
+            // Optionally scroll to first error
+            const firstInvalid = document.querySelector(".is-invalid");
+            if (firstInvalid) firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
     });
-  }
+
+
+    // Fetch doctors when specialization changes
+    document.getElementById("specialization").addEventListener("change", async function () {
+        const res = await fetch(`/reception/doctors/${this.value}`);
+        const doctors = await res.json();
+        const doctorSelect = document.getElementById("doctor");
+        doctorSelect.innerHTML = '<option selected disabled>Select Doctor</option>';
+        doctors.forEach(d => {
+            doctorSelect.innerHTML += `<option value="${d.doctor_id}">${d.doctor_name}</option>`;
+        });
+        fetchSlots(); // Refresh slots after doctor list changes
+    });
+
+    // Fetch available slots
+    document.getElementById("appointment_date").addEventListener("change", fetchSlots);
+    document.getElementById("doctor").addEventListener("change", fetchSlots);
+
+    async function fetchSlots() {
+        const doctorId = document.getElementById("doctor").value;
+        const date = document.getElementById("appointment_date").value;
+        if (!doctorId || !date) return;
+
+        const res = await fetch(`/reception/doctors/${doctorId}/slots?date=${date}`);
+        const slots = await res.json();
+        const slotSelect = document.getElementById("available_slots");
+
+        slotSelect.innerHTML = slots.length === 0
+            ? '<option disabled>No slots available</option>'
+            : '<option selected disabled>Select Time</option>';
+
+        slots.forEach(t => {
+            slotSelect.innerHTML += `<option value="${t}">${t}</option>`;
+        });
+
+        // Auto-select the first slot if available
+        if (slots.length > 0) {
+            slotSelect.value = slots[0];
+            clearError(slotSelect);
+        }
+    }
 </script>

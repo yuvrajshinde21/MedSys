@@ -2,252 +2,274 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>MedSys+ | Final Bill</title>
-  <link rel="icon" href="/images/hospital-logo.png" type="image/png">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #fff;
-    }
+    <meta charset="UTF-8">
+    <title>MedSys+ | Final Bill</title>
+    <link rel="icon" href="/images/hospital-logo.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #fff;
+        }
 
-    .print-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-    }
+        .print-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
 
-    .print-btn button {
-      padding: 8px 16px;
-      background-color: #0d6efd;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+        .print-btn button {
+            padding: 8px 16px;
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
 
-    .header h2 {
-      font-size: 24px;
-      color: #007b83;
-      margin-bottom: 8px;
-    }
+        .header h2 {
+            font-size: 24px;
+            color: #007b83;
+            margin-bottom: 8px;
+        }
 
-    .header-right img {
-      width: 100px;
-    }
+        .header-right img {
+            width: 100px;
+        }
 
-    .bill-title {
-      background: linear-gradient(to right, #007b83, #00a1a7);
-      color: white;
-      text-align: center;
-      padding: 10px;
-      margin: 20px 0;
-      font-size: 20px;
-      font-weight: bold;
-      border-radius: 4px;
-    }
+        .bill-title {
+            background: linear-gradient(to right, #007b83, #00a1a7);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 4px;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
 
-    th,
-    td {
-      border: 1px solid #888;
-      padding: 6px 10px;
-      text-align: left;
-    }
+        th,
+        td {
+            border: 1px solid #888;
+            padding: 6px 10px;
+            text-align: left;
+        }
 
-    th {
-      background-color: #f0f0f0;
-    }
+        th {
+            background-color: #f0f0f0;
+        }
 
-    .summary-table td {
-      text-align: right;
-    }
+        .summary-table td {
+            text-align: right;
+        }
 
-    .amount-label {
-      text-align: right;
-      font-weight: bold;
-    }
+        .amount-label {
+            text-align: right;
+            font-weight: bold;
+        }
 
-    .summary-table tr:last-child td {
-      font-size: 16px;
-      background-color: #f7f7f7;
-    }
+        .summary-table tr:last-child td {
+            font-size: 16px;
+            background-color: #f7f7f7;
+        }
 
-    .signature-section {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 50px;
-      font-size: 13px;
-    }
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            font-size: 13px;
+        }
 
-    .signature-box {
-      width: 40%;
-      text-align: center;
-    }
+        .signature-box {
+            width: 40%;
+            text-align: center;
+        }
 
-    .thank-you {
-      text-align: center;
-      margin-top: 30px;
-      font-style: italic;
-      color: #333;
-    }
+        .thank-you {
+            text-align: center;
+            margin-top: 30px;
+            font-style: italic;
+            color: #333;
+        }
 
-    @media print {
-      .print-btn {
-        display: none;
-      }
-    }
-  </style>
+        @media print {
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-  <!-- Print Button -->
-  <div class="print-btn no-print">
-    <button onclick="window.print()">🖨️ Print</button>
-  </div>
-
-  <!-- Header -->
-  <div class="header">
-    <div class="header-left">
-      <h2>MedSys+</h2>
-      <p>📍 123 Health Street, City</p>
-      <p>📞 +91-9876543210</p>
-      <p>✉️ info@medsys.com</p>
-      <p>🧾 GSTIN: 27ABCDE1234F2Z5</p>
+    <div class="print-btn no-print ">
+        <button onclick="window.print()">🖨️ Print</button>
     </div>
-    <div class="header-right">
-      <img src="/images/hospital-logo.png" alt="Hospital Logo">
+
+    <div class="header">
+        <div class="header-left">
+            <h2>MedSys+</h2>
+            <p>📍 123 Health Street, City</p>
+            <p>📞 +91-9876543210</p>
+            <p>✉️ info@medsys.com</p>
+            <p>🧾 GSTIN: 27ABCDE1234F2Z5</p>
+        </div>
+        <div class="header-right">
+            <img src="/images/hospital-logo.png" alt="Hospital Logo">
+        </div>
     </div>
-  </div>
 
-  <!-- Title -->
-  <div class="bill-title">🏥 Final Hospital Bill Summary</div>
+    <div class="bill-title">🏥 Final Hospital Bill Summary</div>
 
-  <!-- Patient Info Table -->
-  <table>
-    <tr>
-      <td><strong>👤 Patient Name:</strong> <%= patient.patient_name %></td>
-      <td><strong>🧾 Bill No:</strong> #<%= appointment.appointment_id %></td>
-    </tr>
-    <tr>
-      <td><strong>🏠 Address:</strong> —</td>
-      <td><strong>📅 Admit Date:</strong> <%= admission?.admitted_date ? new Date(admission.admitted_date).toLocaleDateString() : "-" %></td>
-    </tr>
-    <tr>
-      <td><strong>📞 Phone:</strong> <%= patient.patient_contact %></td>
-      <td><strong>📅 Discharge Date:</strong> <%= admission?.discharge_date ? new Date(admission.discharge_date).toLocaleDateString() : "-" %></td>
-    </tr>
-    <tr>
-      <td><strong>✉️ Email:</strong> —</td>
-      <td><strong>🧾 GSTIN:</strong> —</td>
-    </tr>
-  </table>
-
-  <!-- Billing Table -->
-  <table style="margin-top: 20px;">
-    <thead>
-      <tr>
-        <th>Sl. No.</th>
-        <th>Description</th>
-        <th>Unit</th>
-        <th>Quantity</th>
-        <th>Price / Unit</th>
-        <th>GST (%)</th>
-        <th>Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>Room Rent</td>
-        <td>Day</td>
-        <td><%= roomDays %></td>
-        <td>₹<%= room.price.toFixed(2) %></td>
-        <td>12%</td>
-        <td>₹<%= (room.price * roomDays).toFixed(2) %></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>Doctor Charges</td>
-        <td>Visit</td>
-        <td>1</td>
-        <td>₹500.00</td>
-        <td>12%</td>
-        <td>₹500.00</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>Nurse Charges</td>
-        <td>Shift</td>
-        <td>1</td>
-        <td>₹<%= nurse.charge.toFixed(2) %></td>
-        <td>12%</td>
-        <td>₹<%= nurse.charge.toFixed(2) %></td>
-      </tr>
-      <% prescriptions.forEach((p, i) => { %>
+    <table>
         <tr>
-          <td><%= i + 4 %></td>
-          <td><%= p.medicine_name %></td>
-          <td>Unit</td>
-          <td><%= p.quantity %></td>
-          <td>₹<%= p.price.toFixed(2) %></td>
-          <td>5%</td>
-          <td>₹<%= (p.price * p.quantity).toFixed(2) %></td>
+            <td><strong>👤 Patient Name:</strong>
+                <%= patient.patient_name %>
+            </td>
+            <td><strong>🧾 Bill No:</strong> #<%= appointment.appointment_id %>
+            </td>
         </tr>
-      <% }) %>
-    </tbody>
-  </table>
+        <tr>
+            <td><strong>🏠 Address:</strong> —</td>
+            <td><strong>📅 Admit Date:</strong>
+                <%= admission?.admitted_date ? new Date(admission.admitted_date).toLocaleDateString() : "-" %>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>📞 Phone:</strong>
+                <%= patient.patient_contact %>
+            </td>
+            <td><strong>📅 Discharge Date:</strong>
+                <%= admission?.discharge_date ? new Date(admission.discharge_date).toLocaleDateString() : "-" %>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>✉️ Email:</strong> —</td>
+            <td><strong>🧾 GSTIN:</strong> —</td>
+        </tr>
+    </table>
 
-  <!-- Summary -->
-  <table class="summary-table" style="margin-top: 20px;">
-    <tr>
-      <td class="amount-label" colspan="6">Sub Total:</td>
-      <td>₹<%= (
-        roomTotal + 500 + nurse.charge + prescriptions.reduce((sum, p) => sum + p.price * p.quantity, 0)
-      ).toFixed(2) %></td>
-    </tr>
-    <tr>
-      <td class="amount-label" colspan="6"><strong>Final Amount:</strong></td>
-      <td><strong>₹<%= (
-        roomTotal + 500 + nurse.charge + prescriptions.reduce((sum, p) => sum + p.price * p.quantity, 0) - 100
-      ).toFixed(2) %></strong></td>
-    </tr>
-  </table>
+    <table style="margin-top: 20px;">
+        <thead>
+            <tr>
+                <th>Sl. No.</th>
+                <th>Description</th>
+                <th>Unit</th>
+                <th>Quantity</th>
+                <th>Price / Unit</th>
+                <th>GST (%)</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Room Rent</td>
+                <td>Day</td>
+                <td>
+                    <%= roomDays %>
+                </td>
+                <td>₹<%= room.charges_per_day?.toFixed(2) || '0.00' %>
+                </td>
+                <td>12%</td>
+                <td>₹<%= parseFloat(bill.room_charges || 0).toFixed(2) %>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Doctor & Treatment Charges</td>
+                <td>-</td>
+                <td>
+                    <%= prescriptions.length %> prescriptions
+                </td>
+                <td>-</td>
+                <td>12%</td>
+                <td>₹<%= parseFloat(bill.treatment_charges || 0).toFixed(2) %>
+                </td>
 
-  <!-- Declaration -->
-  <div style="margin-top: 20px;">
-    <strong>📜 Declaration:</strong> We declare that this bill shows the actual price of the goods/services described and that all particulars are true.
-  </div>
+                </td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Nurse Charges</td>
+                <td>Shift</td>
+                <td>1</td>
+                <td>₹<%= parseFloat(bill.nurse_charges || 0).toFixed(2) %>
+                </td>
+                <td>12%</td>
+                <td>₹<%= parseFloat(bill.nurse_charges || 0).toFixed(2) %>
+                </td>
 
-  <!-- Signatures -->
-  <div class="signature-section">
-    <div class="signature-box">
-      <hr>
-      <strong>👩‍💼 Reception Signature</strong>
+                </td>
+            </tr>
+            <% prescriptions.forEach((p, i)=> { %>
+                <tr>
+                    <td>
+                        <%= i + 4 %>
+                    </td>
+                    <td>
+                        <%= p.medicine_name %>
+                    </td>
+                    <td>Unit</td>
+                    <td>
+                        <%= p.quantity %>
+                    </td>
+                    <td>₹<%= p.price.toFixed(2) %>
+                    </td>
+                    <td>5%</td>
+                    <td>₹<%= (p.price * p.quantity).toFixed(2) %>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+
+    <table class="summary-table" style="margin-top: 20px;">
+        <tr>
+            <td class="amount-label" colspan="6">Sub Total:</td>
+            <td>₹<%= parseFloat(bill.total_amount || 0).toFixed(2) %>
+            </td>
+
+            </td>
+        </tr>
+        <tr>
+            <td class="amount-label" colspan="6"><strong>Final Amount:</strong></td>
+            <td><strong>₹<%= parseFloat(bill.total_amount || 0).toFixed(2) %></strong></td>
+
+        </tr>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <strong>📜 Declaration:</strong> We declare that this bill shows the actual price of the goods/services
+        described and that all particulars are true.
     </div>
-    <div class="signature-box">
-      <hr>
-      <strong>🧍 Patient Signature</strong>
-    </div>
-  </div>
 
-  <!-- Thank You -->
-  <div class="thank-you">
-    ❤️ Thank you for choosing MedSys+. We wish you a speedy recovery and continued good health!
-  </div>
+    <div class="signature-section">
+        <div class="signature-box">
+            <hr>
+            <strong>👩‍💼 Reception Signature</strong>
+        </div>
+        <div class="signature-box">
+            <hr>
+            <strong>🧍 Patient Signature</strong>
+        </div>
+    </div>
+
+    <div class="thank-you">
+        ❤️ Thank you for choosing MedSys+. We wish you a speedy recovery and continued good health!
+    </div>
 
 </body>
 

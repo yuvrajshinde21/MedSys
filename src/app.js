@@ -39,6 +39,14 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
+  next();
+});
+
 //routes
 app.use("/", homeRoutes);
 app.use("/auth", authRoutes);
@@ -52,10 +60,4 @@ app.use("/reception", authMiddleware, receptionRoutes);
 app.use(errorHandler)
 
 module.exports = app;
-
-
-
-// 	/auth/login, /auth/register
-// 	/admin/add, /doctor/list, /reception/add
-// 	/patient/admit, /patient/discharge, /bill/generate
 

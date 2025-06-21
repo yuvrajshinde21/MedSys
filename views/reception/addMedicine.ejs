@@ -5,7 +5,7 @@
         <div class="card-body p-4">
           <h4 class="mb-4 text-center text-primary">Add Medicine</h4>
 
-          <form action="/reception/medicines" method="POST">
+          <form id="medicineForm" action="/reception/medicines" method="POST" novalidate>
             <!-- Medicine Name -->
             <div class="mb-3">
               <label for="medicine_name" class="form-label fw-semibold">Medicine Name</label>
@@ -16,7 +16,7 @@
             <!-- Price -->
             <div class="mb-3">
               <label for="price" class="form-label fw-semibold">Price (₹)</label>
-              <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+              <input type="number" class="form-control" id="price" name="price" step="1.0" min="0" required>
               <div id="priceError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
             </div>
 
@@ -33,3 +33,48 @@
     </div>
   </div>
 </div>
+
+<script>
+  const form = document.getElementById("medicineForm");
+  const nameInput = document.getElementById("medicine_name");
+  const priceInput = document.getElementById("price");
+
+  const nameError = document.getElementById("medicineNameError");
+  const priceError = document.getElementById("priceError");
+
+  function validateName() {
+    const value = nameInput.value.trim();
+    if (value.length < 2 || !/^[a-zA-Z\s]+$/.test(value)) {
+      nameError.textContent = "Enter a valid medicine name (min 3 letters, only alphabets).";
+      return false;
+    }
+    nameError.textContent = "";
+    return true;
+  }
+
+  function validatePrice() {
+    const price = parseFloat(priceInput.value);
+    if (isNaN(price) || price <= 0) {
+      priceError.textContent = "Price must be a number greater than 0.";
+      return false;
+    }
+    priceError.textContent = "";
+    return true;
+  }
+
+  // Real-time validation
+  nameInput.addEventListener("input", validateName);
+  priceInput.addEventListener("input", validatePrice);
+
+  // On form submit
+  form.addEventListener("submit", function (e) {
+    const isValid = validateName() && validatePrice();
+    if (!isValid) {
+      e.preventDefault();
+      const firstError = document.querySelector(".text-danger:not(:empty)");
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  });
+</script>

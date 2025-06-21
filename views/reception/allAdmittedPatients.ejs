@@ -32,8 +32,9 @@
 
 <!-- Inject patient data -->
 <script>
-  const allPatients = <%- JSON.stringify(admittedPatients || []) %>;
+  const allPatients = JSON.parse(`<%- JSON.stringify(admittedPatients || []).replace(/</g, '\\u003c') %>`);
 </script>
+
 
 <script>
   const patientsPerPage = 6;

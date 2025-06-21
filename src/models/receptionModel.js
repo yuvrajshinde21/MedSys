@@ -80,8 +80,42 @@ exports.deleteRoom = async (roomId) => {
     return result.affectedRows > 0;
 };
 
-//--------------------------generate Bill--------------------------------
+//-------------------------- Bill--------------------------------
+// check bill is generated
+exports.getBillByPatientId = async (patientId) => {
+  const [rows] = await promiseConn.query(
+    `SELECT * FROM bill WHERE patient_id = ?`,
+    [patientId]
+  );
 
+  // Assuming one bill per patient
+  return rows.length > 0 ? rows[0] : null;
+};
+
+
+//insert bill in bill
+exports.insertBill = async (billData) => {
+  const {
+    patient_id,
+    room_charges,
+    treatment_charges,
+    nurse_charges,
+    medicine_charges,
+    total_amount,
+    billing_date
+  } = billData;
+
+  const [result] = await promiseConn.query(
+    `INSERT INTO bill 
+      (patient_id, room_charges, treatment_charges, nurse_charges, medicine_charges, total_amount, billing_date)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [patient_id, room_charges, treatment_charges, nurse_charges, medicine_charges, total_amount, billing_date]
+  );
+
+  return result.insertId;
+};
+
+//-----------------------------------
 // Patient
 exports.getPatientById = async (id) => {
     const [rows] = await promiseConn.query(
@@ -138,21 +172,46 @@ exports.getNurseById = async (nurseId) => {
 };
 
 // Prescriptions
+// exports.getPrescriptionsByPatientId = async (patientId) => {
+//     const [rows] = await promiseConn.query(
+//         `SELECT p.quantity, p.dosage, p.frequency, m.medicine_name, m.price
+//      FROM prescriptions p
+//      JOIN medicines m ON p.medicine_id = m.medicine_id
+//      WHERE p.patient_id = ?`,
+//         [patientId]
+//     );
+//     //   Convert price to number
+//     return rows.map(row => ({
+//         ...row,
+//         price: parseFloat(row.price)
+//     }));
+
+// };
+//==============================
 exports.getPrescriptionsByPatientId = async (patientId) => {
     const [rows] = await promiseConn.query(
-        `SELECT p.quantity, p.dosage, p.frequency, m.medicine_name, m.price
-     FROM prescriptions p
-     JOIN medicines m ON p.medicine_id = m.medicine_id
-     WHERE p.patient_id = ?`,
+        `SELECT 
+            p.quantity, 
+            p.dosage, 
+            p.frequency, 
+            m.medicine_name, 
+            m.price,
+            (p.quantity * m.price) AS medicine_cost
+        FROM prescriptions p
+        JOIN medicines m ON p.medicine_id = m.medicine_id
+        WHERE p.patient_id = ?`,
         [patientId]
     );
-    //   Convert price to number
+
     return rows.map(row => ({
         ...row,
-        price: parseFloat(row.price)
+        price: parseFloat(row.price),
+        medicine_cost: parseFloat(row.medicine_cost),
+        treatment_cost: 0 // placeholder
     }));
-
 };
+
+
 
 //get all admited patients
 exports.getAdmittedPatients = async () => {

@@ -102,9 +102,13 @@ exports.handleLogin = asynchandler(async function (req, res) {
     res.render("login.ejs", { error: "invalid username or password" });
   }
 });
-
 exports.logoutUser = (req, res) => {
-
-  res.clearCookie("token");
-  res.redirect("/auth/login");
+  res.clearCookie("token"); // remove JWT
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Session destroy error:", err);
+      return res.redirect("/auth/login");
+    }
+    res.redirect("/auth/login");
+  });
 };
