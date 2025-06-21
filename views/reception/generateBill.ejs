@@ -7,76 +7,76 @@
     text-align: center;
   }
 
-  .bill-header::before {
-    content: "";
-    background: url('/images/hospital-logo.png') no-repeat center;
-    background-size: contain;
-    opacity: 0.16;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .bill-header h1,
-  .bill-header h2,
-  .bill-header p {
-    position: relative;
-    z-index: 1;
-  }
-
-  .bill-header h1 {
-    font-size: 4rem;
-    color: #0d6efd;
-    font-weight: 900;
-    margin-bottom: 0.3rem;
-  }
-
-  .bill-header h2 {
-    font-size: 2rem;
-    color: #0d6efd;
-    font-weight: 900;
-  }
-
-  .bill-header p.quote {
-    font-size: 1rem;
-    font-style: italic;
-    color: #6c757d;
-    margin-bottom: 1rem;
-  }
-
-  .bill-section {
-    background-color: #fdfdfd;
-    border-radius: 10px;
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid #dee2e6;
-  }
-
-  .table th,
-  .table td {
-    vertical-align: middle;
-  }
-
-  .section-title {
-    font-weight: 600;
-    font-size: 1.1rem;
-    border-bottom: 1px solid #ced4da;
-    padding-bottom: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  @media print {
-    .btn {
-      display: none;
+    .bill-header::before {
+      content: "";
+      background: url('/images/hospital-logo.png') no-repeat center;
+      background-size: contain;
+      opacity: 0.16;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    body {
-      background: white !important;
+    .bill-header h1,
+    .bill-header h2,
+    .bill-header p {
+      position: relative;
+      z-index: 1;
     }
+
+    .bill-header h1 {
+      font-size: 4rem;
+      color: #0d6efd;
+      font-weight: 900;
+      margin-bottom: 0.3rem;
+    }
+
+    .bill-header h2 {
+      font-size: 2rem;
+      color: #0d6efd;
+      font-weight: 900;
+    }
+
+    .bill-header p.quote {
+      font-size: 1rem;
+      font-style: italic;
+      color: #6c757d;
+      margin-bottom: 1rem;
+    }
+
+    .bill-section {
+      background-color: #fdfdfd;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #dee2e6;
+    }
+
+    .table th,
+    .table td {
+      vertical-align: middle;
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-bottom: 1px solid #ced4da;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    @media print {
+      .btn {
+        display: none;
+      }
+
+      body {
+        background: white !important;
+      }
 
     .card {
       box-shadow: none !important;
@@ -84,38 +84,52 @@
     }
   }</style>
 
-<div class="container py-4">
-  <div class="card shadow rounded-4 border-0">
-    <div class="card-body">
+  <div class="container py-4">
+    <div class="card shadow rounded-4 border-0">
+      <div class="card-body">
 
-      <!-- Header -->
-      <div class="text-center mb-4 bill-header">
-        <h1 class="fw-bold">MedSys+</h1>
-        <p class="quote">"Caring for life. Healing with heart."</p>
-        <p class="mb-0">Contact: +91-9876543210</p>
-        <h2 class="mt-3">🧾 Patient Bill</h2>
-      </div>
-
-      <!-- Patient Info -->
-      <div class="bill-section">
-        <div class="section-title">👤 Patient Details</div>
-        <div class="row">
-          <div class="col-md-3"><strong>Name:</strong> <%= patient.patient_name %></div>
-          <div class="col-md-3"><strong>Age:</strong> <%= patient.patient_age %></div>
-          <div class="col-md-3"><strong>Gender:</strong> <%= patient.patient_gender %></div>
-          <div class="col-md-3"><strong>Contact:</strong> <%= patient.patient_contact %></div>
-          <div class="col-md-12 mt-2"><strong>Issue:</strong> <%= appointment.patient_issue %></div>
+        <!-- Header -->
+        <div class="text-center mb-4 bill-header">
+          <h1 class="fw-bold">MedSys+</h1>
+          <p class="quote">"Caring for life. Healing with heart."</p>
+          <p class="mb-0">Contact: +91-9876543210</p>
+          <h2 class="mt-3">🧾 Patient Bill</h2>
         </div>
-      </div>
 
-      <!-- Doctor Info -->
-      <div class="bill-section">
-        <div class="section-title">🩺 Doctor Details</div>
-        <div class="row">
-          <div class="col-md-4"><strong>Name:</strong> <%= doctor.doctor_name %></div>
-          <div class="col-md-4"><strong>Appointment Date:</strong> <%= new Date(appointment.appointment_date).toLocaleString() %></div>
+        <!-- Patient Info -->
+        <div class="bill-section">
+          <div class="section-title">👤 Patient Details</div>
+          <div class="row">
+            <div class="col-md-3"><strong>Name:</strong>
+              <%= patient.patient_name %>
+            </div>
+            <div class="col-md-3"><strong>Age:</strong>
+              <%= patient.patient_age %>
+            </div>
+            <div class="col-md-3"><strong>Gender:</strong>
+              <%= patient.patient_gender %>
+            </div>
+            <div class="col-md-3"><strong>Contact:</strong>
+              <%= patient.patient_contact %>
+            </div>
+            <div class="col-md-12 mt-2"><strong>Issue:</strong>
+              <%= appointment.patient_issue %>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <!-- Doctor Info -->
+        <div class="bill-section">
+          <div class="section-title">🩺 Doctor Details</div>
+          <div class="row">
+            <div class="col-md-4"><strong>Name:</strong>
+              <%= doctor.doctor_name %>
+            </div>
+            <div class="col-md-4"><strong>Appointment Date:</strong>
+              <%= new Date(appointment.appointment_date).toLocaleString() %>
+            </div>
+          </div>
+        </div>
 
       <!-- Charges Table -->
       <div class="table-responsive bill-section">
@@ -160,15 +174,15 @@
         </table>
       </div>
 
-      <!-- Print -->
-      <div class="text-end mt-3">
-        <a href="/reception/print-bill/<%= patient.patient_id %>" target="_blank" class="btn btn-primary">
-          <i class="bi bi-printer"></i> Print Bill
-        </a>
-      </div>
+        <!-- Print -->
+        <div class="text-end mt-3">
+          <a href="/reception/print-bill/<%= patient.patient_id %>" target="_blank" class="btn btn-primary">
+            <i class="bi bi-printer"></i> Print Bill
+          </a>
+        </div>
 
+      </div>
     </div>
   </div>
-</div>
 
-<%- include('../partials/footer') %>
+  <%- include('../partials/footer') %>
