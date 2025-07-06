@@ -35,7 +35,7 @@ const promiseConn = conn.promise();
 exports.fetchBasicPatients = async ({ status, page, limit, search }) => {
   const offset = (page - 1) * limit;
   const params = [];
-  let whereClause = `WHERE 1`; // Always true, so we can add conditions with AND
+  let whereClause = `WHERE 1`; 
   let havingClause = '';
 
   // Search condition

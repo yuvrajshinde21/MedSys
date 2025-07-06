@@ -19,10 +19,10 @@ router.get("/view-patient/:patientId", patientController.viewSpecificPatientDeta
 router.get("/rooms", receptionController.viewRooms);          // GET /reception/rooms
 
 // // Show add room form (optional if frontend)
-router.get("/rooms/new", receptionController.renderAddRoom);        // GET /reception/rooms/new
+router.get("/add-rooms", receptionController.renderAddRoom);        // GET /reception/rooms/new
 
 // // Create room
-router.post("/rooms", receptionController.createRoom);          // POST /reception/rooms
+router.post("/add-rooms", receptionController.createRoom);          // POST /reception/rooms
 
 // // Update room status
 router.get("/rooms/edit/:roomId", receptionController.getRoomById); // GET /reception/rooms/edit/:roomId
@@ -40,9 +40,10 @@ router.get("/rooms/delete/:roomId", receptionController.deleteRoom); // GET /rec
 //show all admited
 router.get('/admitted-patients', receptionController.showAdmittedPatients);
 //assign room
-router.post('/assign-room/:id', receptionController.assignRoom);
+router.post('/assign-room/:admission_id', receptionController.assignRoom);
+
 //asssign nurse
-router.post('/assign-nurse/:id', receptionController.assignNurse);
+router.post('/assign-nurse/:admission_id', receptionController.assignNurse);
 // ---------------------- Nurses ----------------------
 // get all nurses
 router.get("/nurses", nurseController.viewNurses);        // GET /reception/nurses

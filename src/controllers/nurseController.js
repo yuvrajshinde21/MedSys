@@ -1,3 +1,4 @@
+const asyncHandler = require("express-async-handler");
 const nurseModel = require("../models/nurseModel");
 //Add nurse controller
 exports.addNurse = (req, res) => {
@@ -9,22 +10,18 @@ exports.addNurse = (req, res) => {
 };
 
 // Save nurse to database   
-exports.saveNurse = async (req, res) => {
-    try {
-        const nurse = {
-            nurse_name: req.body.nurse_name,
-            nurse_contact: req.body.nurse_contact,
-            nurse_shift: req.body.nurse_shift
-        };
+exports.saveNurse = asyncHandler(async (req, res) => {
+    const nurse = {
+        nurse_name: req.body.nurse_name,
+        nurse_contact: req.body.nurse_contact,
+        nurse_shift: req.body.nurse_shift
+    };
 
-        const result = await nurseModel.saveNurse(nurse);
-        console.log("Nurse saved with ID:", result);
-        res.redirect("/reception");
-    } catch (err) {
-        console.error("Error saving nurse:", err);
-        res.status(500).send("Error saving nurse");
-    }
-};
+    const result = await nurseModel.saveNurse(nurse);
+    req.flash("successMessage", "Nurse registration completed successfully.");
+    res.redirect("/reception/nurses/new");
+
+});
 
 // View all nurses controller
 exports.viewNurses = async (req, res) => {
@@ -62,20 +59,19 @@ exports.getNurseById = async (req, res) => {
 };
 
 // Update nurse controller
-exports.updateNurse = async (req, res) => {
-    try {
-        const nurseId = req.params.nurseId;
-        const { nurse_name, nurse_contact, nurse_shift } = req.body;
-
-        await nurseModel.updateNurse(nurseId, nurse_name, nurse_contact, nurse_shift);
-
-        console.log(`Nurse ${nurseId} updated successfully`);
-        res.redirect("/reception");
-    } catch (err) {
-        console.error("Error updating nurse:", err);
-        res.status(500).send("Error updating nurse");
+exports.updateNurse = asyncHandler(async (req, res) => {
+    const nurseId = req.params.nurseId;
+    const { nurse_name, nurse_contact, nurse_shift } = req.body;
+    if (!nurse_name || !nurse_contact || !nurse_shift) {
+        req.flash("errorMessage", "All fields are required.")
+        return res.redirect(`/reception/nurse/edit/${nurseId}`);
     }
-};
+    await nurseModel.updateNurse(nurseId, nurse_name, nurse_contact, nurse_shift);
+
+    req.flash("successMessage", `Nurse '${nurse_name}' updated successfully.`)
+    return res.redirect("/reception/nurses");
+
+});
 
 // Delete nurse controller
 exports.deleteNurse = async (req, res) => {

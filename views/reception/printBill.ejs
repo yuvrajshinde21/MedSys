@@ -31,6 +31,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
+            margin-top: 40px;
         }
 
         .header h2 {
@@ -102,6 +103,31 @@
             margin-top: 30px;
             font-style: italic;
             color: #333;
+        }
+
+        @media print {
+            .print-btn {
+                display: none;
+            }
+        }
+
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            margin-right: 13px;
+        }
+
+        .print-btn button {
+            padding: 8px 16px;
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         @media print {
@@ -181,7 +207,9 @@
                 <td>
                     <%= roomDays %>
                 </td>
-                <td>₹<%= room.charges_per_day?.toFixed(2) || '0.00' %>
+                <td>₹<%= parseFloat(room.charges_per_day || 0).toFixed(2) %>
+                </td>
+
                 </td>
                 <td>12%</td>
                 <td>₹<%= parseFloat(bill.room_charges || 0).toFixed(2) %>

@@ -1,62 +1,147 @@
 <div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-6">
-      <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
-        <div class="card-body p-4">
-          <h4 class="text-primary text-center mb-4">✏️ Edit Nurse</h4>
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
+                <div class="card-body p-4">
+                    <h4 class="text-primary text-center mb-4">✏️ Edit Nurse</h4>
 
-          <form action="/reception/nurses/<%= nurse.nurse_id %>/update" method="POST">
-            <!-- Nurse Name -->
-            <div class="mb-3">
-              <label for="nurse_name" class="form-label fw-semibold">Nurse Name</label>
-              <input 
-                type="text" 
-                id="nurse_name" 
-                name="nurse_name" 
-                class="form-control" 
-                value="<%= nurse.nurse_name %>" 
-                required
-              >
-            </div>
+                    <form action="/reception/nurses/<%= nurse.nurse_id %>/update" method="POST" novalidate>
+                        <!-- Nurse Name -->
+                        <div class="mb-3">
+                            <label for="nurse_name" class="form-label fw-semibold">Nurse Name</label>
+                            <input type="text" id="nurse_name" name="nurse_name" class="form-control"
+                                value="<%= nurse.nurse_name %>" required>
+                                    <div class="invalid-feedback"></div>
 
-            <!-- Contact -->
-            <div class="mb-3">
-              <label for="nurse_contact" class="form-label fw-semibold">Contact</label>
-              <input 
-                type="text" 
-                id="nurse_contact" 
-                name="nurse_contact" 
-                class="form-control" 
-                value="<%= nurse.nurse_contact %>" 
-                required
-              >
-            </div>
+                        </div>
 
-            <!-- Shift -->
-            <div class="mb-3">
-              <label for="nurse_shift" class="form-label fw-semibold">Shift</label>
-              <select 
-                id="nurse_shift" 
-                name="nurse_shift" 
-                class="form-select" 
-                required
-              >
-                <option value="Morning" <%= nurse.nurse_shift === 'Morning' ? 'selected' : '' %>>Morning</option>
-                <option value="Evening" <%= nurse.nurse_shift === 'Evening' ? 'selected' : '' %>>Evening</option>
-                <option value="Night" <%= nurse.nurse_shift === 'Night' ? 'selected' : '' %>>Night</option>
-              </select>
-            </div>
+                        <!-- Contact -->
+                        <div class="mb-3">
+                            <label for="nurse_contact" class="form-label fw-semibold">Contact</label>
+                            <input type="text" id="nurse_contact" name="nurse_contact" class="form-control"
+                                value="<%= nurse.nurse_contact %>" required>
+                                    <div class="invalid-feedback"></div>
 
-            <!-- Submit -->
-            <div class="text-center mt-4">
-              <button type="submit" class="btn btn-success px-4">
-                <i class="bi bi-pencil-square me-1"></i> Update Nurse
-              </button>
-              <a href="/reception/nurses" class="btn btn-secondary ms-2 px-4">🔙 Cancel</a>
+                        </div>
+
+                        <!-- Shift -->
+                        <div class="mb-3">
+                            <label for="nurse_shift" class="form-label fw-semibold">Shift</label>
+                            <select id="nurse_shift" name="nurse_shift" class="form-select" required>
+                                <option value="Morning" <%=nurse.nurse_shift==='Morning' ? 'selected' : '' %>>Morning
+                                </option>
+                                <option value="Evening" <%=nurse.nurse_shift==='Evening' ? 'selected' : '' %>>Evening
+                                </option>
+                                <option value="Night" <%=nurse.nurse_shift==='Night' ? 'selected' : '' %>>Night</option>
+                            </select>
+                                <div class="invalid-feedback"></div>
+
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-pencil-square me-1"></i> Update Nurse
+                            </button>
+                            <a href="/reception/nurses" class="btn btn-secondary ms-2 px-4">🔙 Cancel</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const nameInput = document.getElementById("nurse_name");
+    const contactInput = document.getElementById("nurse_contact");
+    const shiftSelect = document.getElementById("nurse_shift");
+    const form = document.querySelector("form");
+
+    const nameError = nameInput.nextElementSibling;
+    const contactError = contactInput.nextElementSibling;
+    const shiftError = shiftSelect.nextElementSibling;
+
+    // Live validation for Nurse Name
+    nameInput.addEventListener("input", function() {
+        let value = this.value.replace(/^\s+/, '');
+        // Capitalize each word
+        value = value.replace(/\b\w+/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+        this.value = value;
+
+        if (value.trim() === "") {
+            showError(nameInput, nameError, "Nurse name cannot be empty.");
+        } else if (!/^[A-Za-z\s]+$/.test(value)) {
+            showError(nameInput, nameError, "Nurse name must contain only letters and spaces.");
+        } else {
+            clearError(nameInput, nameError);
+        }
+    });
+
+    // Live validation for Contact
+    contactInput.addEventListener("input", function() {
+        let value = this.value.replace(/^\s+/, '').replace(/\D/g, '');
+        if (value.length > 10) value = value.slice(0, 10);
+        this.value = value;
+
+        if (value.length !== 10) {
+            showError(contactInput, contactError, "Contact must be exactly 10 digits.");
+        } else {
+            clearError(contactInput, contactError);
+        }
+    });
+
+    // Validate on Shift change
+    shiftSelect.addEventListener("change", function() {
+        if (this.value === "") {
+            showError(shiftSelect, shiftError, "Please select a shift.");
+        } else {
+            clearError(shiftSelect, shiftError);
+        }
+    });
+
+    // Form submit validation
+    form.addEventListener("submit", function(e) {
+        let valid = true;
+        const nameValue = nameInput.value.trim();
+        const contactValue = contactInput.value.trim();
+        const shiftValue = shiftSelect.value.trim();
+
+        if (nameValue === "") {
+            showError(nameInput, nameError, "Nurse name cannot be empty.");
+            valid = false;
+        } else if (!/^[A-Za-z\s]+$/.test(nameValue)) {
+            showError(nameInput, nameError, "Nurse name must contain only letters and spaces.");
+            valid = false;
+        } else {
+            clearError(nameInput, nameError);
+        }
+
+        if (contactValue.length !== 10) {
+            showError(contactInput, contactError, "Contact must be exactly 10 digits.");
+            valid = false;
+        } else {
+            clearError(contactInput, contactError);
+        }
+
+        if (shiftValue === "") {
+            showError(shiftSelect, shiftError, "Please select a shift.");
+            valid = false;
+        } else {
+            clearError(shiftSelect, shiftError);
+        }
+
+        if (!valid) e.preventDefault();
+    });
+
+    function showError(input, errorDiv, message) {
+        input.classList.add("is-invalid");
+        errorDiv.textContent = message;
+    }
+
+    function clearError(input, errorDiv) {
+        input.classList.remove("is-invalid");
+        errorDiv.textContent = "";
+    }
+});
+</script>

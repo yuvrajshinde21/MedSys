@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 // @route GET: "auth/login"
 // @access public
 exports.getLoginPage = function (req, res) {
-  res.render("login.ejs", { message: "" });
+    res.render("login.ejs", { message: "" });
 };
 
 // @desc register doctor
@@ -58,57 +58,39 @@ exports.handleLogin = asynchandler(async function (req, res) {
         return res.render("admin/adminDashboard");
     } else if (user.role === "doctor") {
         return res.render("doctor/doctorDashboard.ejs", {
-            main_content:"doctorInfo",
-            doctorName: "John Doe",
-            totalAppointments: 12,
-            todaysPatients: 5,
-            pendingPrescriptions: 3,
-            appointments: [
-                {
-                    time: "10:00 AM",
-                    patient_name: "Alice Smith",
-                    reason: "Headache",
-                    status: "Pending"
-                },
-                {
-                    time: "11:30 AM",
-                    patient_name: "Bob Jones",
-                    reason: "Fever",
-                    status: "Completed"
-                }
-            ]
+            main_content: "doctorInfo",
         });
 
     } else if (user.role === "reception") {
         return res.render("reception/receptionDashboard.ejs", {
-            main_content: "receptionistInfo", // ✅ match the actual filename
+            main_content: "receptionistInfo", // 
             receptionist: receptionist,
         });
     } else {
         return res.render("login.ejs", { error: "invalid user role!" });
     }
 
-  //admin
-  if (user.role === "admin") {
-    console.log("admin");
-    console.log(user.role);
-    
-    res.render("admin/adminDashboard");
-  } else if (user.role === "doctor") {
-    res.render("doctor/doctorDashboard");
-  } else if (user.role === "reception") {
-    res.render("reception/receptionDashboard");
-  } else {
-    res.render("login.ejs", { error: "invalid username or password" });
-  }
+    //admin
+    // if (user.role === "admin") {
+    //     console.log("admin");
+    //     console.log(user.role);
+
+    //     res.render("admin/adminDashboard");
+    // } else if (user.role === "doctor") {
+    //     res.render("doctor/doctorDashboard");
+    // } else if (user.role === "reception") {
+    //     res.render("reception/receptionDashboard");
+    // } else {
+    //     res.render("login.ejs", { error: "invalid username or password" });
+    // }
 });
 exports.logoutUser = (req, res) => {
-  res.clearCookie("token"); // remove JWT
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Session destroy error:", err);
-      return res.redirect("/auth/login");
-    }
-    res.redirect("/auth/login");
-  });
+    res.clearCookie("token"); // remove JWT
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Session destroy error:", err);
+            return res.redirect("/auth/login");
+        }
+        res.redirect("/auth/login");
+    });
 };

@@ -125,6 +125,11 @@
 
     function validateName() {
         const input = document.getElementById("patient_name");
+
+        input.value = input.value.replace(/^\s+/, "");
+
+        input.value = input.value.replace(/\b\w/g, (char) => char.toUpperCase());
+
         const name = input.value.trim();
 
         // Regex: only letters (upper/lower), dots, and spaces allowed
@@ -183,6 +188,8 @@
 
     function validateContact() {
         const input = document.getElementById("patient_contact");
+        input.value = input.value.replace(/^\s+/, "");
+
         const regex = /^[0-9]{10}$/;
         if (!regex.test(input.value)) {
             showError(input, "Enter a valid 10-digit number.");
@@ -192,18 +199,11 @@
         return true;
     }
 
-    function validateGender() {
-        const input = document.getElementById("patient_gender");
-        if (!input.value) {
-            showError(input, "Please select gender.");
-            return false;
-        }
-        clearError(input);
-        return true;
-    }
 
     function validateIssue() {
         const input = document.getElementById("patient_issue");
+        input.value = input.value.replace(/^\s+/, "");
+
         if (input.value.trim().length < 5) {
             showError(input, "Please describe the issue (min 5 characters).");
             return false;
@@ -256,7 +256,7 @@
     document.getElementById("patient_name").addEventListener("input", validateName);
     document.getElementById("patient_age").addEventListener("input", validateAge);
     document.getElementById("patient_contact").addEventListener("input", validateContact);
-    document.getElementById("patient_gender").addEventListener("change", validateGender);
+    document.getElementById("patient_gender").addEventListener("input", validateGender);
     document.getElementById("patient_issue").addEventListener("input", validateIssue);
     document.getElementById("specialization").addEventListener("change", validateSpecialization);
     document.getElementById("doctor").addEventListener("change", validateDoctor);

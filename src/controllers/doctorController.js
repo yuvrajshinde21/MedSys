@@ -25,7 +25,7 @@ exports.showPrescriptionForm = async (req, res) => {
     console.log('Fetching previous prescriptions for', patientId, 'excluding', appointmentId);
 
     const prescriptions = await doctorModel.getPriviousPrescriptions(patientId, appointmentId)
-    console.log("Previous Prescriptions:", prescriptions);
+    // console.log("Previous Prescriptions:", prescriptions);
 
     res.render("doctor/doctorDashboard", {
         main_content: "prescribe_form",
@@ -157,15 +157,22 @@ exports.createAdmittedPrescription = asynchandler(async (req, res) => {
 });
 
 //discharge
-
 exports.dischargePatient = async (req, res) => {
+  try {
     const admissionId = req.params.id;
 
     const success = await doctorModel.markAsDischarged(admissionId);
+
     if (success) {
-        req.flash('successMessage', 'Patient discharged successfully.');
+      req.flash('successMessage', 'Patient discharged successfully and room marked as available.');
     } else {
-        req.flash('errorMessage', 'Discharge failed. Try again.');
+      req.flash('errorMessage', 'Discharge failed. Patient may already be discharged or not found.');
     }
-    res.redirect('/doctor/admitted-patients'); 
+  } catch (error) {
+    console.error("Discharge error:", error);
+    req.flash('errorMessage', 'An error occurred while discharging the patient.');
+  }
+
+  res.redirect('/doctor/admitted-patients');
 };
+

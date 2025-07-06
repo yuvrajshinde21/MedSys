@@ -90,8 +90,8 @@ exports.updateDoctor = async (doctor_id, doctor_name, doctor_specialization, doc
 
 //function create receptionist user with recesptionist
 exports.createReceptionWithUser = async (reception_name, username, password, reception_contact, reception_email, status, admin_id, reception_image, role) => {
-
-    const connection = await conn.promise().getConnection();
+console.log("=========")
+    const connection = await promiseConn.getConnection();
     try {
         await connection.beginTransaction();
         //create user
@@ -124,10 +124,13 @@ exports.createReceptionWithUser = async (reception_name, username, password, rec
         );
 
         await connection.commit();
-        return { success: true, message: "Receptionist registered successfully ✅" };
+        console.log("not=errr")
+
+        return { success: true, message: "Receptionist registered successfully " };
     } catch (error) {
         await connection.rollback();
-        return { success: false, message: "Something went wrong while saving the receptionist ❌" };
+        console.error("Reception creation error:", error);
+        return { success: false, message: "Something went wrong while saving the receptionist " };
     } finally {
         connection.release();
     }
@@ -181,6 +184,6 @@ exports.updateReception = async (reception_id, reception_name, reception_contact
 
 // Function to get all patients
 exports.getAllPatients = async () => {
-    const [rows] = await promiseConn.query("SELECT * FROM patient");
+    const [rows] = await promiseConn.query("SELECT * FROM patients");
     return rows;
 };

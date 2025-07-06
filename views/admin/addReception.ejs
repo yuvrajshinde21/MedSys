@@ -1,67 +1,236 @@
-<div class="container py-4">
-  <form action="/admin/reception" method="POST" enctype="multipart/form-data" novalidate
-    class="p-4 border-0 rounded-4 shadow w-100 w-md-75 mx-auto"
-    style="background-color: #f0f8ff; max-width: 48rem;">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <form action="/admin/reception" method="POST" enctype="multipart/form-data" novalidate
+                class="p-4 border-0 rounded-4 shadow bg-light">
 
-    <h4 class="text-primary mb-4 text-center">Add Receptionist</h4>
+                <h4 class="text-primary mb-4 text-center">Add Receptionist</h4>
 
-    <!-- Name -->
-    <div class="mb-3">
-      <label for="reception_name" class="form-label">Receptionist Name</label>
-      <input type="text" class="form-control" id="reception_name" name="reception_name" required>
-      <div id="receptionNameError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
+                <div class="row g-3">
+
+                    <!-- Name -->
+                    <div class="col-12 col-md-6">
+                        <label for="reception_name" class="form-label">Receptionist Name</label>
+                        <input type="text" class="form-control" id="reception_name" name="reception_name" required>
+                        <div id="receptionNameError" class="text-danger mt-1 small"></div>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="col-12 col-md-6">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div id="receptionUserNameError" class="text-danger mt-1 small"></div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="col-12 col-md-6">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div id="receptionPasswordError" class="text-danger mt-1 small"></div>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="col-12 col-md-6">
+                        <label for="reception_contact" class="form-label">Contact Number</label>
+                        <input type="tel" class="form-control" id="reception_contact" name="reception_contact" required>
+                        <div id="receptionContactError" class="text-danger mt-1 small"></div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-12 col-md-6">
+                        <label for="reception_email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="reception_email" name="reception_email">
+                        <div id="receptionEmailError" class="text-danger mt-1 small"></div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-12 col-md-6">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="" selected disabled>Select Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                        <div id="receptionStatusError" class="text-danger mt-1 small"></div>
+                    </div>
+
+                    <!-- Image (full width) -->
+                    <div class="col-12">
+                        <label for="reception_image" class="form-label">Receptionist Image</label>
+                        <input class="form-control" type="file" id="reception_image" name="reception_image"
+                            accept="image/*">
+                        <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" id="receptionSubmitButton" class="btn btn-success btn-lg px-4">
+                        <i class="bi bi-person-plus me-2"></i> Add Receptionist
+                    </button>
+                </div>
+
+            </form>
+        </div>
     </div>
-
-    <!-- Username -->
-    <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" id="username" name="username" required>
-      <div id="receptionUserNameError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
-    </div>
-
-    <!-- Password -->
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password" name="password" required>
-      <div id="receptionPasswordError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
-    </div>
-
-    <!-- Contact -->
-    <div class="mb-3">
-      <label for="reception_contact" class="form-label">Contact Number</label>
-      <input type="tel" class="form-control" id="reception_contact" name="reception_contact" required>
-      <div id="receptionContactError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
-    </div>
-
-    <!-- Email -->
-    <div class="mb-3">
-      <label for="reception_email" class="form-label">Email Address</label>
-      <input type="email" class="form-control" id="reception_email" name="reception_email">
-      <div id="receptionEmailError" class="text-danger mt-1" style="font-size: 0.9rem;"></div>
-    </div>
-
-    <!-- Status -->
-    <div class="mb-3">
-      <label for="status" class="form-label">Status</label>
-      <select class="form-select" id="status" name="status" required>
-        <option value="" selected disabled>Select Status</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-      </select>
-    </div>
-
-    <!-- Image -->
-    <div class="mb-3">
-      <label for="reception_image" class="form-label">Receptionist Image</label>
-      <input class="form-control" type="file" id="reception_image" name="reception_image" accept="image/*">
-      <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
-    </div>
-
-    <!-- Submit Button -->
-    <div class="text-center mt-4">
-      <button type="submit" id="receptionSubmitButton" class="btn btn-success px-4 py-2">
-        <i class="bi bi-person-plus me-1"></i> Add Receptionist
-      </button>
-    </div>
-  </form>
 </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const reception_name = document.getElementById("reception_name");
+        const reception_username = document.getElementById("username");
+        const reception_password = document.getElementById("password");
+        const reception_contact = document.getElementById("reception_contact");
+        const reception_email = document.getElementById("reception_email");
+        const reception_status = document.getElementById("status");
+        const reception_image = document.getElementById("reception_image");
+
+        const nameErrorDiv = document.getElementById("receptionNameError");
+        const usernameErrorDiv = document.getElementById("receptionUserNameError");
+        const passwordErrorDiv = document.getElementById("receptionPasswordError");
+        const contactErrorDiv = document.getElementById("receptionContactError");
+        const emailErrorDiv = document.getElementById("receptionEmailError");
+        const statusErrorDiv = document.getElementById("receptionStatusError");
+
+        function validateName() {
+            reception_name.value = reception_name.value.replace(/^\s+/, '');
+            reception_name.value = reception_name.value.replace(/\b\w/g, char => char.toUpperCase());
+            const value = reception_name.value.trim();
+            const isValid = /^[A-Za-z\s]+$/.test(value);
+
+            if (!value || !isValid) {
+                nameErrorDiv.textContent = "Enter a valid name (letters and spaces only).";
+                return false;
+            }
+            if (value.length > 30) {
+                nameErrorDiv.textContent = "Name cannot exceed 30 characters.";
+                return false;
+            }
+            nameErrorDiv.textContent = "";
+            return true;
+        }
+
+        function validateUsername() {
+            reception_username.value = reception_username.value.replace(/^\s+/, '');
+            const value = reception_username.value.trim();
+            const isValid = /^[A-Za-z0-9_]+$/.test(value);
+
+            if (!value || !isValid) {
+                usernameErrorDiv.textContent = "Enter a valid username (letters, numbers, underscores).";
+                return false;
+            }
+            if (value.length > 30) {
+                usernameErrorDiv.textContent = "Username cannot exceed 30 characters.";
+                return false;
+            }
+            usernameErrorDiv.textContent = "";
+            return true;
+        }
+
+        function validatePassword() {
+            reception_password.value = reception_password.value.replace(/^\s+/, '');
+            const value = reception_password.value.trim();
+            const isValid = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{6,}$/.test(value);
+
+            if (!value) {
+                passwordErrorDiv.textContent = "Password is required.";
+                return false;
+            }
+            if (!isValid) {
+                passwordErrorDiv.textContent = "Min 6 chars with letters, one number & one special char.";
+                return false;
+            }
+            if (value.length > 30) {
+                passwordErrorDiv.textContent = "Password cannot exceed 30 characters.";
+                return false;
+            }
+            passwordErrorDiv.textContent = "";
+            return true;
+        }
+
+        function validateContact() {
+            reception_contact.value = reception_contact.value.replace(/^\s+/, '');
+            const value = reception_contact.value.trim();
+            const isValid = /^\d{10}$/.test(value);
+
+            if (!value || !isValid) {
+                contactErrorDiv.textContent = "Enter a valid 10-digit contact number.";
+                return false;
+            }
+            contactErrorDiv.textContent = "";
+            return true;
+        }
+
+        function validateEmail() {
+            const value = reception_email.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (value !== "" && !emailRegex.test(value)) {
+                emailErrorDiv.textContent = "Enter a valid email address.";
+                return false;
+            }
+            if (value.length > 50) {
+                emailErrorDiv.textContent = "Email cannot exceed 50 characters.";
+                return false;
+            }
+            emailErrorDiv.textContent = "";
+            return true;
+        }
+
+        function validateStatus() {
+            if (reception_status.value === "") {
+                statusErrorDiv.textContent = "Please select a status.";
+                return false;
+            }
+            statusErrorDiv.textContent = "";
+            return true;
+        }
+
+
+        function validateImage() {
+            const file = reception_image.files[0];
+            const validTypes = ["image/jpeg", "image/png", "image/gif"];
+            const maxSize = 2 * 1024 * 1024; // 2MB
+
+            if (!file) return true; // optional field
+
+            if (!validTypes.includes(file.type)) {
+                alert("Only JPG, PNG, or GIF images are allowed.");
+                return false;
+            }
+
+            if (file.size > maxSize) {
+                alert("Image must be under 2MB.");
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateReceptionForm() {
+            const validName = validateName();
+            const validUsername = validateUsername();
+            const validPassword = validatePassword();
+            const validContact = validateContact();
+            const validEmail = validateEmail();
+            const validStatus = validateStatus();
+            const validImage = validateImage();
+
+            return validName && validUsername && validPassword && validContact && validEmail && validStatus && validImage;
+        }
+
+        reception_name.addEventListener("input", validateName);
+        reception_username.addEventListener("input", validateUsername);
+        reception_password.addEventListener("input", validatePassword);
+        reception_contact.addEventListener("input", validateContact);
+        reception_email.addEventListener("input", validateEmail);
+        reception_status.addEventListener("change", validateStatus);
+        reception_image.addEventListener("change", validateImage);
+
+        document.querySelector("form").addEventListener("submit", function (e) {
+            if (!validateReceptionForm()) {
+                e.preventDefault(); // Stop submission if validation fails
+            }
+        });
+    });
+</script>

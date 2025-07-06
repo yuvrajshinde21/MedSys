@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 // @Desc render addDoctorForm
 // @route GET: admin/doctor 
-exports.addDoctorForm =async (req, res) => {
+exports.addDoctorForm = async (req, res) => {
     const specializations = await adminModel.getSpecializations();
     res.render("admin/adminDashboard.ejs", {
         main_content: "addDoctor",
@@ -26,25 +26,15 @@ exports.registerDoctor = asynchandler(async (req, res) => {
     const admin_id = req.body.admin_id;
     const doctorImage = req.file ? req.file.filename : null;
 
-    const specializations = await adminModel.getSpecializations();
-
     if (!doctor_name || !username || !password || !doctor_specialization || !doctor_contact || !doctor_email || !doctor_experience || !status || !admin_id) {
-        return res.render("admin/adminDashboard.ejs", {
-            main_content: "addDoctor",
-            user_id: req.user.user_id,
-            errorMessage: "All required fields must be filled.",
-            specializations
-        })
+        req.flash("errorMessage", "All required fields must be filled.")
+        return res.redirect("/admin/doctor");
     }
 
     const userNameExists = await adminModel.isUserNameTaken(username);
     if (userNameExists) {
-        return res.render("admin/adminDashboard.ejs", {
-            main_content: "addDoctor",
-            user_id: req.user.user_id,
-            errorMessage: "Username is already taken. Try another.",
-            specializations
-        })
+        req.flash("errorMessage", "Username is already taken. Try another.")
+        return res.redirect("/admin/doctor");
     }
     //register user
     const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
@@ -52,11 +42,12 @@ exports.registerDoctor = asynchandler(async (req, res) => {
 
     const doctor_id = await adminModel.createUser(username, hashedPassword, "doctor");
     const insertCount = await adminModel.createDoctor(doctor_name, doctor_specialization, doctor_contact, doctor_email, doctor_experience, status, doctor_id, admin_id, doctorImage)
-    return res.render("admin/adminDashboard.ejs", {
-        main_content: "addDoctor",
-        errorMessage: insertCount === 1 ? "Doctor registered successfully ✅" : "Something went wrong while saving the doctor ❌",
-        specializations
-    });
+    if (insertCount === 1) {
+        req.flash("successMessage", "Doctor registered successfully")
+    } else {
+        req.flash("errorMessage", "Something went wrong while saving the doctor")
+    }
+    return res.redirect("/admin/doctor");
 })
 
 // @Desc view Doctors
@@ -77,9 +68,9 @@ exports.deleteDoctor = asynchandler(async (req, res) => {
     const doctorId = req.params.id;
     const deleteCount = await adminModel.deleteDoctor(doctorId);
     if (deleteCount === 1) {
-        return res.status(200).json({ message: "Doctor deleted successfully ✅" });
+        return res.status(200).json({ message: "Doctor deleted successfully " });
     } else {
-        return res.status(500).json({ message: "Something went wrong while deleting the doctor ❌" });
+        return res.status(500).json({ message: "Something went wrong while deleting the doctor " });
     }
 });
 
@@ -87,14 +78,12 @@ exports.deleteDoctor = asynchandler(async (req, res) => {
 //@route GET: admin/doctors/edit/:id
 exports.getEditDoctorForm = asynchandler(async (req, res) => {
     const doctorId = req.params.id;
-        const specializations = await adminModel.getSpecializations();
+    const specializations = await adminModel.getSpecializations();
 
     const doctor = await adminModel.getDoctorById(doctorId);
     if (!doctor) {
-        return res.status(404).render("admin/adminDashboard.ejs", {
-            main_content: "viewDoctors",
-            errorMessage: "Doctor not found.",
-        });
+        req.flash("errorMessage", "Doctor not found.");
+        return res.redirect("/admin/doctors");
     }
     res.render("admin/adminDashboard.ejs", {
         main_content: "editDoctor",
@@ -117,8 +106,8 @@ exports.editDoctor = asynchandler(async (req, res) => {
     const doctorImage = req.file ? req.file.filename : req.body.existing_image;
 
     if (!doctor_name || !doctor_specialization || !doctor_contact || !doctor_email || !doctor_experience || !status) {
-        // console.log(doctor_name, doctor_specialization, doctor_contact, doctor_email, doctor_experience, status);
         const specializations = await adminModel.getSpecializations();
+        req.flash("errorMessage", "All required fields must be filled.");
         return res.render("admin/adminDashboard.ejs", {
             main_content: "editDoctor",
             doctor: {
@@ -131,25 +120,18 @@ exports.editDoctor = asynchandler(async (req, res) => {
                 status: status,
             },
             specializations,
-            errorMessage: "All required fields must be filled.",
         });
     }
 
     const updateCount = await adminModel.updateDoctor(doctorId, doctor_name, doctor_specialization, doctor_contact, doctor_email, doctor_experience, status, doctorImage);
 
+
     if (updateCount === 1) {
-        //get doctors
-        const doctors = await adminModel.getDoctors();
-        return res.render("admin/adminDashboard.ejs", {
-            main_content: "viewDoctors",
-            doctors: doctors,
-            errorMessage: "Doctor updated successfully ✅",
-        });
+        req.flash("successMessage", "Doctor updated successfully ");
+        return res.redirect("/admin/doctors");
     } else {
-        return res.render("admin/adminDashboard.ejs", {
-            main_content: "editDoctor",
-            errorMessage: "Something went wrong while updating the doctor ❌",
-        });
+        req.flash("errorMessage", "Something went wrong while updating the doctor ");
+        return res.redirect(`/admin/doctors/edit/${doctorId}`);
     }
 });
 
@@ -158,7 +140,6 @@ exports.editDoctor = asynchandler(async (req, res) => {
 exports.addReceptionForm = asynchandler(async (req, res) => {
     res.render("admin/adminDashboard.ejs", {
         main_content: "addReception",
-        errorMessage: null,
     });
 });
 
@@ -174,21 +155,17 @@ exports.registerReception = asynchandler(async (req, res) => {
     const admin_id = 1; // Assuming admin_id is hardcoded for now, you can change this as per your logic
     const receptionImage = req.file ? req.file.filename : null; // Uncomment if you want to handle image upload  
     const role = "reception";
-
     if (!reception_name || !username || !password || !reception_contact || !reception_email || !status || !admin_id) {
-        return res.render("admin/adminDashboard.ejs", {
-            main_content: "addReception",
-            errorMessage: "All required fields must be filled.",
-        });
+        req.flash('errorMessage', "All required fields must be filled.");
+        return res.redirect("/admin/reception");
     }
 
     const userNameExists = await adminModel.isUserNameTaken(username);
     if (userNameExists) {
-        return res.render("admin/adminDashboard.ejs", {
-            main_content: "addReception",
-            errorMessage: "Username is already taken. Try another.",
-        });
+        req.flash('errorMessage', "Username is already taken. Try another.");
+        return res.redirect("/admin/reception");
     }
+
 
     //register user
     const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
@@ -205,25 +182,25 @@ exports.registerReception = asynchandler(async (req, res) => {
         receptionImage,
         role
     );
-
-    return res.render("admin/adminDashboard.ejs", {
-        main_content: "addReception",
-        errorMessage: result.message
-    });
-
+    if (result.success) {
+        req.flash("successMessage", result.message);
+    } else {
+        req.flash("errorMessage", result.message);
+    }
+    return res.redirect("/admin/reception");
 });
+
 // @Desc view Receptionists
 // @route GET: admin/receptionists
 exports.viewReceptions = asynchandler(async (req, res) => {
     console.log("View All Receptionists");
-    
+
     const receptionists = await adminModel.getReceptionists();
     console.log("Receptionists:", receptionists);
-    
+
     res.render("admin/adminDashboard.ejs", {
         main_content: "viewReceptions",
         receptionists: receptionists,
-        errorMessage: null
     });
 });
 // @Desc delete Receptionist
@@ -233,9 +210,9 @@ exports.deleteReception = asynchandler(async (req, res) => {
     const deleteCount = await adminModel.deleteReception(receptionId);
 
     if (deleteCount === 1) {
-        return res.status(200).json({ message: "Receptionist deleted successfully ✅" });
+        return res.status(200).json({ message: "Receptionist deleted successfully " });
     } else {
-        return res.status(404).json({ message: "Receptionist not found ❌" });
+        return res.status(404).json({ message: "Receptionist not found " });
     }
 });
 
@@ -245,10 +222,8 @@ exports.getEditReceptionForm = asynchandler(async (req, res) => {
     const receptionId = req.params.id;
     const receptionist = await adminModel.getReceptionById(receptionId);
     if (!receptionist) {
-        return res.status(404).render("admin/adminDashboard.ejs", {
-            main_content: "viewReceptions",
-            errorMessage: "Receptionist not found.",
-        });
+        req.flash("errorMessage", "Receptionist not found.");
+        return res.redirect("/admin/receptions");
     }
     res.render("admin/adminDashboard.ejs", {
         main_content: "editReception",
@@ -262,12 +237,12 @@ exports.editReception = asynchandler(async (req, res) => {
     const reception_name = req.body.reception_name?.trim();
     const reception_contact = parseInt(req.body.reception_contact?.trim());
     const reception_email = req.body.reception_email?.trim();
-    const status = req.body.status?.trim(); 
+    const status = req.body.status?.trim();
     const receptionImage = req.file ? req.file.filename : req.body.existing_image;
     if (!reception_name || !reception_contact || !reception_email || !status) {
+        req.flash("errorMessage", "All fields are require.")
         return res.status(400).render("admin/adminDashboard.ejs", {
             main_content: "editReception",
-            errorMessage: "All fields are required.",
             reception: {
                 reception_id: receptionId,
                 reception_name: reception_name,
@@ -288,11 +263,8 @@ exports.editReception = asynchandler(async (req, res) => {
         receptionImage
     );
 
-    return res.render("admin/adminDashboard.ejs", {
-        main_content: "viewReceptions",
-        receptionists: await adminModel.getReceptionists(),
-        errorMessage: "Receptionist updated successfully ✅",
-    });
+    req.flash("successMessage", "Receptionist updated successfully ✅");
+    return res.redirect("/admin/receptions");
 });
 
 

@@ -44,8 +44,8 @@
 
   function validateName() {
     const value = nameInput.value.trim();
-    if (value.length < 2 || !/^[a-zA-Z\s]+$/.test(value)) {
-      nameError.textContent = "Enter a valid medicine name (min 3 letters, only alphabets).";
+    if (value.length < 2 || !/^[A-Za-z0-9\s\-()]{2,50}$/.test(value)) {
+      nameError.textContent = "Enter a valid medicine name (2-50 letters, numbers, spaces).";
       return false;
     }
     nameError.textContent = "";

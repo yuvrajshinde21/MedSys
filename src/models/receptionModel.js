@@ -63,6 +63,11 @@ exports.getRoomById = async (roomId) => {
     return rows.length > 0 ? rows[0] : null;
 
 };
+//---
+exports.chckRoomIsAssignedToAdmitedPatient =asyncHandler(async (rooId)=>{
+    let [rows] = await promiseConn.query("select admission_id from admissions where room_no = ? and status ='Admitted'",[rooId])
+    return rows;
+})
 
 // Update room information:
 exports.updateRoom = async (roomId, roomType, roomStatus, chargesPerDay) => {
@@ -83,36 +88,36 @@ exports.deleteRoom = async (roomId) => {
 //-------------------------- Bill--------------------------------
 // check bill is generated
 exports.getBillByPatientId = async (patientId) => {
-  const [rows] = await promiseConn.query(
-    `SELECT * FROM bill WHERE patient_id = ?`,
-    [patientId]
-  );
+    const [rows] = await promiseConn.query(
+        `SELECT * FROM bill WHERE patient_id = ?`,
+        [patientId]
+    );
 
-  // Assuming one bill per patient
-  return rows.length > 0 ? rows[0] : null;
+    // Assuming one bill per patient
+    return rows.length > 0 ? rows[0] : null;
 };
 
 
 //insert bill in bill
 exports.insertBill = async (billData) => {
-  const {
-    patient_id,
-    room_charges,
-    treatment_charges,
-    nurse_charges,
-    medicine_charges,
-    total_amount,
-    billing_date
-  } = billData;
+    const {
+        patient_id,
+        room_charges,
+        treatment_charges,
+        nurse_charges,
+        medicine_charges,
+        total_amount,
+        billing_date
+    } = billData;
 
-  const [result] = await promiseConn.query(
-    `INSERT INTO bill 
+    const [result] = await promiseConn.query(
+        `INSERT INTO bill 
       (patient_id, room_charges, treatment_charges, nurse_charges, medicine_charges, total_amount, billing_date)
      VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [patient_id, room_charges, treatment_charges, nurse_charges, medicine_charges, total_amount, billing_date]
-  );
+        [patient_id, room_charges, treatment_charges, nurse_charges, medicine_charges, total_amount, billing_date]
+    );
 
-  return result.insertId;
+    return result.insertId;
 };
 
 //-----------------------------------
@@ -285,6 +290,22 @@ exports.assignRoom = async (admissionId, newRoomNo) => {
         conn.release();
     }
 };
+//get patient id from admission=============================================================================
+exports.getPatientIdFromAdmission = async (admissionId) => {
+    const [rows] = await promiseConn.query(
+        "SELECT patient_id FROM admissions WHERE admission_id = ?",
+        [admissionId]
+    );
+
+    if (!rows.length) {
+        console.log(`No admission found for admission_id=${admissionId}`);
+        return null;
+    }
+
+    const patientId = rows[0].patient_id;
+    console.log(`Found patient_id=${patientId} for admission_id=${admissionId}`);
+    return patientId;
+};
 
 
 //get available rooms
@@ -325,13 +346,13 @@ exports.updateRoomStatus = async (roomNo, status) => {
     return result.affectedRows > 0;
 };
 //assign nurse to patient
-exports.assignNurseToPatient = async (admissionId, nurseId) => {
+exports.assignNurseToPatient = asyncHandler(async (admissionId, nurseId) => {
     const [result] = await promiseConn.query(
         `UPDATE admissions SET nurse_id = ? WHERE admission_id = ?`,
         [nurseId, admissionId]
     );
     return result.affectedRows > 0;
-};
+});
 
 
 

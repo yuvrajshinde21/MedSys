@@ -1,72 +1,178 @@
 <div class="container mt-4">
-    <h2 class="mb-4">Edit Receptionist</h2>
-    <form action="/admin/reception/edit/<%= reception.reception_id %>" method="POST"
-        enctype="multipart/form-data" novalidate>
-        <div class="mb-3">
-            <label for="reception_name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="reception_name" name="reception_name"
-                value="<%= reception.reception_name %>" required>
-        </div>
+  <h2 class="mb-4">Edit Receptionist</h2>
+  <form id="editReceptionForm" action="/admin/reception/edit/<%= reception.reception_id %>" method="POST" enctype="multipart/form-data" novalidate>
+    <!-- Name -->
+    <div class="mb-3">
+      <label for="reception_name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="reception_name" name="reception_name" value="<%= reception.reception_name %>" required>
+      <div id="receptionNameError" class="text-danger mt-1 small"></div>
+    </div>
 
-        <div class="mb-3">
-            <label for="reception_contact" class="form-label">Contact</label>
-            <input type="text" class="form-control" id="reception_contact" name="reception_contact"
-                value="<%= reception.reception_contact %>" required>
-        </div>
+    <!-- Contact -->
+    <div class="mb-3">
+      <label for="reception_contact" class="form-label">Contact</label>
+      <input type="text" class="form-control" id="reception_contact" name="reception_contact" value="<%= reception.reception_contact %>" required>
+      <div id="receptionContactError" class="text-danger mt-1 small"></div>
+    </div>
 
-        <div class="mb-3">
-            <label for="reception_email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="reception_email" name="reception_email"
-                value="<%= reception.reception_email %>" required>
-        </div>
+    <!-- Email -->
+    <div class="mb-3">
+      <label for="reception_email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="reception_email" name="reception_email" value="<%= reception.reception_email %>" required>
+      <div id="receptionEmailError" class="text-danger mt-1 small"></div>
+    </div>
 
-        <!-- <div class="mb-3">
-            <label for="reception_image" class="form-label">Profile Image</label>
-            <input type="file" class="form-control" id="reception_image" name="reception_image">
-            <% if (reception.reception_image) { %>
-                <img src="/uploads/<%= reception.reception_image %>" alt="Profile Image"
-                     class="img-thumbnail mt-2" style="max-width: 150px;">
-            <% } %>
-        </div>
-         -->
-        <div class="mb-3">
-                <label for="reception_image" class="form-label">Reception Image</label>
-                <input class="form-control" type="file" id="reception_image" name="reception_image" accept="image/*">
-                <% if (reception.reception_image) { %>
-                    <img id="imagePreview" src="/uploads/<%= reception.reception_image %>" alt="Reception Image"
-                        class="img-thumbnail mt-2" style="max-width: 150px;">
-                    <% } %>
-                        <input type="hidden" name="existing_image" value="<%= reception.reception_image %>">
-                        <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
-            </div>
+    <!-- Image -->
+    <div class="mb-3">
+      <label for="reception_image" class="form-label">Reception Image</label>
+      <input class="form-control" type="file" id="reception_image" name="reception_image" accept="image/*">
+      <% if (reception.reception_image) { %>
+        <img id="imagePreview" src="/uploads/<%= reception.reception_image %>" alt="Reception Image" class="img-thumbnail mt-2" style="max-width: 150px;">
+      <% } %>
+      <input type="hidden" name="existing_image" value="<%= reception.reception_image %>">
+      <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
+    </div>
 
-        <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select class="form-select" id="status" name="status" required>
-                <option value="active" <%=reception.status==='active' ? 'selected' : '' %>>Active</option>
-                <option value="inactive" <%=reception.status==='inactive' ? 'selected' : '' %>>Inactive</option>
-            </select>
-        </div>
+    <!-- Status -->
+    <div class="mb-3">
+      <label for="status" class="form-label">Status</label>
+      <select class="form-select" id="status" name="status" required>
+        <option value="active" <%= reception.status==='active' ? 'selected' : '' %>>Active</option>
+        <option value="inactive" <%= reception.status==='inactive' ? 'selected' : '' %>>Inactive</option>
+      </select>
+      <div id="receptionStatusError" class="text-danger mt-1 small"></div>
+    </div>
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Update Reception</button>
-            <a href="/admin/receptions" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary">Update Reception</button>
+      <a href="/admin/receptions" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
 </div>
 <script>
-    document.getElementById('reception_image').addEventListener('change', function (event) {
-        const input = event.target;
-        const preview = document.getElementById('imagePreview');
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("editReceptionForm");
+  const reception_name = document.getElementById("reception_name");
+  const reception_contact = document.getElementById("reception_contact");
+  const reception_email = document.getElementById("reception_email");
+  const reception_status = document.getElementById("status");
+  const reception_image = document.getElementById("reception_image");
 
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        } else {
-            preview.src = '';
-        }
-    });
+  const nameErrorDiv = document.getElementById("receptionNameError");
+  const contactErrorDiv = document.getElementById("receptionContactError");
+  const emailErrorDiv = document.getElementById("receptionEmailError");
+  const statusErrorDiv = document.getElementById("receptionStatusError");
+
+  function validateName() {
+    reception_name.value = reception_name.value.replace(/^\s+/, '');
+    reception_name.value = reception_name.value.replace(/\b\w/g, char => char.toUpperCase());
+    const value = reception_name.value.trim();
+    const isValid = /^[A-Za-z\s]+$/.test(value);
+
+    if (!value || !isValid) {
+      nameErrorDiv.textContent = "Enter a valid name (letters and spaces only).";
+      return false;
+    }
+    if (value.length > 30) {
+      nameErrorDiv.textContent = "Name cannot exceed 30 characters.";
+      return false;
+    }
+    nameErrorDiv.textContent = "";
+    return true;
+  }
+
+  function validateContact() {
+    reception_contact.value = reception_contact.value.replace(/^\s+/, '');
+    const value = reception_contact.value.trim();
+    const isValid = /^\d{10}$/.test(value);
+
+    if (!value || !isValid) {
+      contactErrorDiv.textContent = "Enter a valid 10-digit contact number.";
+      return false;
+    }
+    contactErrorDiv.textContent = "";
+    return true;
+  }
+
+  function validateEmail() {
+    const value = reception_email.value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (value !== "" && !emailRegex.test(value)) {
+      emailErrorDiv.textContent = "Enter a valid email address.";
+      return false;
+    }
+    if (value.length > 50) {
+      emailErrorDiv.textContent = "Email cannot exceed 50 characters.";
+      return false;
+    }
+    emailErrorDiv.textContent = "";
+    return true;
+  }
+
+  function validateStatus() {
+    if (reception_status.value === "") {
+      statusErrorDiv.textContent = "Please select a status.";
+      return false;
+    }
+    statusErrorDiv.textContent = "";
+    return true;
+  }
+
+  function validateImage() {
+    const file = reception_image.files[0];
+    const validTypes = ["image/jpeg", "image/png", "image/gif"];
+    const maxSize = 2 * 1024 * 1024;
+
+    if (!file) return true; // optional
+
+    if (!validTypes.includes(file.type)) {
+      alert("Only JPG, PNG, or GIF images are allowed.");
+      return false;
+    }
+    if (file.size > maxSize) {
+      alert("Image must be under 2MB.");
+      return false;
+    }
+    return true;
+  }
+
+  function validateEditReceptionForm() {
+    const validName = validateName();
+    const validContact = validateContact();
+    const validEmail = validateEmail();
+    const validStatus = validateStatus();
+    const validImage = validateImage();
+
+    return validName && validContact && validEmail && validStatus && validImage;
+  }
+
+  reception_name.addEventListener("input", validateName);
+  reception_contact.addEventListener("input", validateContact);
+  reception_email.addEventListener("input", validateEmail);
+  reception_status.addEventListener("change", validateStatus);
+  reception_image.addEventListener("change", validateImage);
+
+  form.addEventListener("submit", function (e) {
+    if (!validateEditReceptionForm()) {
+      e.preventDefault();
+    }
+  });
+
+  // Image preview
+  reception_image.addEventListener('change', function (event) {
+    const input = event.target;
+    const preview = document.getElementById('imagePreview');
+
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      preview.src = '';
+    }
+  });
+});
 </script>

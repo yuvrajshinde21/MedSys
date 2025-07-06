@@ -1,130 +1,132 @@
 <div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-10 col-lg-8">
-      <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
-        <div class="card-body p-4">
-          <h4 class="mb-4 text-center text-primary">Room Details Form</h4>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
+                <div class="card-body p-4">
+                    <h4 class="mb-4 text-center text-primary">Room Details Form</h4>
 
-          <form id="roomForm" action="/reception/rooms" method="POST" novalidate>
-            <!-- Room Number -->
-            <div class="mb-3">
-              <label for="room_no" class="form-label fw-semibold">Room Number</label>
-              <input type="number" class="form-control" id="room_no" name="room_no" required>
-              <div id="roomNoError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
+                    <form id="roomForm" action="/reception/add-rooms" method="POST" novalidate>
+                        <!-- Room Number -->
+                        <div class="mb-3">
+                            <label for="room_no" class="form-label fw-semibold">Room Number</label>
+                            <input type="number" class="form-control" id="room_no" name="room_no" required>
+                            <div id="roomNoError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
+                        </div>
+
+                        <!-- Room Type -->
+                        <div class="mb-3">
+                            <label for="room_type" class="form-label fw-semibold">Room Type</label>
+                            <select class="form-select" id="room_type" name="room_type" required>
+                                <option value="">-- Select Room Type --</option>
+                                <option value="ICU">ICU</option>
+                                <option value="General">General</option>
+                                <option value="Semi-Private">Semi-Private</option>
+                                <option value="Private">Private</option>
+                            </select>
+                            <div id="roomTypeError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
+                        </div>
+
+                        <!-- Room Status -->
+                        <div class="mb-3">
+                            <label for="room_status" class="form-label fw-semibold">Room Status</label>
+                            <select class="form-select" id="room_status" name="room_status" required>
+                                <!-- <option value="">-- Select Room Status --</option> -->
+                                <option value="Available">Available</option>
+                                <option value="Occupied">Occupied</option>
+                            </select>
+                            <div id="roomStatusError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
+                        </div>
+
+                        <!-- Charges Per Day -->
+                        <div class="mb-4">
+                            <label for="charges_per_day" class="form-label fw-semibold">Charges Per Day (₹)</label>
+                            <input type="number" step="100.00" class="form-control" id="charges_per_day"
+                                name="charges_per_day" required>
+                            <div id="chargesError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success px-4 py-2">
+                                <i class="bi bi-save me-1"></i> Save Room
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-
-            <!-- Room Type -->
-            <div class="mb-3">
-              <label for="room_type" class="form-label fw-semibold">Room Type</label>
-              <select class="form-select" id="room_type" name="room_type" required>
-                <option value="">-- Select Room Type --</option>
-                <option value="General">General</option>
-                <option value="ICU">Semi-Private</option>
-                <option value="Private">Private</option>
-              </select>
-              <div id="roomTypeError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
-            </div>
-
-            <!-- Room Status -->
-            <div class="mb-3">
-              <label for="room_status" class="form-label fw-semibold">Room Status</label>
-              <select class="form-select" id="room_status" name="room_status" required>
-                <!-- <option value="">-- Select Room Status --</option> -->
-                <option value="Available">Available</option>
-                <option value="Occupied">Occupied</option>
-              </select>
-              <div id="roomStatusError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
-            </div>
-
-            <!-- Charges Per Day -->
-            <div class="mb-4">
-              <label for="charges_per_day" class="form-label fw-semibold">Charges Per Day (₹)</label>
-              <input type="number" step="100.00" class="form-control" id="charges_per_day" name="charges_per_day" required>
-              <div id="chargesError" class="text-danger mt-1" style="font-size: 0.875rem;"></div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="text-center">
-              <button type="submit" class="btn btn-success px-4 py-2">
-                <i class="bi bi-save me-1"></i> Save Room
-              </button>
-            </div>
-          </form>
-
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <script>
-  const roomNoInput = document.getElementById("room_no");
-  const roomTypeSelect = document.getElementById("room_type");
-  const roomStatusSelect = document.getElementById("room_status");
-  const chargesInput = document.getElementById("charges_per_day");
+    const roomNoInput = document.getElementById("room_no");
+    const roomTypeSelect = document.getElementById("room_type");
+    const roomStatusSelect = document.getElementById("room_status");
+    const chargesInput = document.getElementById("charges_per_day");
 
-  const roomNoError = document.getElementById("roomNoError");
-  const roomTypeError = document.getElementById("roomTypeError");
-  const roomStatusError = document.getElementById("roomStatusError");
-  const chargesError = document.getElementById("chargesError");
+    const roomNoError = document.getElementById("roomNoError");
+    const roomTypeError = document.getElementById("roomTypeError");
+    const roomStatusError = document.getElementById("roomStatusError");
+    const chargesError = document.getElementById("chargesError");
 
-  // Validation functions
-  function validateRoomNo() {
-    if (roomNoInput.value.trim() === "" || Number(roomNoInput.value) <= 0) {
-      roomNoError.textContent = "Please enter a valid room number greater than 0.";
-      return false;
+    // Validation functions
+    function validateRoomNo() {
+        if (roomNoInput.value.trim() === "" || Number(roomNoInput.value) <= 0) {
+            roomNoError.textContent = "Please enter a valid room number greater than 0.";
+            return false;
+        }
+        roomNoError.textContent = "";
+        return true;
     }
-    roomNoError.textContent = "";
-    return true;
-  }
 
-  function validateRoomType() {
-    if (roomTypeSelect.value === "") {
-      roomTypeError.textContent = "Please select a room type.";
-      return false;
+    function validateRoomType() {
+        if (roomTypeSelect.value === "") {
+            roomTypeError.textContent = "Please select a room type.";
+            return false;
+        }
+        roomTypeError.textContent = "";
+        return true;
     }
-    roomTypeError.textContent = "";
-    return true;
-  }
 
-  function validateRoomStatus() {
-    if (roomStatusSelect.value === "") {
-      roomStatusError.textContent = "Please select a room status.";
-      return false;
+    function validateRoomStatus() {
+        if (roomStatusSelect.value === "") {
+            roomStatusError.textContent = "Please select a room status.";
+            return false;
+        }
+        roomStatusError.textContent = "";
+        return true;
     }
-    roomStatusError.textContent = "";
-    return true;
-  }
 
-  function validateCharges() {
-    if (chargesInput.value.trim() === "" || Number(chargesInput.value) <= 0) {
-      chargesError.textContent = "Please enter valid charges greater than 0.";
-      return false;
+    function validateCharges() {
+        if (chargesInput.value.trim() === "" || Number(chargesInput.value) <= 0) {
+            chargesError.textContent = "Please enter valid charges greater than 0.";
+            return false;
+        }
+        chargesError.textContent = "";
+        return true;
     }
-    chargesError.textContent = "";
-    return true;
-  }
 
-  // Add real-time validation listeners
-  roomNoInput.addEventListener("input", validateRoomNo);
-  roomTypeSelect.addEventListener("change", validateRoomType);
-  roomStatusSelect.addEventListener("change", validateRoomStatus);
-  chargesInput.addEventListener("input", validateCharges);
+    // Add real-time validation listeners
+    roomNoInput.addEventListener("input", validateRoomNo);
+    roomTypeSelect.addEventListener("change", validateRoomType);
+    roomStatusSelect.addEventListener("change", validateRoomStatus);
+    chargesInput.addEventListener("input", validateCharges);
 
-  // On form submit
-  document.getElementById("roomForm").addEventListener("submit", function (e) {
-    const isValid =
-      validateRoomNo() &&
-      validateRoomType() &&
-      validateRoomStatus() &&
-      validateCharges();
+    // On form submit
+    document.getElementById("roomForm").addEventListener("submit", function (e) {
+        const isValid =
+            validateRoomNo() &&
+            validateRoomType() &&
+            validateRoomStatus() &&
+            validateCharges();
 
-    if (!isValid) {
-      e.preventDefault();
-      const firstError = document.querySelector(".text-danger:not(:empty)");
-      if (firstError) {
-        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }
-  });
+        if (!isValid) {
+            e.preventDefault();
+            const firstError = document.querySelector(".text-danger:not(:empty)");
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+    });
 </script>

@@ -1,44 +1,158 @@
 <div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-6">
-      <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
-        <div class="card-body p-4">
-          <h4 class="text-primary mb-4 text-center">✏️ Edit Patient</h4>
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 rounded-4" style="background-color: #f0f8ff;">
+                <div class="card-body p-4">
+                    <h4 class="text-primary mb-4 text-center">✏️ Edit Patient</h4>
 
-          <form method="POST" action="/reception/patients/edit/<%= patient.patient_id %>">
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Name</label>
-              <input type="text" name="patient_name" value="<%= patient.patient_name %>" class="form-control" required>
-            </div>
+                    <form method="POST" action="/reception/patients/edit/<%= patient.patient_id %>">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Name</label>
+                            <input type="text" name="patient_name" value="<%= patient.patient_name %>"
+                                class="form-control" required>
+                        </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Age</label>
-              <input type="number" name="patient_age" value="<%= patient.patient_age %>" class="form-control" required>
-            </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Age</label>
+                            <input type="number" name="patient_age" value="<%= patient.patient_age %>"
+                                class="form-control" required>
+                        </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Gender</label>
-              <select name="patient_gender" class="form-select" required>
-                <option value="Male" <%= patient.patient_gender === 'Male' ? 'selected' : '' %>>Male</option>
-                <option value="Female" <%= patient.patient_gender === 'Female' ? 'selected' : '' %>>Female</option>
-                <option value="Other" <%= patient.patient_gender === 'Other' ? 'selected' : '' %>>Other</option>
-              </select>
-            </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Gender</label>
+                            <select name="patient_gender" class="form-select" required>
+                                <option value="Male" <%=patient.patient_gender==='Male' ? 'selected' : '' %>>Male
+                                </option>
+                                <option value="Female" <%=patient.patient_gender==='Female' ? 'selected' : '' %>>Female
+                                </option>
+                                <option value="Other" <%=patient.patient_gender==='Other' ? 'selected' : '' %>>Other
+                                </option>
+                            </select>
+                        </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Contact</label>
-              <input type="text" name="patient_contact" value="<%= patient.patient_contact %>" class="form-control" required>
-            </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Contact</label>
+                            <input type="text" name="patient_contact" value="<%= patient.patient_contact %>"
+                                class="form-control" required>
+                        </div>
 
-            <div class="text-center mt-4">
-              <button type="submit" class="btn btn-success px-4">
-                💾 Save
-              </button>
-              <a href="/reception/patients" class="btn btn-secondary ms-2 px-4">🔙 Cancel</a>
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success px-4">
+                                💾 Save
+                            </button>
+                            <a href="/reception/patients" class="btn btn-secondary ms-2 px-4">🔙 Cancel</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+
+        const nameInput = form.querySelector("[name='patient_name']");
+        const ageInput = form.querySelector("[name='patient_age']");
+        const genderInput = form.querySelector("[name='patient_gender']");
+        const contactInput = form.querySelector("[name='patient_contact']");
+
+        function showError(input, message) {
+            const parent = input.parentElement;
+            input.classList.add("is-invalid");
+            let error = parent.querySelector(".invalid-feedback");
+            if (!error) {
+                error = document.createElement("div");
+                error.className = "invalid-feedback";
+                parent.appendChild(error);
+            }
+            error.textContent = message;
+        }
+
+        function clearError(input) {
+            input.classList.remove("is-invalid");
+            const error = input.parentElement.querySelector(".invalid-feedback");
+            if (error) error.remove();
+        }
+
+        function validateName() {
+            const value = nameInput.value.trim();
+            const nameRegex = /^[a-zA-Z\s.]{2,}$/;
+            if (!nameRegex.test(value)) {
+                showError(nameInput, "Name can only contain letters, spaces, and dots (min 2 chars).");
+                return false;
+            }
+            clearError(nameInput);
+            return true;
+        }
+        function validateName() {
+            nameInput.value = nameInput.value.replace(/^\s+/, "");
+
+            nameInput.value = nameInput.value.replace(/\b\w/g, (char) => char.toUpperCase());
+
+            const value = nameInput.value.trim();
+            const nameRegex = /^[a-zA-Z\s.]{2,}$/;
+
+            if (!nameRegex.test(value)) {
+                showError(nameInput, "Name can only contain letters, spaces, and dots (min 2 chars).");
+                return false;
+            }
+
+            clearError(nameInput);
+            return true;
+        }
+
+        function validateAge() {
+            const age = Number(ageInput.value);
+            if (!age || age < 0 || age > 120) {
+                showError(ageInput, "Enter a valid age between 0 and 120.");
+                return false;
+            }
+            clearError(ageInput);
+            return true;
+        }
+
+        function validateGender() {
+            if (!genderInput.value) {
+                showError(genderInput, "Please select a gender.");
+                return false;
+            }
+            clearError(genderInput);
+            return true;
+        }
+
+        function validateContact() {
+              contactInput.value = contactInput.value.replace(/^\s+/, "");
+
+            const value = contactInput.value.trim();
+            const regex = /^[0-9]{10}$/;
+            if (!regex.test(value)) {
+                showError(contactInput, "Enter a valid 10-digit mobile number.");
+                return false;
+            }
+            clearError(contactInput);
+            return true;
+        }
+
+        // Attach real-time validation
+        nameInput.addEventListener("input", validateName);
+        ageInput.addEventListener("input", validateAge);
+        genderInput.addEventListener("change", validateGender);
+        contactInput.addEventListener("input", validateContact);
+
+        // Validate on submit
+        form.addEventListener("submit", function (e) {
+            const isValid =
+                validateName() &&
+                validateAge() &&
+                validateGender() &&
+                validateContact();
+
+            if (!isValid) {
+                e.preventDefault();
+                const firstInvalid = document.querySelector(".is-invalid");
+                if (firstInvalid) firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        });
+    });
+</script>

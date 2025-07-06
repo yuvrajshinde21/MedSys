@@ -158,6 +158,11 @@
                         </table>
                         <p class="text-muted">🗓️ Billing Date: <%= new Date(bill.billing_date).toLocaleDateString() %>
                         </p>
+                        <div class="text-end mt-3">
+          <a href="/reception/print-bill/<%= patient.patient_id %>" target="_blank" class="btn btn-primary">
+            <i class="bi bi-printer"></i> Print Bill
+          </a>
+        </div>
                         <% } else if (patient.admission_status==='Discharged' || (!patient.admission_status &&
                             patient.appointment_status==='Completed' )) { %>
                             <div class="text-end">

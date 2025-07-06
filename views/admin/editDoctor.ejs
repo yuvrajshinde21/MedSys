@@ -1,91 +1,186 @@
-<!DOCTYPE html>
-<html lang="en">
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary">Edit Doctor</h2>
+  <form id="editDoctorForm" action="/admin/doctors/edit/<%= doctor.doctor_id %>" method="POST" enctype="multipart/form-data" class="border p-4 rounded shadow bg-light" novalidate>
+    <div class="row g-4">
+      <!-- Left Column -->
+      <div class="col-md-6">
+        <!-- Doctor Name -->
+        <div class="mb-3">
+          <label for="doctor_name" class="form-label">Doctor Name</label>
+          <input type="text" class="form-control" id="doctor_name" name="doctor_name" value="<%= doctor.doctor_name %>" required>
+          <div class="invalid-feedback">Doctor name is required.</div>
+        </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Doctor</title>
-</head>
+        <!-- Specialization -->
+        <div class="mb-3">
+          <label for="doctor_specialization" class="form-label">Specialization</label>
+          <select class="form-select" id="doctor_specialization" name="doctor_specialization" required>
+            <% specializations.forEach(function(specialization) { %>
+              <option value="<%= specialization.specialization_id %>" <%= doctor.doctor_specialization == specialization.specialization_id ? 'selected' : '' %>>
+                <%= specialization.specialization_name %>
+              </option>
+            <% }) %>
+          </select>
+          <div class="invalid-feedback">Specialization is required.</div>
+        </div>
 
-<body>
-    <div class="container">
-        <h1>Edit Doctor</h1>
-        <form action="/admin/doctors/edit/<%= doctor.doctor_id %>" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="_method" value="PUT">
-            <div class="mb-3">
-                <label for="doctor_name" class="form-label">Doctor Name</label>
-                <input type="text" class="form-control" id="doctor_name" name="doctor_name"
-                    value="<%= doctor.doctor_name %>" required>
-            </div>
-            <!-- //show doctor specialization but insert value specialization id -->
-            <div class="mb-3">
-                <label for="doctor_specialization" class="form-label">Specialization</label>
-                <select class="form-select" id="doctor_specialization" name="doctor_specialization" required>
-                    <% specializations.forEach(function(specialization) { %>
-                        <option value="<%= specialization.specialization_id %>"
-                            <%=doctor.doctor_specialization==specialization.specialization_id ? 'selected' : '' %>>
-                            <%= specialization.specialization_name %>
-                        </option>
-                        <% }) %>
-                </select>
-            </div>
+        <!-- Contact Number -->
+        <div class="mb-3">
+          <label for="doctor_contact" class="form-label">Contact Number</label>
+          <input type="text" class="form-control" id="doctor_contact" name="doctor_contact" value="<%= doctor.doctor_contact %>" required>
+          <div class="invalid-feedback">Valid 10-digit contact number is required.</div>
+        </div>
 
-            <div class="mb-3">
-                <label for="doctor_contact" class="form-label">Contact Number</label>
-                <input type="text" class="form-control" id="doctor_contact" name="doctor_contact"
-                    value="<%= doctor.doctor_contact %>" required>
-            </div>
-            <div class="mb-3">
-                <label for="doctor_email" class="form-label">Email Address</label>
-                <input type="email" class="form-control" id="doctor_email" name="doctor_email"
-                    value="<%= doctor.doctor_email %>" required>
-            </div>
-            <div class="mb-3">
-                <label for="doctor_experience" class="form-label">Years of Experience</label>
-                <input type="number" class="form-control" id="doctor_experience" name="doctor_experience"
-                    value="<%= doctor.doctor_experience %>" min="0" required>
-            </div>
-            <div class="mb-3">
-                <label for="doctor_image" class="form-label">Doctor Image</label>
-                <input class="form-control" type="file" id="doctor_image" name="doctor_image" accept="image/*">
-                <% if (doctor.doctor_image) { %>
-                    <img id="imagePreview" src="/uploads/<%= doctor.doctor_image %>" alt="Doctor Image"
-                        class="img-thumbnail mt-2" style="max-width: 150px;">
-                    <% } %>
-                        <input type="hidden" name="existing_image" value="<%= doctor.doctor_image %>">
-                        <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
-            </div>
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="doctor_email" class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="doctor_email" name="doctor_email" value="<%= doctor.doctor_email %>" required>
+          <div class="invalid-feedback">Valid email address is required.</div>
+        </div>
+      </div>
 
-            <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select class="form-select" id="status" name="status">
-                    <option value="active" <%=doctor.status==='active' ? 'selected' : '' %>>Active</option>
-                    <option value="inactive" <%=doctor.status==='inactive' ? 'selected' : '' %>>Inactive</option>
-                </select>
-            </div>
-            <input type="hidden" name="doctor_id" value="<%= doctor.doctor_id %>">
-            <button type="submit" class="btn btn-primary">Update Doctor</button>
-            <a href="/admin/doctors" class="btn btn-secondary">Cancel</a>
-        </form>
+      <!-- Right Column -->
+      <div class="col-md-6">
+        <!-- Experience -->
+        <div class="mb-3">
+          <label for="doctor_experience" class="form-label">Years of Experience</label>
+          <input type="number" class="form-control" id="doctor_experience" name="doctor_experience" value="<%= doctor.doctor_experience %>" min="0" required>
+          <div class="invalid-feedback">Experience must be a non-negative number.</div>
+        </div>
+
+        <!-- Image -->
+        <div class="mb-3">
+          <label for="doctor_image" class="form-label">Doctor Image</label>
+          <input class="form-control" type="file" id="doctor_image" name="doctor_image" accept="image/*">
+          <% if (doctor.doctor_image) { %>
+            <img id="imagePreview" src="/uploads/<%= doctor.doctor_image %>" alt="Doctor Image" class="img-thumbnail mt-2" style="max-width: 150px;">
+          <% } %>
+          <input type="hidden" name="existing_image" value="<%= doctor.doctor_image %>">
+          <div class="form-text">Accepted formats: JPG, PNG, GIF. Max size ~2MB.</div>
+        </div>
+
+        <!-- Status -->
+        <div class="mb-3">
+          <label for="status" class="form-label">Status</label>
+          <select class="form-select" id="status" name="status" required>
+            <option value="active" <%= doctor.status === 'active' ? 'selected' : '' %>>Active</option>
+            <option value="inactive" <%= doctor.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+          </select>
+          <div class="invalid-feedback">Status is required.</div>
+        </div>
+      </div>
     </div>
-</body>
+
+    <input type="hidden" name="doctor_id" value="<%= doctor.doctor_id %>">
+
+    <div class="d-flex gap-3 mt-4">
+      <button type="submit" class="btn btn-primary px-4">Update Doctor</button>
+      <a href="/admin/doctors" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
 <script>
-    document.getElementById('doctor_image').addEventListener('change', function (event) {
-        const input = event.target;
-        const preview = document.getElementById('imagePreview');
+  const form = document.getElementById('editDoctorForm');
 
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            };
-            reader.readAsDataURL(input.files[0]);
-        } else {
-            preview.src = '';
-            preview.style.display = 'none';
-        }
-    });
+  const nameField = form.doctor_name;
+  const specField = form.doctor_specialization;
+  const contactField = form.doctor_contact;
+  const emailField = form.doctor_email;
+  const expField = form.doctor_experience;
+  const statusField = form.status;
+
+  // ON INPUT / CHANGE VALIDATIONS
+
+  nameField.addEventListener('input', () => {
+    nameField.value = nameField.value.replace(/^\s+/, ''); // prevent leading spaces
+    nameField.value = nameField.value.replace(/\b\w/g, char => char.toUpperCase()); // capitalize words
+    const isValid = /^[A-Za-z\s]+$/.test(nameField.value.trim());
+    toggleValidationClass(nameField, isValid);
+  });
+
+  specField.addEventListener('change', () => {
+    const isValid = !!specField.value.trim();
+    toggleValidationClass(specField, isValid);
+  });
+
+  contactField.addEventListener('input', () => {
+    contactField.value = contactField.value.replace(/^\s+/, '');
+    const isValid = /^[0-9]{10}$/.test(contactField.value.trim());
+    toggleValidationClass(contactField, isValid);
+  });
+
+  emailField.addEventListener('input', () => {
+    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value.trim());
+    toggleValidationClass(emailField, isValid);
+  });
+
+  expField.addEventListener('input', () => {
+    const value = expField.value.trim();
+    const isValid = value && !isNaN(value) && Number(value) >= 0;
+    toggleValidationClass(expField, isValid);
+  });
+
+  statusField.addEventListener('change', () => {
+    const isValid = !!statusField.value.trim();
+    toggleValidationClass(statusField, isValid);
+  });
+
+  // ON SUBMIT VALIDATION
+  form.addEventListener('submit', function (e) {
+    let isValid = true;
+
+    const nameValid = /^[A-Za-z\s]+$/.test(nameField.value.trim());
+    toggleValidationClass(nameField, nameValid);
+    if (!nameValid) isValid = false;
+
+    const specValid = !!specField.value.trim();
+    toggleValidationClass(specField, specValid);
+    if (!specValid) isValid = false;
+
+    const contactValid = /^[0-9]{10}$/.test(contactField.value.trim());
+    toggleValidationClass(contactField, contactValid);
+    if (!contactValid) isValid = false;
+
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value.trim());
+    toggleValidationClass(emailField, emailValid);
+    if (!emailValid) isValid = false;
+
+    const expValue = expField.value.trim();
+    const expValid = expValue && !isNaN(expValue) && Number(expValue) >= 0;
+    toggleValidationClass(expField, expValid);
+    if (!expValid) isValid = false;
+
+    const statusValid = !!statusField.value.trim();
+    toggleValidationClass(statusField, statusValid);
+    if (!statusValid) isValid = false;
+
+    if (!isValid) e.preventDefault();
+  });
+
+  // IMAGE PREVIEW
+  document.getElementById('doctor_image').addEventListener('change', function (event) {
+    const input = event.target;
+    const preview = document.getElementById('imagePreview');
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      preview.src = '';
+      preview.style.display = 'none';
+    }
+  });
+
+  // HELPER FUNCTION
+  function toggleValidationClass(element, isValid) {
+    if (isValid) {
+      element.classList.remove('is-invalid');
+    } else {
+      element.classList.add('is-invalid');
+    }
+  }
 </script>
-
-</html>

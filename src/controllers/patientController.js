@@ -14,7 +14,7 @@ exports.loadAppointmentForm = asyncHandler(async (req, res) => {
 
     res.render("reception/receptionDashboard.ejs", {
         title: "Add Patient",
-        main_content: "addPatient", // ✅ Remove "reception/"
+        main_content: "addPatient",
         specializations
     });
 });
@@ -34,7 +34,7 @@ exports.getDoctorsBySpecialization = async (req, res) => {
 exports.createPatientAppointment = async (req, res) => {
     const patient_name = req.body.patient_name.trim();
     const patient_age = req.body.patient_age.trim();
-    const patient_gender = req.body.patient_gender.trim();
+    const patient_gender = req.body.patient_gender?.trim();
     const patient_contact = req.body.patient_contact.trim();
     const patient_issue = req.body.patient_issue.trim();
     const doctor_id = req.body.doctor_id.trim();
@@ -42,7 +42,9 @@ exports.createPatientAppointment = async (req, res) => {
     const appointment_time = req.body.appointment_time.trim();
 
     if (!patient_name || !patient_age || !patient_contact || !patient_gender || !patient_issue || !doctor_id || !appointment_date || !appointment_time) {
-        throw new Error("All fields are required!");//===render err message later
+        req.flash("errorMessage", "All fields are required!")
+        return res.redirect("/reception/patients/add");
+        // throw new Error("All fields are required!");
 
     }
 
@@ -66,12 +68,11 @@ exports.createPatientAppointment = async (req, res) => {
             patient_issue
         );
 
-        req.flash("success_msg", "Patient registered and appointment booked successfully!");
-        res.redirect("/reception/patients");
+        req.flash("successMessage", "Patient registered and appointment booked successfully!");
+        return res.redirect("/reception/patients/add");
     } catch (err) {
-        req.flash("error_msg", "Something went wrong while booking the appointment.");
-        res.redirect("/reception/patients/create"); // or wherever your form is
-
+        req.flash("errorMessage", "Something went wrong while booking the appointment.");
+        return res.redirect("/reception/patients/add");
     }
 };
 //==================================
@@ -79,7 +80,7 @@ exports.getAllPatients = asyncHandler(async (req, res) => {
     const status = req.query.status || 'All';
     const page = parseInt(req.query.page) || 1;
     const limit = 8;
-    const search = req.query.search || ''; 
+    const search = req.query.search || '';
 
     const { patients, totalCount } = await patientModel.fetchBasicPatients({ status, page, limit, search });
 
@@ -92,7 +93,7 @@ exports.getAllPatients = asyncHandler(async (req, res) => {
         currentPage: page,
         totalPages,
         selectedStatus: status,
-        searchQuery: search // <-- pass to EJS
+        searchQuery: search 
     });
 });
 
@@ -176,7 +177,7 @@ exports.viewSpecificPatientDetailsById = asyncHandler(async (req, res) => {
     const bill = await patientModel.getBillByPatientId(patientId);
     const availableRooms = await receptionModel.getAvailableRooms();
     const availableNurses = await receptionModel.getAvailableNurses();
-    console.log(patientDetails)
+    // console.log(patientDetails)
     res.render("reception/receptionDashboard", {
         main_content: "patient_full_details",
         title: "Patient Details",
@@ -204,29 +205,11 @@ exports.renderEditPatientForm = async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error loading edit form");
+        req.flash("errorMessage", "Error loading edit form");
+        return res.redirect(`/reception/view-patient/${patientId}`);
     }
 };
 
-// Show Edit Form
-exports.renderEditPatientForm = async (req, res) => {
-    const patientId = req.params.patient_id;
-
-    try {
-        const patient = await patientModel.getPatientById(patientId);
-        if (!patient) {
-            return res.status(404).send("Patient not found");
-        }
-
-        res.render("reception/receptionDashboard", {
-            main_content: "edit_patient",
-            patient
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error loading edit form");
-    }
-};
 
 // Handle Update
 exports.updatePatientDetails = async (req, res) => {
@@ -240,11 +223,12 @@ exports.updatePatientDetails = async (req, res) => {
             patient_gender,
             patient_contact,
         });
-
-        res.redirect("/reception/patients"); // or detailed view
+        req.flash("successMessage", `Patient '${patient_name}' details updated successfully`)
+        res.redirect(`/reception/view-patient/${patientId}`);
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error updating patient");
+        req.flash("errorMessage", "An error occurred while updating the patient.");
+        return res.redirect(`/reception/patients/edit/${patientId}`);
     }
 };
 //========================================

@@ -56,10 +56,10 @@ exports.getPriviousPrescriptions = async (patientId, currentAppointmentId) => {
       
     ORDER BY a.appointment_date DESC
   `, [patientId]);
-//  WHERE p.patient_id = ? 
-//       AND p.appointment_id != ?
-//     ORDER BY a.appointment_date DESC
-//   `, [patientId, currentAppointmentId]);
+    //  WHERE p.patient_id = ? 
+    //       AND p.appointment_id != ?
+    //     ORDER BY a.appointment_date DESC
+    //   `, [patientId, currentAppointmentId]);
     // Group prescriptions by appointment_id
     const grouped = {};
 
@@ -236,7 +236,7 @@ exports.getAdmissionDetails = async (admissionId) => {
 };
 
 //get appoiment_id from addmission
-exports.getAppoimentIdFromAdmission =async (admissionId) => {
+exports.getAppoimentIdFromAdmission = async (admissionId) => {
     const [rows] = await promiseConn.query(
         `SELECT appointment_id FROM admissions WHERE admission_id = ?`,
         [admissionId]
@@ -246,11 +246,58 @@ exports.getAppoimentIdFromAdmission =async (admissionId) => {
 
 //discharge
 exports.markAsDischarged = async (admissionId) => {
-    const [result] = await promiseConn.query(
-        `UPDATE admissions 
-         SET status = 'Discharged', discharge_date = NOW() 
-         WHERE admission_id = ? AND status = 'Admitted'`,
-        [admissionId]
-    );
-    return result.affectedRows > 0;
+    const conn = await promiseConn.getConnection();
+    try {
+        await conn.beginTransaction();
+
+        console.log("🔍 Checking admission with ID:", admissionId);
+
+        const [admissionRows] = await conn.query(
+            `SELECT room_no FROM admissions WHERE admission_id = ? AND TRIM(status) = 'Admitted'`,
+            [admissionId]
+        );
+
+        console.log("📋 Admission Rows Found:", admissionRows.length, admissionRows);
+
+        if (admissionRows.length === 0) {
+            await conn.rollback();
+            return false; // No such admitted patient or already discharged
+        }
+
+        const roomNo = admissionRows[0].room_no;
+
+        // Step 1: Update admission status
+        const [updateAdmission] = await conn.query(
+            `UPDATE admissions 
+       SET status = 'Discharged', discharge_date = NOW() 
+       WHERE admission_id = ?`,
+            [admissionId]
+        );
+
+        if (updateAdmission.affectedRows === 0) {
+            await conn.rollback();
+            return false;
+        }
+
+        // Step 2: Mark room as Available
+        const [updateRoom] = await conn.query(
+            `UPDATE rooms SET room_status = 'Available' WHERE room_no = ?`,
+            [roomNo]
+        );
+        
+        if (updateRoom.affectedRows === 0) {
+            await conn.rollback();
+            return false;
+        }
+
+        await conn.commit();
+        return true;
+
+
+    } catch (err) {
+        await conn.rollback();
+        return false;
+    } finally {
+        conn.release();
+    }
 };

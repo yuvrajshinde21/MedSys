@@ -38,15 +38,12 @@
 
                     <!-- Right side: Add Patient -->
                     <div class="col-md-3 text-md-end">
-                        <a href="/reception/patients/create" class="btn btn-outline-primary">
+                        <a href="/reception/patients/add" class="btn btn-outline-primary">
                             <i class="bi bi-person-plus-fill me-1"></i> Add Patient
                         </a>
                     </div>
 
                 </div>
-
-
-
 
                 <!-- Table -->
                 <div class="table-responsive shadow-sm border bg-white p-3 rounded-4">
@@ -161,7 +158,7 @@
     const currentSearch = new URLSearchParams(window.location.search).get("search") || "";
     const currentStatus = new URLSearchParams(window.location.search).get("status") || "All";
 
-    // 🔁 Reload page with updated filters
+    //  Reload page with updated filters
     function applyFilters(page = 1) {
         const status = statusDropdown.value;
         const search = searchInput.value.trim();
@@ -173,18 +170,18 @@
         window.location.href = `/reception/patients?${query.toString()}`;
     }
 
-    // 🔄 On status change
+    //  On status change
     statusDropdown.addEventListener("change", () => {
-        applyFilters(1); // Reset to page 1
+        applyFilters(1);
     });
 
-    // 🔍 On search button click
+    //  On search button click
     searchBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        applyFilters(1); // Reset to page 1
+        applyFilters(1); 
     });
 
-    // ⏩ On pagination click
+    //  On pagination click
     pagination?.addEventListener("click", function (e) {
         if (e.target.tagName === "A") {
             e.preventDefault();
