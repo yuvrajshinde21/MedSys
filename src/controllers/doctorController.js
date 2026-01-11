@@ -166,7 +166,7 @@ exports.dischargePatient = async (req, res) => {
     if (success) {
       req.flash('successMessage', 'Patient discharged successfully and room marked as available.');
     } else {
-      req.flash('errorMessage', 'Discharge failed. Patient may already be discharged or not found.');
+      req.flash('errorMessage', 'Discharge failed.');
     }
   } catch (error) {
     console.error("Discharge error:", error);

@@ -38,13 +38,11 @@ exports.fetchBasicPatients = async ({ status, page, limit, search }) => {
   let whereClause = `WHERE 1`; 
   let havingClause = '';
 
-  // Search condition
   if (search) {
     whereClause += ` AND (p.patient_name LIKE ? OR p.patient_contact LIKE ?)`;
     params.push(`%${search}%`, `%${search}%`);
   }
 
-  // Status filter logic (in HAVING)
   if (status !== 'All') {
     if (['Admitted', 'Discharged'].includes(status)) {
       havingClause = `HAVING admission_status = '${status}'`;
@@ -53,7 +51,6 @@ exports.fetchBasicPatients = async ({ status, page, limit, search }) => {
     }
   }
 
-  // Fetch filtered + paginated data
   const [patients] = await promiseConn.query(`
     SELECT 
       p.patient_id,
@@ -82,7 +79,6 @@ exports.fetchBasicPatients = async ({ status, page, limit, search }) => {
     LIMIT ? OFFSET ?
   `, [...params, limit, offset]);
 
-  // Total count
   const [countResult] = await promiseConn.query(`
     SELECT COUNT(*) AS total
     FROM (
@@ -112,23 +108,6 @@ exports.fetchBasicPatients = async ({ status, page, limit, search }) => {
 };
 
 
-// //===============================================================================================================
-
-// // get available rooms
-// exports.getAvailableRooms = async () => {
-//   const [rows] = await promiseConn.query(
-//     "SELECT room_no, room_type FROM room WHERE room_status = 'Available'"
-//   );
-//   return rows;
-// }
-
-// //get all nurses
-// exports.getAllNurses = async () => {
-//   const [rows] = await promiseConn.query("SELECT nurse_id, nurse_name FROM nurse");
-//   return rows;
-// }
-
-// get spelizations
 exports.getAllSpecializations = async () => {
   const [rows] = await promiseConn.query("SELECT * FROM specializations");
   return rows;

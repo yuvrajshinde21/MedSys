@@ -38,7 +38,7 @@
                 <a href="/doctor/admitted-patients/prescribe/<%= p.admission_id %>" class="btn btn-sm btn-primary me-2">
                   <i class="bi bi-capsule"></i> Prescribe
                 </a>
-                <a href="/doctor/admitted-patients/discharge/<%= p.admission_id %>" class="btn btn-sm btn-outline-danger">
+                <a href="/doctor/admitted-patients/discharge/<%= p.admission_id %>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to discharge this patient?');">
                   <i class="bi bi-box-arrow-right"></i> Discharge
                 </a>
               </td>
